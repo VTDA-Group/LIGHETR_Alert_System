@@ -210,7 +210,7 @@ def process_fits(fits_file, alert_message = None):
             
             call_people(calling_dict = calling_dict, people_to_contact = people_to_contact, message_to_say = 'NS Event Detected. Check email for information.')
             print('I made phone calls. I am now sending text messages')
-            send_text_messages(reciever_dict = texting_dict, people_to_contact = people_to_contact, message_to_send = 'NS Event Detected. Check email for information.\n\nPlease join this zoom Call:\nhttps://us06web.zoom.us/j/87536495694')
+            send_text_messages(reciever_dict = texting_dict, people_to_contact = people_to_contact, message_to_send = 'NS Event Detected. Check email for information.Please join the Zoom call.')
             print('I have send text messages.')
             #send_notifications(params,timetill90)
             
@@ -243,7 +243,7 @@ with stream.open("kafka://kafka.scimma.org/igwn.gwalert", "r") as s:
         alert_time = Time(alert_time)
         
         num_messages+=1
-        if num_messages > 1:
+        if num_messages > 5:
             sys.exit()
         
         # Is this from testing?

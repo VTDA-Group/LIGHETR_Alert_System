@@ -16,7 +16,7 @@ client = Client(account_sid, auth_token)
 calling_dict = {'Ashley':'+17726438132'}
 texter_dict = {'Ashley':'+17726438132'}
 
-message_to_say = 'We got one boys. There be a neutron star merger. Check your email for the deets.'
+message_to_say = 'There is a BNS!.'
 
 
 
@@ -59,4 +59,5 @@ def call_people(people_to_contact = [], from_ = "+18333749011", message_to_say =
         print(call.sid)
         time.sleep(1)
 
-call_people(people_to_contact = ['Ashley'])
+# This is just a test
+# call_people(people_to_contact = ['Ashley'])
