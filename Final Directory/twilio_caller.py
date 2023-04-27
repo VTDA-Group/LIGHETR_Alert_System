@@ -3,12 +3,18 @@ import twilio
 import time
 from twilio.rest import Client
 from twilio.twiml.voice_response import VoiceResponse, Say
+import json
 
-# Set environment variables for your credentials
-# Read more at http://twil.io/secure
 
-calling_dict = {'Zhenyuan':'+18147772603', 'Kaylee':'+17863973538', 'OG':'+16789006318', 'Laura':'+14403615990', 'Mary':'+17034241176'}
-texter_dict = {'Zhenyuan':'+18147772603', 'Kaylee':'+17863973538', 'OG':'+16789006318', 'Laura':'+14403615990', 'Mary':'+17034241176'}
+
+account_sid = os.environ['TWILIO_ACCOUNT_SID']
+auth_token = os.environ['TWILIO_AUTH_TOKEN']
+client = Client(account_sid, auth_token)
+
+
+
+calling_dict = {'Ashley':'+17726438132'}
+texter_dict = {'Ashley':'+17726438132'}
 
 message_to_say = 'We got one boys. There be a neutron star merger. Check your email for the deets.'
 
@@ -30,12 +36,7 @@ def build_message_to_say(voice = voice, message_to_say = message_to_say):
     
     return xml
 
-def call_people(people_to_contact = [], from_ = "+16073886023", message_to_say = message_to_say, calling_dict = calling_dict):
-    
-    account_sid = "ACc430265c246c76afe3f2c2bc52fd7c8a"
-    auth_token = "eb0888a1ffc6f472a26723b2edd2da39"
-
-
+def call_people(people_to_contact = [], from_ = "+18333749011", message_to_say = message_to_say, calling_dict = calling_dict):
     client = Client(account_sid, auth_token)
     
     if len(people_to_contact) == 0:
@@ -58,4 +59,4 @@ def call_people(people_to_contact = [], from_ = "+16073886023", message_to_say =
         print(call.sid)
         time.sleep(1)
 
-#call_people(reciever_dict = calling_dict, people_to_contact = ['Kaylee'])
+call_people(people_to_contact = ['Ashley'])

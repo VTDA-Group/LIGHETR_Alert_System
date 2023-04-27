@@ -113,8 +113,9 @@ def process_fits(fits_file, alert_message = None):
         
         
         obs_time = Time(header['DATE-OBS'],format='isot',scale='utc')
-        #time = Time.now()
-        time = Time('2023-04-17T07:00:00.00')
+        time = Time.now()
+        # This is our testing time
+	#time = Time('2023-04-17T07:00:00.00')
         dist = str(header['DISTMEAN']) + ' +/- ' + str(header['DISTSTD'])
         header['id'] = superevent_id
 
@@ -208,15 +209,16 @@ def process_fits(fits_file, alert_message = None):
             make_phaseii.make_phaseii(lstfile = obs_time_dir+'LSTs_Visible.out', savedir = obs_time_dir)
             
             call_people(calling_dict = calling_dict, people_to_contact = people_to_contact, message_to_say = 'NS Event Detected. Check email for information.')
+            print('I made phone calls. I am now sending text messages')
             send_text_messages(reciever_dict = texting_dict, people_to_contact = people_to_contact, message_to_send = 'NS Event Detected. Check email for information.\n\nPlease join this zoom Call:\nhttps://us06web.zoom.us/j/87536495694')
-            
+            print('I have send text messages.')
             #send_notifications(params,timetill90)
             
             
             
 ###########Things start here####################
 contact_list_file_loc = 'contact_only_HET_BNS.json'
-people_to_contact = ['Karthik', 'Ashley', 'Kaylee']
+people_to_contact = ['Ashley']
 
 
 #stream_start_pos = 1600
@@ -240,12 +242,14 @@ with stream.open("kafka://kafka.scimma.org/igwn.gwalert", "r") as s:
         
         alert_time = Time(alert_time)
         
+        num_messages+=1
+        if num_messages > 1:
+            sys.exit()
         
-        
-        
-        if alert_time.jd < recent_April.jd:
-            num_messages+=1
-            continue
+        # Is this from testing?
+        #if alert_time.jd < recent_April.jd:
+        #    num_messages+=1
+        #    continue
         
         
         if event is not None:

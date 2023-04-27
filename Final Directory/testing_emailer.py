@@ -1,5 +1,10 @@
 from important_functions import *
 import json
+import os
+
+ligo_list_email = os.environ['LIGO_EMAIL']
+ligo_list_password = os.environ['EMAIL_PASSWORD']
+
 
 def get_email_list(file_loc = 'contact_all_BNS.json'):
     f = open( file_loc , "rb" )
@@ -48,19 +53,12 @@ def email(contact_list_file_loc = 'contact_all_BNS.json', subject = None, body =
     if subject is None:
         subject = "LIGO HET Followup Test Email"
     if body is None:
-        body = """I think this works?
-        Let's see
-        I like cheese"""
+        body = """This is just a test."""
 
-    email_sender = 'hetligo@gmail.com'
-    email_password = 'xadlutfmejxfyqeq'
+    email_sender = ligo_list_email
+    email_password = ligo_list_password
 
     print("sending email")
     send_email(email_sender = email_sender, email_password = email_password, all_email_recipients = all_email_recipients, files = files_to_attach, subject = subject, body = body)
 
 
-
-
-
-#main_text()
-#email(files_to_attach = ['60027.74060185185/fits_plotted.png'])
