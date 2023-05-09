@@ -1,0 +1,7 @@
+#!/home/ligo/LIGHETR_Alert_System/Final Directory/ligoenv/bin/python3.8
+import os
+import sys
+from importlib import resources
+with resources.path('lalapps', '__init__.py') as new_path:
+    new_path = str(new_path.parent / 'bin' / 'lalpulsar_WeaveCompare')
+os.execv(new_path, sys.argv)

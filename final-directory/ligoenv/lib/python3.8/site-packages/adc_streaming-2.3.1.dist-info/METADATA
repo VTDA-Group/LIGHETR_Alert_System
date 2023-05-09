@@ -1,0 +1,85 @@
+Metadata-Version: 2.1
+Name: adc-streaming
+Version: 2.3.1
+Summary: Astronomy Data Commons streaming client libraries
+Home-page: https://github.com/astronomy-commons/adc-streaming
+Author: Astronomy Data Commons Team
+Author-email: swnelson@uw.edu
+License: BSD
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Development Status :: 3 - Alpha
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Operating System :: MacOS :: MacOS X
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: authlib
+Requires-Dist: confluent-kafka
+Requires-Dist: requests
+Requires-Dist: tqdm
+Requires-Dist: certifi (>=2020.04.05.1)
+Requires-Dist: dataclasses ; python_version < "3.7"
+Requires-Dist: importlib-metadata ; python_version < "3.8"
+Requires-Dist: typing-extensions ; python_version < "3.8"
+Provides-Extra: dev
+Requires-Dist: autopep8 ; extra == 'dev'
+Requires-Dist: docker ; extra == 'dev'
+Requires-Dist: flake8 ; extra == 'dev'
+Requires-Dist: isort ; extra == 'dev'
+Requires-Dist: pytest ; extra == 'dev'
+Requires-Dist: pytest-timeout ; extra == 'dev'
+Requires-Dist: pytest-integration ; extra == 'dev'
+Requires-Dist: sphinx ; extra == 'dev'
+Requires-Dist: sphinx-rtd-theme ; extra == 'dev'
+Requires-Dist: twine ; extra == 'dev'
+
+# Astronomy Data Commons Streaming Client Libraries
+
+Libraries making it easy to access astronomy data commons resources.
+
+## Developer notes
+
+### Setup
+
+To prepare for development, run `pip install --editable ".[dev]"` from within
+the repo directory. This will install all dependencies, including those using
+during development workflows.
+
+This project expects you to use a `pip`-centric workflow for development on the
+project itself. If you're using conda, then use the conda environment's `pip` to
+install development dependencies, as described above.
+
+Integration tests require Docker to run a Kafka broker. The broker might have
+network problems on OSX if you use Docker Desktop; run the tests in a Linux
+virtual machine (like with VirtualBox) to get around this.
+
+### Code Workflow
+
+Write code, making changes.
+
+Use `make format` to reformat your code to comply with PEP8.
+
+Use `make lint` to catch common mistakes.
+
+Use `make test-quick` to run fast unit tests.
+
+Use `make test` to run the full slow test suite, including integration tests.
+
+Once satisfied with all four of those, push your changes and open a PR.
+
+### Tag, build, and upload to PyPI and Conda
+
+Tag a new version:
+```
+git tag -s -a v0.x.x
+```
+
+Build and release:
+
+```
+make pypi-dist
+make pypi-dist-check
+make pypi-upload
+make conda-build
+make conda-upload
+```

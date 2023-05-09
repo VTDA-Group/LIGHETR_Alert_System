@@ -1,0 +1,5 @@
+#!/bin/sh
+PYTHONPATH="/builds/lscsoft/lalsuite/wheel/build/inst/lib/python3.8/site-packages:${PYTHONPATH}"
+export PYTHONPATH
+exec /opt/python/cp38-cp38/bin/python '/builds/lscsoft/lalsuite/wheel/build/inst/libexec/lalpulsar/lalpulsar_MakeSFTDAG.py' "$@"
+exit 1
