@@ -94,7 +94,7 @@ def process_fits(fits_file, alert_message = None):
         
         #flatten the multi-order fits file into single-order
         singleorder_file_name = obs_time_dir+'flattened_multiorder_fits_'+superevent_id+'.fits'
-        os.system('ligo-skymap-flatten '+str(multiorder_file_name)+' '+singleorder_file_name)
+        os.system('ligo-skymap-flatten '+str(multiorder_file_name)+' '+singleorder_file_name+' --nside 256')
         
         #open the flattened fits file
         fits_file = fits.open(singleorder_file_name)

@@ -66,7 +66,11 @@ def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nsid
     cls = cls[ipix]
 
     dist = cat['d']
-    logdp_dV = np.log(probability[ipix]) + np.log(conditional_pdf(dist,distmu[ipix],distsigma[ipix],distnorm[ipix]).tolist()) - np.log(pixarea)
+    logdp_dV = np.log(probability[ipix]) + np.log(conditional_pdf(dist,distmu[ipix],distsigma[ipix],distnorm[ipix]).tolist()) - np.log(pixarea) #seems like logdpdv is only finding infinities, no real numbers... which is why it's never finding any galaxies. This likely has to do with me setting probability to 0.0. Maybe it'll be prudent to send in a mask of pixels within the 90% region that is visible to HET, and just work with only those pixels?
+    plt.close()
+    plt.hist(logdp_dV)
+    plt.savefig('logdpdv.pdf')
+    plt.close()
     print("logdp_dV: "+str(logdp_dV))
     #cutting to select only 90 % confidence in position
     cattop = cat[cls<90]

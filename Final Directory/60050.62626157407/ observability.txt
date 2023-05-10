@@ -1,3 +1,0 @@
-Source has a 0.0% chance of being observable now.
-Integrated probability over 24 hours (ignoring the sun) is 6.0%
-5.6 hours till you can observe the 90 % prob region.
