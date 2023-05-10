@@ -20,7 +20,7 @@ from testing_emailer import *
 import time as TIme
 import make_phaseii
 
-recent_April = Time('2023-05-06T00:00:00.00')
+recent_April = Time('2023-04-16T00:00:00.00')
 
 def write_to_file(file_loc, data_out, separator = ' ', headers=None, append=False):
     '''inputs: file_loc-location to which to write to, data_to_write-this is a 2d array that will be written to a file
@@ -257,12 +257,3 @@ with stream.open("kafka://kafka.scimma.org/igwn.gwalert", "r") as s:
         if skymap is not None and event is not None:
             print('Calling process_fits')
             process_fits(fits_file = skymap, alert_message = message_content)
-
-
-
-
-#decide if it's visible to het
-
-#if yes, send emails/text/phone calls to people
-
-#create TSL for the files

@@ -28,7 +28,7 @@ def make_visibility_figure(savedir, time, m, plot = True):
     npix = len(m)
     nside = hp.npix2nside(npix)
     
-    nside_HET = 128
+    nside_HET = nside
     
     hetpupil = np.loadtxt('hetpix.dat')
     hetfullpix = hp.query_strip(nside_HET, minhetdec_rad, \
@@ -193,87 +193,19 @@ def prob_observable(m, header, time, savedir, plot = True):
     # Where is the moon in the Texas sky, in this time?
     moon_altaz = moon.transform_to(frame)
     
+    msortedpix = np.flipud(np.argsort(m))
+    cumsum = np.cumsum(m[msortedpix])
+    cls = np.empty_like(m)
+    cls[msortedpix] = cumsum*100
+    p90i = np.where(cls <= 90)
 
     # How likely is it that the (true, unknown) location of the source
     # is within the area that is visible, in this time and within 24 hours? 
     # Demand that it falls in the HETDEX pupil, that the sun is at least 18 
     # degrees below the horizon and that the airmass (secant of zenith angle 
     # approximation) is at most 2.5.
-
-    
-
-    msortedpix = np.flipud(np.argsort(m))
-    cumsum = np.cumsum(m[msortedpix])
-    cls = np.empty_like(m)
-    cls[msortedpix] = cumsum*100
-    p90i = np.where(cls <= 90)
     
     
-    not_observable_mask = np.empty_like(m) #make a mask of the 90% region that is not visible to HET because of sun or moon constraints
-    observable_mask = np.empty_like(m) #make a mask of the 90% region that is not visible to HET because of sun or moon constraints
-    
-    
-    #SUN CIRCLE OF 18 DEGREES
-    radius_sun = 18
-    phis = Angle(sun.ra).radian
-    thetas = 0.5*np.pi-Angle(sun.dec).radian
-    radius = np.deg2rad(radius_sun)
-    xyz = hp.ang2vec(thetas, phis)
-    ipix_sun = hp.query_disc(nside, xyz, radius)
-
-    #Moon CIRCLE OF 5 DEGREES
-    radius_moon = 5
-    phis = Angle(moon.ra).radian
-    thetas = 0.5*np.pi-Angle(moon.dec).radian
-    radius = np.deg2rad(radius_moon)
-    xyz = hp.ang2vec(thetas, phis)
-    ipix_moon = hp.query_disc(nside, xyz, radius)
-
-    #Coloring the plot, order important here!
-    mplot[:] = 1 #background color, everything is the grey color
-    mplot[altaz.secz > 2.5] = 0.99 # salmon-region where airmass is too high
-    mplot[altaz.alt < 0] = 0.99 #salmon-region below the horizon
-    
-    
-    mplot[newpixp] = 0.2 #purple, color of HET pixels
-    mplot[p90i] = 0.4 #blue, location of 90% region contours
-    #for i in range(24*6):
-    for i in range(24):
-        future_time = time + i*u.hour
-    
-        p90i_HET_visible = make_visibility_figure(savedir=savedir, m = m, time = future_time, plot = True)
-        
-        if p90i_HET_visible is not None:
-            #print("m of the visible region is to be: "+str(m[p90i_HET_visible])+", mplot is being set to 0.5")
-            mplot[p90i_HET_visible] = 0.5
-    
-    #find mask of where mplot still is 0.4, this is the part of the 90% region that is never visible to HET at nighttime, because it was never set to 0.5
-    never_visible_mask = np.where(mplot == 0.4)
-    mplot[never_visible_mask] = 0.7
-    m[never_visible_mask] = 0.0
-        
-
-    
-    
-    #mplot[not_observable_mask] = 0.5 #location of 90% region contours that are not visible to HET while the sun is up
-    #mplot[observable_mask] = 0.7 #location of 90% region contours that are not visible to HET while the sun is up
-    
-    mplot[ipix_sun] = 0.8 #yellow, location of the sun
-    mplot[ipix_moon] = 0.3 #location of the moon. Note this doesn't take into account the actual brightness of the moon. It just gives the location
-    hp.mollview(mplot, coord='C',cmap= 'nipy_spectral', cbar=False, max=1, title='HET NOW')
-    hp.graticule(local=True)
-    ax1 = [2,4,6,8,10,12,14,16,18,20,22,24]
-    for ii in ax1:
-        hp.projtext(ii/24.*360-1,-5,str(ii)+'h',lonlat=True)
-    ax2 = [60,30,0,-30,-60]
-    for ii in ax2:
-        hp.projtext(360./2,ii,'   '+str(ii)+'°',lonlat=True)
-        
-    plt.savefig(savedir+"HET_Full_Visibility.pdf")
-    
-
-    
-
     delta_time = np.linspace(0, 24, 1000)*u.hour
     times24 = t + delta_time
     frames24 = astropy.coordinates.AltAz(obstime = times24, location=observatory)
@@ -336,6 +268,75 @@ def prob_observable(m, header, time, savedir, plot = True):
         timetill90 = (wsecs+timetilldark.value)/3600
     elif timetilldark.value > 0:
         timetill90 = timetilldark.value/3600
+        
+    print("Time till 90: "+str(timetill90))
+    print("Time till dark: "+str(timetilldark))
+    print("Time till bright: "+str(timetillbright))
+
+    
+
+    
+    
+    
+    #SUN CIRCLE OF 18 DEGREES
+    radius_sun = 18
+    phis = Angle(sun.ra).radian
+    thetas = 0.5*np.pi-Angle(sun.dec).radian
+    radius = np.deg2rad(radius_sun)
+    xyz = hp.ang2vec(thetas, phis)
+    ipix_sun = hp.query_disc(nside, xyz, radius)
+
+    #Moon CIRCLE OF 5 DEGREES
+    radius_moon = 5
+    phis = Angle(moon.ra).radian
+    thetas = 0.5*np.pi-Angle(moon.dec).radian
+    radius = np.deg2rad(radius_moon)
+    xyz = hp.ang2vec(thetas, phis)
+    ipix_moon = hp.query_disc(nside, xyz, radius)
+
+    #Coloring the plot, order important here!
+    mplot[:] = 1 #background color, everything is the grey color
+    mplot[altaz.secz > 2.5] = 0.99 # salmon-region where airmass is too high
+    mplot[altaz.alt < 0] = 0.99 #salmon-region below the horizon
+    
+    
+    mplot[newpixp] = 0.2 #purple, color of HET pixels
+    mplot[p90i] = 0.4 #blue, location of 90% region contours
+    #for i in range(24*6):
+    delta_time = np.linspace(0, 24, 24)*u.hour
+    for dt in delta_time:
+        future_time = time + dt
+    
+        p90i_HET_visible = make_visibility_figure(savedir=savedir, m = m, time = future_time, plot = False)
+        
+        if p90i_HET_visible is not None:
+            #print("m of the visible region is to be: "+str(m[p90i_HET_visible])+", mplot is being set to 0.5")
+            mplot[p90i_HET_visible] = 0.5
+    
+    #find mask of where mplot still is 0.4, this is the part of the 90% region that is never visible to HET at nighttime, because it was never set to 0.5
+    never_visible_mask = np.where(mplot == 0.4)
+    mplot[never_visible_mask] = 0.7
+    m[never_visible_mask] = 0.0
+        
+
+    
+    mplot[ipix_sun] = 0.8 #yellow, location of the sun
+    mplot[ipix_moon] = 0.3 #location of the moon. Note this doesn't take into account the actual brightness of the moon. It just gives the location
+    hp.mollview(mplot, coord='C',cmap= 'nipy_spectral', cbar=False, max=1, title='HET NOW')
+    hp.graticule(local=True)
+    ax1 = [2,4,6,8,10,12,14,16,18,20,22,24]
+    for ii in ax1:
+        hp.projtext(ii/24.*360-1,-5,str(ii)+'h',lonlat=True)
+    ax2 = [60,30,0,-30,-60]
+    for ii in ax2:
+        hp.projtext(360./2,ii,'   '+str(ii)+'°',lonlat=True)
+        
+    plt.savefig(savedir+"HET_Full_Visibility.pdf")
+    
+
+    
+
+    
 
     mask_arraynow = np.zeros(len(m), dtype=int)
     mask_arraynow[newpixp] = 1
