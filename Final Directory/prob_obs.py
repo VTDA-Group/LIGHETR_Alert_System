@@ -145,8 +145,6 @@ def prob_observable(m, header, time, savedir, plot = True):
     mplot = np.copy(m)
     npix = len(m)
     nside = hp.npix2nside(npix)
-    
-    print("prob_observable, nside = "+str(nside))
 
     # Geodetic coordinates of MacDonald Obs
 
@@ -246,7 +244,7 @@ def prob_observable(m, header, time, savedir, plot = True):
 
         #if the region doesn't intersect HET at all
         if len(np.intersect1d(p90i,hetfullpix)) == 0:
-            return 0 , 0 , -99, 0
+            return 0 , 0 , -99, 0, 0, 0
         hetedge = np.loadtxt('hetedge.dat')
         hetedgef = lambda x: np.interp(x,hetedge[:,0],hetedge[:,1])
         y = theta90HET*180/np.pi #DEC SKYMAP
@@ -261,18 +259,13 @@ def prob_observable(m, header, time, savedir, plot = True):
 
         if timetilldark == 0:
             if wsecs > timetillbright.value:
-                return 0 , 0 , -99, 0
+                return 0 , 0 , -99, 0, 0, 0
         else:
             if wsecs > nightime.value:
-                return 0 , 0 , -99, 0
+                return 0 , 0 , -99, 0, 0, 0
         timetill90 = (wsecs+timetilldark.value)/3600
     elif timetilldark.value > 0:
         timetill90 = timetilldark.value/3600
-        
-    print("Time till 90: "+str(timetill90))
-    print("Time till dark: "+str(timetilldark))
-    print("Time till bright: "+str(timetillbright))
-
     
 
     
@@ -314,9 +307,16 @@ def prob_observable(m, header, time, savedir, plot = True):
             mplot[p90i_HET_visible] = 0.5
     
     #find mask of where mplot still is 0.4, this is the part of the 90% region that is never visible to HET at nighttime, because it was never set to 0.5
-    never_visible_mask = np.where(mplot == 0.4)
+    
+    
+    never_visible_mask = np.where(mplot == 0.4)[0]
     mplot[never_visible_mask] = 0.7
-    m[never_visible_mask] = 0.0
+    
+    
+    m[never_visible_mask] = np.nan
+    visible_mask = np.where(mplot == 0.5)[0]
+    
+    
         
 
     
@@ -341,11 +341,8 @@ def prob_observable(m, header, time, savedir, plot = True):
     mask_arraynow = np.zeros(len(m), dtype=int)
     mask_arraynow[newpixp] = 1
     mask_arraynow *= (altaz.secz <= 2.5)&(sun_altaz.alt <= -18*u.deg)
-    print("mask_arrayow: "+str(mask_arraynow))
-    print("sun_altaz.alt: "+str(sun_altaz.alt))
 
-    prob = m[mask_arraynow > 0].sum()
-    probfull = m[np.intersect1d(p90i,hetfullpix)].sum()
+    
     m[np.setdiff1d(np.arange(len(m)),np.intersect1d(p90i,hetfullpix),assume_unique=True)]=m.min()
     
 
@@ -353,7 +350,7 @@ def prob_observable(m, header, time, savedir, plot = True):
     
     
     
-    return prob, probfull, timetill90, m
+    return timetill90, m, visible_mask, never_visible_mask
 
 def main():
         skymap, header = hp.read_map(sys.argv[1],

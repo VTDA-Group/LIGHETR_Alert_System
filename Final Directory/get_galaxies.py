@@ -20,6 +20,7 @@ import pandas as pd
 from ligo.skymap.distance import conditional_pdf
 import pdb
 import matplotlib.pyplot as plt
+import pdb
 
 def parseargs():
 
@@ -48,11 +49,15 @@ def cdf(pdf):
     cls[sortedpix] = cumsum*100
     return cls
 
-def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nside, probability):
+def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nside, probability, visible_mask, never_visible_mask):
     
     '''
     This will take a pandas-read in csv file, and will return a ordered list of galaxies within that catalog that are ordered by probability map
     '''
+    
+    #print("in probability index, probabilty of never viisble mask: "+str(probability[never_visible_mask]))
+    
+    #print("in probability index, probabilty of visible mask: "+str(probability[visible_mask]))
     
     theta = 0.5*np.pi - cat['DEJ2000']*np.pi/180
     theta = np.asarray([float(i) for i in theta])
@@ -63,15 +68,32 @@ def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nsid
 
 
     ipix = hp.ang2pix(nside, theta, phi)
+    pix = visible_mask
     cls = cls[ipix]
-
     dist = cat['d']
-    logdp_dV = np.log(probability[ipix]) + np.log(conditional_pdf(dist,distmu[ipix],distsigma[ipix],distnorm[ipix]).tolist()) - np.log(pixarea) #seems like logdpdv is only finding infinities, no real numbers... which is why it's never finding any galaxies. This likely has to do with me setting probability to 0.0. Maybe it'll be prudent to send in a mask of pixels within the 90% region that is visible to HET, and just work with only those pixels?
-    plt.close()
-    plt.hist(logdp_dV)
-    plt.savefig('logdpdv.pdf')
-    plt.close()
-    print("logdp_dV: "+str(logdp_dV))
+    
+    
+    print("probability at ipix: "+str(probability[ipix]))
+    pixel_log_prob = np.log(probability[ipix])
+    print("pixel_log_prob: "+str(pixel_log_prob))
+    
+    
+    print("dist: "+str(dist))
+    print("distmu: "+str(distmu[ipix]))
+    print("distsigma: "+str(distsigma[ipix]))
+    print("distnorm: "+str(distnorm[ipix]))
+    
+    
+    c_pdf = conditional_pdf(dist,distmu[ipix],distsigma[ipix],distnorm[ipix]).tolist()
+    #print("c_pdf: "+str(c_pdf))
+    distance_log_prob = np.log(c_pdf)
+    
+    print("distance log prob: "+str(distance_log_prob))
+
+    logdp_dV = pixel_log_prob + distance_log_prob - np.log(pixarea)
+    #logdp_dV = pixel_log_prob - np.log(pixarea)
+    
+    
     #cutting to select only 90 % confidence in position
     cattop = cat[cls<90]
     logdp_dV= logdp_dV[cls<90]
@@ -82,14 +104,19 @@ def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nsid
     cls = cls[cls<90]
     #only using K for now
     logdp_dV = np.log(s_lumK) + logdp_dV
-    print("logdp_dV: "+str(logdp_dV))
+    #print("logdp_dV: "+str(logdp_dV))
     #Now working only with event with overall probability 99% lower than the most probable
-    top99i = logdp_dV-np.max(logdp_dV) > np.log(1/100)
+    print("logdp_dv is : "+str(type(logdp_dV)))
+    
+    top99i = logdp_dV.where((logdp_dV is not np.nan) & (logdp_dV-np.max(logdp_dV) > np.log(1/100))).dropna()
+    
+
+    print("top99i: "+str(top99i))
 
     cattop = cattop[top99i]
     logdp_dV = logdp_dV[top99i]
     cls = cls[top99i]
-    print("cls: "+str(cls))
+    #print("cls: "+str(cls))
     #sorting by probability
     isort = np.argsort(logdp_dV)[::-1]
     
@@ -104,6 +131,8 @@ def write_catalog(params, savedir=''):
     fits = params['skymap_fits']
     event = params['superevent_id']
     probability = params['skymap_array']
+    visible_mask = params['visible_mask']
+    never_visible_mask = params['never_visible_mask']
     
     
     # Reading in the skymap prob and header
@@ -120,9 +149,9 @@ def write_catalog(params, savedir=''):
     #working with list of galaxies visble to HET
     cat1 = pd.read_csv("Glade_HET_Visible_Galaxies.csv", sep=',',usecols = [1,2,3,4,5],names=['RAJ2000','DEJ2000','B','K','d'],header=0,dtype=np.float64)
     #plt.show()
-    print("cat1: "+str(cat1))
-    cattop, logptop, cls = get_probability_index(cat1, probb, distmu, distsigma, distnorm, pixarea, nside, probability)
-    print("cattop: "+str(cattop))
+    #print("cat1: "+str(cat1))
+    cattop, logptop, cls = get_probability_index(cat1, probb, distmu, distsigma, distnorm, pixarea, nside, probability, visible_mask, never_visible_mask)
+    #print("cattop: "+str(cattop))
 
     index = Column(name='index',data=np.arange(len(cattop)))
     logprob = Column(name='LogProb',data=logptop)
@@ -133,13 +162,7 @@ def write_catalog(params, savedir=''):
     ascii.write(cattop['index','RAJ2000','DEJ2000','exptime','Nvis','LogProb','contour'], savedir+'HET_Visible_Galaxies_prob_list.dat', overwrite=True)
     
     
-    #should find the number of galaxies that will be visible to HET, compared to the number of total galaxies within the region
-    num_galaxies_visible_HET = len(index)
-    
-    #divide this number by the number of galaxies within the region corresponding to the skymap
-    
-    
-    return cattop,logptop,num_galaxies_visible_HET
+    return cattop,logptop
 
 def main():
 

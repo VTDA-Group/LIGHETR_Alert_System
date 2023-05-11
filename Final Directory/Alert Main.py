@@ -20,7 +20,7 @@ from testing_emailer import *
 import time as TIme
 import make_phaseii
 
-recent_April = Time('2023-04-16T00:00:00.00')
+recent_April = Time('2023-02-16T00:00:00.00')
 
 def write_to_file(file_loc, data_out, separator = ' ', headers=None, append=False):
     '''inputs: file_loc-location to which to write to, data_to_write-this is a 2d array that will be written to a file
@@ -165,10 +165,15 @@ def process_fits(fits_file, alert_message = None):
 
         
         #find probabilities and list of galaxies visible to HET
-        prob, probfull, timetill90, m = prob_observable(skymap, header, time, savedir = obs_time_dir, plot=True)
+        timetill90, m, visible_mask, never_visible_mask = prob_observable(skymap, header, time, savedir = obs_time_dir, plot=True)
 
         alert_message['skymap_fits'] = singleorder_file_name
         alert_message['skymap_array'] = m
+        alert_message['visible_mask'] = visible_mask
+        alert_message['never_visible_mask'] = never_visible_mask
+        
+        #print("In alert main, m at never visible: "+str(m[visible_mask]))
+        #print("In alert main, m at never visible: "+str(m[never_visible_mask]))
         
         
         #if False:
@@ -177,18 +182,18 @@ def process_fits(fits_file, alert_message = None):
             
             return
         else:
-            cattop, logptop, num_galaxies_visible_HET = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir)
+            cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir)
             
             if len(cattop) == 0:
                 print("Only visible during the day, I think")
                 write_to_file(obs_time_dir+" observability.txt", "This object is only visible during the day, I think.")
                 return
                 
-            print("Source has a {:.1f}% chance of being observable now.".format(int(round(100 * prob))))
-            print("Integrated probability over 24 hours (ignoring the sun) is {:.1f}%".format(int(round(100 * probfull))))
+            #print("Source has a {:.1f}% chance of being observable now.".format(int(round(100 * prob))))
+            #print("Integrated probability over 24 hours (ignoring the sun) is {:.1f}%".format(int(round(100 * probfull))))
             print('{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90))
-            write_to_file(obs_time_dir+" observability.txt", "Source has a {:.1f}% chance of being observable now.".format(int(round(100 * prob))), append = False)
-            write_to_file(obs_time_dir+" observability.txt", "Integrated probability over 24 hours (ignoring the sun) is {:.1f}%".format(int(round(100 * probfull))), append = True)
+            #write_to_file(obs_time_dir+" observability.txt", "Source has a {:.1f}% chance of being observable now.".format(int(round(100 * prob))), append = False)
+            #write_to_file(obs_time_dir+" observability.txt", "Integrated probability over 24 hours (ignoring the sun) is {:.1f}%".format(int(round(100 * probfull))), append = True)
             write_to_file(obs_time_dir+" observability.txt", '{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90), append = True)
             
             mincontour = get_LST.get_LST(savedir = obs_time_dir,targf = obs_time_dir+'HET_Visible_Galaxies_prob_list.dat')
