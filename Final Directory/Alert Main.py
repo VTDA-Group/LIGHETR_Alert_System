@@ -204,8 +204,8 @@ def process_fits(fits_file, alert_message = None):
             
             
             
-            email_body = 'A Neutron Star Merger has been detected by LIGO.\n{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90)+"\nSource has a {:.1f}% chance of being observable now.\n\nPlease join this zoom call: https://us06web.zoom.us/j/87536495694".format(int(round(100 * prob)))
-            #email(contact_list_file_loc = contact_list_file_loc, subject='LIGHETR Alert: NS Merger Detected', body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
+            email_body = 'A Neutron Star Merger has been detected by LIGO.\n{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90)+"\n\nPlease join this zoom call: https://us06web.zoom.us/j/87536495694"
+            email(contact_list_file_loc = contact_list_file_loc, subject='LIGHETR Alert: NS Merger Detected', body = email_body, files_to_attach = [obs_time_dir+"HET_Full_Visibility.pdf"], people_to_contact = people_to_contact)
             
             
             calling_dict = get_caller_list(contact_list_file_loc)
@@ -213,7 +213,7 @@ def process_fits(fits_file, alert_message = None):
             
             make_phaseii.make_phaseii(lstfile = obs_time_dir+'LSTs_Visible.out', savedir = obs_time_dir)
             
-            #call_people(calling_dict = calling_dict, people_to_contact = people_to_contact, message_to_say = 'NS Event Detected. Check email for information.')
+            call_people(calling_dict = calling_dict, people_to_contact = people_to_contact, message_to_say = 'NS Event Detected. Check email for information.')
             
             
             

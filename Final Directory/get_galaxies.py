@@ -61,7 +61,6 @@ def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nsid
     
     theta = 0.5*np.pi - cat['DEJ2000']*np.pi/180
     theta = np.asarray([float(i) for i in theta])
-    
     phi = cat['RAJ2000']*np.pi/180
     phi = np.asarray([float(i) for i in phi])
     cls = cdf(probb)
@@ -70,12 +69,15 @@ def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nsid
     ipix = hp.ang2pix(nside, theta, phi)
     pix = visible_mask
     cls = cls[ipix]
-    dist = cat['d']
+    dist = cat['dist_Mpc'] #catalog galaxy distances in megaparsec
     
     
     print("probability at ipix: "+str(probability[ipix]))
+    print("sum of probability in ipix: "+str(probability[ipix].sum()))
     pixel_log_prob = np.log(probability[ipix])
     print("pixel_log_prob: "+str(pixel_log_prob))
+    gg = np.asarray(pixel_log_prob)
+    print("indices where pixel log prob is not -inf: "+str(len(gg[np.where(gg > -np.inf)])))
     
     
     print("dist: "+str(dist))
@@ -97,18 +99,23 @@ def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nsid
     #cutting to select only 90 % confidence in position
     cattop = cat[cls<90]
     logdp_dV= logdp_dV[cls<90]
-    s_lumK = 10**(-0.4*cat['B'][cls<90])
-    s_lumK = s_lumK/s_lumK.sum()
+    stellar_mass = cat['M*']
+    stellar_mass = stellar_mass/stellar_mass.sum()
     #s_lumB = 10**(-0.4*cat1['B_Abs'][cls>90])
     #s_lumB = s_lumB/s_lumB.sum()
     cls = cls[cls<90]
     #only using K for now
-    logdp_dV = np.log(s_lumK) + logdp_dV
+    #logdp_dV = np.log(stellar_mass) + logdp_dV
     #print("logdp_dV: "+str(logdp_dV))
     #Now working only with event with overall probability 99% lower than the most probable
     print("logdp_dv is : "+str(type(logdp_dV)))
+    print("logdp_dV: "+str(logdp_dV))
     
-    top99i = logdp_dV.where((logdp_dV is not np.nan) & (logdp_dV-np.max(logdp_dV) > np.log(1/100))).dropna()
+    gg = np.where((logdp_dV is not np.nan) & (logdp_dV-np.max(logdp_dV) > np.log(1/100)))
+    
+    #top99i = gg[0]
+    top99i = logdp_dV-np.max(logdp_dV) > np.log(1/1000)
+    #top99i = logdp_dV[gg]
     
 
     print("top99i: "+str(top99i))
@@ -121,7 +128,7 @@ def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nsid
     isort = np.argsort(logdp_dV)[::-1]
     
     cattop = Table.from_pandas(cattop.iloc[isort])
-    logptop = logdp_dV.iloc[isort]
+    logptop = logdp_dV[isort]
     cls = cls[isort]
     
     
@@ -147,7 +154,7 @@ def write_catalog(params, savedir=''):
     
     
     #working with list of galaxies visble to HET
-    cat1 = pd.read_csv("Glade_HET_Visible_Galaxies.csv", sep=',',usecols = [1,2,3,4,5],names=['RAJ2000','DEJ2000','B','K','d'],header=0,dtype=np.float64)
+    cat1 = pd.read_csv("Glade_HET_Visible_Galaxies.csv", sep=',',header=0,dtype=np.float64)
     #plt.show()
     #print("cat1: "+str(cat1))
     cattop, logptop, cls = get_probability_index(cat1, probb, distmu, distsigma, distnorm, pixarea, nside, probability, visible_mask, never_visible_mask)
