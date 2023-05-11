@@ -30,7 +30,7 @@ def make_phaseii(lstfile, savedir = ''):
         targets = np.loadtxt(lstfile,skiprows=1,dtype=str)
         targets = np.atleast_2d(targets)
         c = SkyCoord(ra=np.asarray(targets[:,1], dtype=float) \
-            * u.degree, dec = np.asarray(targets[:,1], \
+            * u.degree, dec = np.asarray(targets[:,2], \
                 dtype=float)* u.degree, frame='icrs')
         c = c.to_string('hmsdms')
         for i,target in enumerate(targets):
