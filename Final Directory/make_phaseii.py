@@ -1,7 +1,7 @@
 import numpy as np
 import sys
 from astropy import units as u
-from astropy.coordinates import Angle
+from astropy.coordinates import SkyCoord
 def make_phaseii(lstfile, savedir = ''):
     common = {
                 'PROGRAM':'HET23-2-400',
@@ -29,14 +29,14 @@ def make_phaseii(lstfile, savedir = ''):
         f.write(' OBJECT\tRA\tDEC\tPIPRI\n')
         targets = np.loadtxt(lstfile,skiprows=1,dtype=str)
         targets = np.atleast_2d(targets)
-        dec = Angle(targets[:,2],u.degree).dms#.to_string(unit=u.degree,sep=':')
-        ra = Angle(targets[:,1],u.degree).hms#.to_string(unit=u.hour,sep=':')
-        dec = ["{:+03.0f}:{:02.0f}:{:05.2f}".format(dd[0],abs(float(dd[1])),abs(float(dd[2]))) for dd in zip(dec[0],dec[1],dec[2])]
-        ra = ["{:02.0f}:{:02.0f}:{:06.2f}".format(rr[0],rr[1],rr[2]) for rr in zip(ra[0],ra[1],ra[2])]
+        c = SkyCoord(ra=np.asarray(targets[:,1], dtype=float) \
+            * u.degree, dec = np.asarray(targets[:,1], \
+                dtype=float)* u.degree, frame='icrs')
+        c = c.to_string('hmsdms')
         for i,target in enumerate(targets):
-            if float(target[2])>0:
-                target[2]='+'+target[2]
-            f.write('GW{}\t{}\t{}\t{}\n'.format(target[1]+target[2],ra[i],dec[i],str(int(target[0]))))
+            ra = c[i].split(' ')[0].replace('h',':').replace('m',':').replace('s','')
+            dec = c[i].split(' ')[1].replace('d',':').replace('m',':').replace('s','')
+            f.write('GW{}\t{}\t{}\t{}\n'.format(target[1]+target[2],ra,dec,str(int(target[0]))))
 def main():
     make_phaseii(sys.argv[1])
 if __name__=='__main__':
