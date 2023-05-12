@@ -49,7 +49,7 @@ def cdf(pdf):
     cls[sortedpix] = cumsum*100
     return cls
 
-def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nside, probability, visible_mask, never_visible_mask):
+def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nside, probability):
     
     '''
     This will take a pandas-read in csv file, and will return a ordered list of galaxies within that catalog that are ordered by probability map
@@ -62,7 +62,6 @@ def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nsid
 
 
     ipix = hp.ang2pix(nside, theta, phi)
-    pix = visible_mask
     
 
     
@@ -113,8 +112,6 @@ def write_catalog(params, savedir=''):
     fits = params['skymap_fits']
     event = params['superevent_id']
     probability = params['skymap_array']
-    visible_mask = params['visible_mask']
-    never_visible_mask = params['never_visible_mask']
     
     
     # Reading in the skymap prob and header
@@ -132,7 +129,7 @@ def write_catalog(params, savedir=''):
     cat1 = pd.read_csv("Glade_HET_Visible_Galaxies.csv", sep=',',header=0,dtype=np.float64)
     #plt.show()
     #print("cat1: "+str(cat1))
-    cattop, logptop, cls = get_probability_index(cat1, probb, distmu, distsigma, distnorm, pixarea, nside, probability, visible_mask, never_visible_mask)
+    cattop, logptop, cls = get_probability_index(cat1, probb, distmu, distsigma, distnorm, pixarea, nside, probability)
     #print("cattop: "+str(cattop))
 
     index = Column(name='index',data=np.arange(len(cattop)))

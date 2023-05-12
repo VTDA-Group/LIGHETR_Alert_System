@@ -62,71 +62,7 @@ def get_texter_list(file_loc = 'contact_all_BNS.json'):
     jsonObject = json.load(f)
     return jsonObject['texter_list']
 
-def process_fits(fits_file, alert_message = None):
-        
-        alert_type = alert_message['alert_type']
-        print("alert type: "+str(alert_type))
-        alert_time = alert_message['time_created']
-        
-        alert_time = Time(alert_time)
-        
-        if alert_time.jd < recent_April.jd:
-            return
-        
-        #so we've found a time that we want to look at. I'll make a directory for this time.
-        obs_time_dir = str(alert_time.mjd)+"/"
-        #obs_time_dir = str(alert_time)+"/"
-        
-        if not os.path.exists(obs_time_dir):
-            os.mkdir(obs_time_dir)
-        superevent_id = alert_message['superevent_id']
-        fits_url = 'https://gracedb.ligo.org/api/superevents/'+str(superevent_id)+'/files/bayestar.multiorder.fits'
-        
-        
-        #download the multi-order fits file from the fits_url filelocation
-        url = fits_url
-        multiorder_file_name = obs_time_dir+'multiorder_fits_'+str(superevent_id)+'.fits'
-        req = requests.get(url)
-        file = open(multiorder_file_name, 'wb')
-        for chunk in req.iter_content(100000):
-            file.write(chunk)
-        file.close()
-        
-        #flatten the multi-order fits file into single-order
-        singleorder_file_name = obs_time_dir+'flattened_multiorder_fits_'+superevent_id+'.fits'
-        os.system('ligo-skymap-flatten '+str(multiorder_file_name)+' '+singleorder_file_name+' --nside 256')
-        
-        #open the flattened fits file
-        fits_file = fits.open(singleorder_file_name)
-        
-        #get the skymap and header of the flattened, single-order fits file
-        skymap,header = hp.read_map(singleorder_file_name, h=True, verbose=False)
-        
-        
-        #plot the sky-localization from the flattened, single-order fits file
-        m1 = hp.read_map(singleorder_file_name)
-        hp.mollview(m1, rot = (180, -10, 0))
-        plt.savefig(obs_time_dir+'fits_plotted.png')
-        plt.close()
-
-
-        # Print and save some values from the FITS header.
-        header = dict(header)
-        
-        
-        obs_time = Time(header['DATE-OBS'],format='isot',scale='utc')
-        time = Time.now()
-        # This is our testing time
-        #time = Time('2023-04-17T07:00:00.00')
-        dist = str(header['DISTMEAN']) + ' +/- ' + str(header['DISTSTD'])
-        header['id'] = superevent_id
-
-        
-        
-        
-        
-        
-        
+def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
         '''
         The format of these alerts is given in this website:
         https://emfollow.docs.ligo.org/userguide/content.html
@@ -139,7 +75,66 @@ def process_fits(fits_file, alert_message = None):
         
         it's unclear whether the key for noise will be either 'Noise' or 'Terrestrial', so I'll make the code flexible enough to use both
         
+        If you look at alert_message['superevent_id'], it will be [{T,M}]SYYMMDDabc. The first character can be either T or M. T means test, M means mock. Then, the S just means it's a superevent. Then you have the name of the event.
+        
         '''
+
+        alert_time = alert_message['time_created']
+        
+        alert_time = Time(alert_time)
+        
+        if alert_time.jd < recent_April.jd:
+            return
+        
+        test_event = False #this value will be set to true if the event turns out to be a test/mock event
+        superevent_id = alert_message['superevent_id']
+        if superevent_id[0] == 'T' or superevent_id[0] == 'M':
+            test_event = True
+        if skip_test_alerts and test_event:
+            return
+        
+        
+        #so we've found a time that we want to look at. I'll make a directory for this time.
+        obs_time_dir = str(alert_time.mjd)+"/"
+        
+        if not os.path.exists(obs_time_dir):
+            os.mkdir(obs_time_dir)
+        
+        fits_url = 'https://gracedb.ligo.org/api/superevents/'+str(superevent_id)+'/files/bayestar.multiorder.fits'
+        
+        
+        #download the multi-order fits file from the fits_url file location
+        url = fits_url
+        multiorder_file_name = obs_time_dir+'multiorder_fits_'+str(superevent_id)+'.fits'
+        req = requests.get(url)
+        file = open(multiorder_file_name, 'wb')
+        for chunk in req.iter_content(100000):
+            file.write(chunk)
+        file.close()
+        
+        #flatten the multi-order fits file into single-order
+        singleorder_file_name = obs_time_dir+'flattened_multiorder_fits_'+superevent_id+'.fits'
+        os.system('ligo-skymap-flatten '+str(multiorder_file_name)+' '+singleorder_file_name+' --nside 256')
+        
+        #get the skymap and header of the flattened, single-order fits file
+        skymap,header = hp.read_map(singleorder_file_name, h=True, verbose=False)
+        
+        
+        #plot the sky-localization from the flattened, single-order fits file
+        os.system("ligo-skymap-plot %s -o %s" % (singleorder_file_name, obs_time_dir+"fits_plotted.png"))
+
+
+        # Print and save some values from the FITS header.
+        header = dict(header)
+        obs_time = Time(header['DATE-OBS'],format='isot',scale='utc')
+        time = Time.now()
+        dist = str(header['DISTMEAN']) + ' +/- ' + str(header['DISTSTD'])
+        header['id'] = superevent_id
+
+
+        
+        
+        
         
         # Making a pie chart of the type of event for the email
         noise_or_terrestrial = 'Terrestrial'
@@ -154,30 +149,30 @@ def process_fits(fits_file, alert_message = None):
             if val >= 0:
                 sizes.append(val)
                 labels.append(label)
-        
-        
         #labels = ['%s (%.1f %%)'%(lab,pct) for lab,pct in zip(labels,sizes)]
         fig1, ax1 = plt.subplots()
         patches,texts = ax1.pie(sizes, startangle=90)
         ax1.legend(patches, labels, loc="best")
         ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
         plt.savefig(obs_time_dir+'piechart.png')
+        
+        #if it's not at least 75% a BNS signal, ignore it.
+        if sizes[1]/(sizes[0]+sizes[1]+sizes[2]+sizes[3]) < 0.75:
+            return
 
         
+        
+        
         #find probabilities and list of galaxies visible to HET
-        timetill90, m, visible_mask, never_visible_mask = prob_observable(skymap, header, time, savedir = obs_time_dir, plot=True)
+        timetill90, m, frac_visible = prob_observable(skymap, header, time, savedir = obs_time_dir, plot=True)
+
+        print("Two-dimensionally, percentage of pixels visible to HET: "+str(frac_visible*100)+"%")
 
         alert_message['skymap_fits'] = singleorder_file_name
         alert_message['skymap_array'] = m
-        alert_message['visible_mask'] = visible_mask
-        alert_message['never_visible_mask'] = never_visible_mask
-        
-        #print("In alert main, m at never visible: "+str(m[visible_mask]))
-        #print("In alert main, m at never visible: "+str(m[never_visible_mask]))
-        
         
         #if False:
-        if timetill90 ==-99:
+        if timetill90 ==-99 or frac_visible < 0.0:
             print("HET can't observe the source.")
             
             return
@@ -186,36 +181,52 @@ def process_fits(fits_file, alert_message = None):
             
             if len(cattop) == 0:
                 return
-                
-            #print("Source has a {:.1f}% chance of being observable now.".format(int(round(100 * prob))))
-            #print("Integrated probability over 24 hours (ignoring the sun) is {:.1f}%".format(int(round(100 * probfull))))
-            print('{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90))
-            #write_to_file(obs_time_dir+" observability.txt", "Source has a {:.1f}% chance of being observable now.".format(int(round(100 * prob))), append = False)
-            #write_to_file(obs_time_dir+" observability.txt", "Integrated probability over 24 hours (ignoring the sun) is {:.1f}%".format(int(round(100 * probfull))), append = True)
-            write_to_file(obs_time_dir+" observability.txt", '{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90), append = True)
-            
+            print('{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90)+"\nPercentage of visible pixels to HET: "+str(round(frac_visible*100, 3))+"%")
+            write_to_file(obs_time_dir+" observability.txt", '{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90)+"\nPercentage of visible pixels to HET: "+str(round(frac_visible*100, 3))+"%", append = True)
             mincontour = get_LST.get_LST(savedir = obs_time_dir,targf = obs_time_dir+'HET_Visible_Galaxies_prob_list.dat')
             
             
             
-            email_body = 'A Neutron Star Merger has been detected by LIGO.\n{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90)+"\nI have attached a figure here, showing the 90% contour of the sky localization where LIGO found a merger. The portion in bright green is not visible to HET because of declination limitations or because of sun constraints. The portion in the dimmer blue-green is visible to HET tonight. \n\nPlease join this zoom call: https://us06web.zoom.us/j/87536495694"
-            email(contact_list_file_loc = contact_list_file_loc, subject='[TEST, Can Safely Disregard!] LIGHETR Alert: NS Merger Detected', body = email_body, files_to_attach = [obs_time_dir+"HET_Full_Visibility.pdf"], people_to_contact = people_to_contact)
+            #sending emails out to everybody about the alert.
+            email_subject = 'LIGHETR Alert: NS Merger Detected'
+            email_body = 'A Neutron Star Merger has been detected by LIGO.\n{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90)+"\nI have attached a figure here, showing the 90% contour of the sky localization where LIGO found a merger. The portion in bright green is not visible to HET because of declination limitations or because of sun constraints. The portion in the dimmer blue-green is visible to HET tonight. The percentage of pixels that are visible to HET is "+str(round(frac_visible*100, 3))+"% \n\nPlease join this zoom call: https://us06web.zoom.us/j/87536495694"
+            if test_event:
+                email_subject = '[TEST, Can Safely Disregard!] '+email_subject
+                email_body = '[TEST EVENT!]' + email_body
+                
+                
+            email(contact_list_file_loc = contact_list_file_loc, subject=email_subject, body = email_body, files_to_attach = [obs_time_dir+"HET_Full_Visibility.pdf"], people_to_contact = people_to_contact)
             
             
+            #calling people
             calling_dict = get_caller_list(contact_list_file_loc)
+            message_to_say = 'NS Event Detected. Check email for information.'
+            if test_event:
+                message_to_say = 'This is a Test Alert. ' + message_to_say
+            call_people(calling_dict = calling_dict, people_to_contact = people_to_contact, message_to_say = message_to_say)
             
+            
+            
+            #sending phaseII file out to astronomer at HET
             make_phaseii.make_phaseii(lstfile = obs_time_dir+'LSTs_Visible.out', savedir = obs_time_dir)
             
-            email_body = '[TEST, Can Safely Disregard!] Attached is a phase submission file to HET with the list of galaxies we wish to observe, along with a file with LSTs of when they are visible.\nThanks for your help! \n\nZoom call: https://us06web.zoom.us/j/87536495694'
-            #email(contact_list_file_loc = contact_list_file_loc, subject='LIGHETR Alert: NS Merger Detected', body = email_body, files_to_attach = [obs_time_dir+"submission_to_HET.tsl", obs_time_dir+"LSTs_Visible.pdf"], people_to_contact = ['astronomer@het.as.utexas.edu'])
+            email_body = 'Attached is a phase ii submission file to HET with the list of galaxies we wish to observe, along with a file with LSTs of when they are visible.\nThanks for your help! \n\nZoom call: https://us06web.zoom.us/j/87536495694'
+            subject='LIGHETR Alert: NS Merger Detected'
+            
+            if test_event:
+                email_body = '[TEST, Can Safely Disregard!] ' + email_body
+                subject = '[TEST, Can Safely Disregard!] ' + subject
+                
+            email(contact_list_file_loc = contact_list_file_loc, subject = subject, body = email_body, files_to_attach = [obs_time_dir+"submission_to_HET.tsl", obs_time_dir+"LSTs_Visible.pdf"], people_to_contact = ['HET'])
             
             
-            #call_people(calling_dict = calling_dict, people_to_contact = people_to_contact, message_to_say = 'NS Event Detected. Check email for information.')
+            
             
             
             
 ###########Things start here####################
 contact_list_file_loc = 'contact_only_HET_BNS.json'
+people_to_contact = ["Karthik", "Srisurya"]
 people_to_contact = []
 
 

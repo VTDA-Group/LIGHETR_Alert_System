@@ -2,6 +2,9 @@ import numpy as np
 import sys
 from astropy import units as u
 from astropy.coordinates import SkyCoord
+
+
+
 def make_phaseii(lstfile, savedir = ''):
     common = {
                 'PROGRAM':'HET23-2-400',
@@ -14,10 +17,11 @@ def make_phaseii(lstfile, savedir = ''):
                 'SEEING': '3.0',
                 'SKYTRANS': 'S',
                 'SKYCALS': 'Y',
-                'FLUX': 'Y',
                 'PRI':'0',
                 'SETUPMETHOD':'DirectGuider',
                 'DITHER':'Y',
+                'PMRA':'0',
+                'PMDEC':'0',
                 'COMMENT':'"Usual Dither, look for new object in target IFU"',
                 }
     GraceID = lstfile.split('_')[1].split('.')[0]
@@ -34,8 +38,50 @@ def make_phaseii(lstfile, savedir = ''):
                 dtype=float)* u.degree, frame='icrs')
         c = c.to_string('hmsdms')
         for i,target in enumerate(targets):
-            ra = c[i].split(' ')[0].replace('h',':').replace('m',':').replace('s','')
-            dec = c[i].split(' ')[1].replace('d',':').replace('m',':').replace('s','')
+            print("c: "+str(c[i]))
+            
+            #process ra into format:
+            ra = c[i].split(' ')[0]
+            hour = "{:2.0f}".format(float(ra[:ra.index('h')]))
+            if hour[0] == ' ':
+                print("hour was "+str(hour))
+                hour = '0'+hour[1:]
+                print("hour is now: "+str(hour))
+            min = "{:2.0f}".format(float(ra[ra.index('h')+1:ra.index('m')]))
+            print("min: "+str(min))
+            if min[0] == ' ':
+                min = '0'+min[1:]
+                print("min is now: "+str(min))
+            sec = "{:2.2f}".format(float(ra[ra.index('m')+1:ra.index('s')]))
+            if sec[0] == ' ':
+                sec = '0'+sec[1:]
+                print("sec is now: "+str(sec))
+            if len(sec) == 4:
+                sec = '0'+sec
+            ra = hour+":"+min+":"+sec
+            print("ra: "+str(ra))
+            
+            #processing dec into format
+            dec = c[i].split(' ')[1]
+            
+            pos_neg = dec[0]
+            print("posneg: "+str(pos_neg))
+            deg = "{:2.0f}".format(float(dec[1:dec.index('d')]))
+            if deg[0] == ' ':
+                deg='0'+deg[1:]
+                print("deg is now: "+str(deg))
+            min = "{:2.0f}".format(float(dec[dec.index('d')+1:dec.index('m')]))
+            print("min: "+str(min))
+            if min[0] == ' ':
+                min='0'+min[1:]
+                print("min is now: "+str(min))
+            sec = "{:2.2f}".format(float(dec[dec.index('m')+1:dec.index('s')]))
+            if sec[0] == ' ':
+                sec = '0'+sec[1:]
+            if len(sec) == 4:
+                sec = '0'+sec
+            dec = pos_neg+deg+":"+min+":"+sec
+            print("dec: "+str(dec))
             f.write('Target{}\t{}\t{}\t{}\n'.format(target[0],ra,dec,str(int(target[0]))))
 def main():
     make_phaseii(sys.argv[1])

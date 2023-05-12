@@ -244,7 +244,7 @@ def prob_observable(m, header, time, savedir, plot = True):
 
         #if the region doesn't intersect HET at all
         if len(np.intersect1d(p90i,hetfullpix)) == 0:
-            return  -99, 0, 0, 0
+            return  -99, 0, 0
         hetedge = np.loadtxt('hetedge.dat')
         hetedgef = lambda x: np.interp(x,hetedge[:,0],hetedge[:,1])
         y = theta90HET*180/np.pi #DEC SKYMAP
@@ -259,10 +259,10 @@ def prob_observable(m, header, time, savedir, plot = True):
 
         if timetilldark == 0:
             if wsecs > timetillbright.value:
-                return  -99, 0, 0, 0
+                return  -99, 0, 0
         else:
             if wsecs > nightime.value:
-                return  -99, 0, 0, 0
+                return  -99, 0, 0
         timetill90 = (wsecs+timetilldark.value)/3600
     elif timetilldark.value > 0:
         timetill90 = timetilldark.value/3600
@@ -311,10 +311,13 @@ def prob_observable(m, header, time, savedir, plot = True):
     
     never_visible_mask = np.where(mplot == 0.4)[0]
     mplot[never_visible_mask] = 0.7
+    visible_mask = np.where(mplot == 0.5)[0]
+    
+    frac_visible = len(visible_mask)/(len(never_visible_mask) + len(visible_mask))
     
     
     m[never_visible_mask] = 0.0
-    visible_mask = np.where(mplot == 0.5)[0]
+    
     
     
         
@@ -350,7 +353,7 @@ def prob_observable(m, header, time, savedir, plot = True):
     
     
     
-    return timetill90, m, visible_mask, never_visible_mask
+    return timetill90, m, frac_visible
 
 def main():
         skymap, header = hp.read_map(sys.argv[1],
