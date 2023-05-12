@@ -54,11 +54,6 @@ def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nsid
     '''
     This will take a pandas-read in csv file, and will return a ordered list of galaxies within that catalog that are ordered by probability map
     '''
-    
-    #print("in probability index, probabilty of never viisble mask: "+str(probability[never_visible_mask]))
-    
-    #print("in probability index, probabilty of visible mask: "+str(probability[visible_mask]))
-    
     theta = 0.5*np.pi - cat['DEJ2000']*np.pi/180
     theta = np.asarray([float(i) for i in theta])
     phi = cat['RAJ2000']*np.pi/180
@@ -68,57 +63,37 @@ def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nsid
 
     ipix = hp.ang2pix(nside, theta, phi)
     pix = visible_mask
-    cls = cls[ipix]
-    dist = cat['dist_Mpc'] #catalog galaxy distances in megaparsec
+    
+
     
     
-    print("probability at ipix: "+str(probability[ipix]))
-    print("sum of probability in ipix: "+str(probability[ipix].sum()))
+    #accounting for probability distribution along the sky
     pixel_log_prob = np.log(probability[ipix])
-    print("pixel_log_prob: "+str(pixel_log_prob))
-    gg = np.asarray(pixel_log_prob)
-    print("indices where pixel log prob is not -inf: "+str(len(gg[np.where(gg > -np.inf)])))
     
-    
-    print("dist: "+str(dist))
-    print("distmu: "+str(distmu[ipix]))
-    print("distsigma: "+str(distsigma[ipix]))
-    print("distnorm: "+str(distnorm[ipix]))
-    
-    
+    #accounting for distance of galaxies and distance localization from LIGO
+    dist = cat['dist_Mpc'] #catalog galaxy distances in megaparsec
     c_pdf = conditional_pdf(dist,distmu[ipix],distsigma[ipix],distnorm[ipix]).tolist()
-    #print("c_pdf: "+str(c_pdf))
     distance_log_prob = np.log(c_pdf)
     
-    print("distance log prob: "+str(distance_log_prob))
+    
+    #accounting for mass of galaxies
+    stellar_mass = np.asarray(cat['M*'])
 
-    logdp_dV = pixel_log_prob + distance_log_prob - np.log(pixarea)
-    #logdp_dV = pixel_log_prob - np.log(pixarea)
+    #getting probability density by accounting for distance, galaxy stellar mass, and sky location
+    logdp_dV = pixel_log_prob + distance_log_prob + np.log(stellar_mass) - np.log(pixarea)
+    #logdp_dV = pixel_log_prob + distance_log_prob - np.log(pixarea)
     
     
+    
+    cls = cls[ipix]
     #cutting to select only 90 % confidence in position
     cattop = cat[cls<90]
     logdp_dV= logdp_dV[cls<90]
-    stellar_mass = cat['M*']
-    stellar_mass = stellar_mass/stellar_mass.sum()
-    #s_lumB = 10**(-0.4*cat1['B_Abs'][cls>90])
-    #s_lumB = s_lumB/s_lumB.sum()
     cls = cls[cls<90]
-    #only using K for now
-    #logdp_dV = np.log(stellar_mass) + logdp_dV
-    #print("logdp_dV: "+str(logdp_dV))
     #Now working only with event with overall probability 99% lower than the most probable
-    print("logdp_dv is : "+str(type(logdp_dV)))
-    print("logdp_dV: "+str(logdp_dV))
     
     gg = np.where((logdp_dV is not np.nan) & (logdp_dV-np.max(logdp_dV) > np.log(1/100)))
-    
-    #top99i = gg[0]
     top99i = logdp_dV-np.max(logdp_dV) > np.log(1/1000)
-    #top99i = logdp_dV[gg]
-    
-
-    print("top99i: "+str(top99i))
 
     cattop = cattop[top99i]
     logdp_dV = logdp_dV[top99i]
@@ -166,7 +141,7 @@ def write_catalog(params, savedir=''):
     contour = Column(name='contour',data = cls)
     Nvis = Column(name='Nvis',data=np.ones(len(cattop)))
     cattop.add_columns([index,logprob,exptime,Nvis,contour])
-    ascii.write(cattop['index','RAJ2000','DEJ2000','exptime','Nvis','LogProb','contour'], savedir+'HET_Visible_Galaxies_prob_list.dat', overwrite=True)
+    ascii.write(cattop['index','RAJ2000','DEJ2000','dist_Mpc','exptime','Nvis','LogProb','contour'], savedir+'HET_Visible_Galaxies_prob_list.dat', overwrite=True)
     
     
     return cattop,logptop

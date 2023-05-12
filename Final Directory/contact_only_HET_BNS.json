@@ -2,18 +2,23 @@
     "caller_list":{
         "Kaylee":"+17863973538",
         "Karthik":"+16789006318",
-        "Ashley": "+17726438132"
-    },
-    "texter_list":{
-        "Kaylee":"+17863973538",
-        "Karthik":"+16789006318",
-        "Ashley": "+17726438132"
+        "Ashley": "+17726438132",
+        "Karl": "+15125905206",
+        "Justen": "+19524863043",
+        "Aaron":"+15125450730",
+        "Craig":"+15127314314"
     },
     "email_list":{
         "Karthik":"yadavallikarthik99@gmail.com",
         "Srisurya":"s.karthik.yadavalli@psu.edu",
         "Ashley": "vav5084@psu.edu",
-        "Kaylee":"kdesoto@psu.edu"
+        "Kaylee":"kdesoto@psu.edu",
+        "Steven":"steven.janowiecki@gmail.com",
+        "HET":"astronomer@het.as.utexas.edu",
+        "Karl":"karl_gebhardt@yahoo.com",
+        "Justen":"justen.pautzke@utexas.edu",
+        "Aaron":"aaron.zimmerman@utexas.edu",
+        "Craig":"wheel@astro.as.utexas.edu"
         
     }
 }

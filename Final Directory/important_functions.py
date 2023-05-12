@@ -29,9 +29,6 @@ def send_email(email_sender, email_password, all_email_recipients, files, subjec
     
     for recipients in all_email_recipients:
         
-        if len(recipients) < 3:
-            continue
-        
         em = EmailMessage()
         em['From'] = email_sender
         em['To'] = recipients

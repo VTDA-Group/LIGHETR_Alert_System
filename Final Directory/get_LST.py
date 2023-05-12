@@ -21,8 +21,8 @@ obs_plot = True
 def get_LST(targf = 'galaxies2MASS.dat', savedir=''):
     GraceID = targf.split('_')[1].split('.')[0]
     #trimester year and number
-    c_y = 2019
-    c_t = 1
+    c_y = 2023
+    c_t = 2
 
     #####----------------------------#####
     #NOTE: only works for 2019-1 right now, with HETDEX data included.
@@ -150,10 +150,11 @@ def get_LST(targf = 'galaxies2MASS.dat', savedir=''):
     targ_id = targs.columns[0].data
     targ_ra = targs.columns[1].data
     targ_dec = targs.columns[2].data
-    targ_exptime = targs.columns[3].data
-    targ_nvis = targs.columns[4].data
-    targ_logprob = targs.columns[5].data
-    targ_contour = targs.columns[6].data
+    targ_dist = targs.columns[3].data
+    targ_exptime = targs.columns[4].data
+    targ_nvis = targs.columns[5].data
+    targ_logprob = targs.columns[6].data
+    targ_contour = targs.columns[7].data
 
     #read in HET observability data file
     hetf = HET_track
@@ -343,9 +344,10 @@ def get_LST(targf = 'galaxies2MASS.dat', savedir=''):
         if (c_t==3): dolab3(fig)
 
     with open(savedir+'LSTs_%s.out'%GraceID,'w') as f:
-        f.write("ID RA DEC LST1_start LST1_stop LST2_start LST2_stop Nvis Exptime Prob(Norm) Contour\n")
-        for ra,dec,t1,t2,t3,t4,i,nv,texp,tprob,cont in zip(targ_ra, targ_dec, LST1_start, LST1_stop, LST2_start, LST2_stop, targ_id, targ_nvis,targ_exptime, probnorm,targ_contour):
+        f.write("ID RA DEC LST1_start LST1_stop LST2_start LST2_stop Nvis Exptime Prob(Norm) Contour Dist(Mpc)\n")
+        for ra,dec,t1,t2,t3,t4,i,nv,texp,tprob,cont,dist in zip(targ_ra, targ_dec, LST1_start, LST1_stop, LST2_start, LST2_stop, targ_id, targ_nvis,targ_exptime, probnorm,targ_contour, targ_dist):
             i = i+1 #to match the tsl convention
+            
             #if valid, add first trajectory for as many visits as needed
             if obs_plot:
                 galtxt = "{} ({:.1f})".format(i, cont)
@@ -387,7 +389,7 @@ def get_LST(targf = 'galaxies2MASS.dat', savedir=''):
                     a.plot(np.linspace(t3,t4,2), [tprob,tprob],color='blue',lw=1)
                     a.text(t4+0.1, tprob,galtxt,color='black', fontname='Arial',fontsize=10)
                     #print("  track 2 good")
-            outp = "%i %.6f %.6f %.6f %.6f %.6f %.6f %i %i %.6f %.1f\n"%(i,ra,dec,t1,t2,t3,t4,nv,texp,tprob,cont) 
+            outp = str(i)+" %.6f %.6f %.6f %.6f %.6f %.6f %i %i %.6f %.1f %.6f\n"%(ra,dec,t1,t2,t3,t4,nv,texp,tprob,cont,dist)
             f.write(outp)
 
 

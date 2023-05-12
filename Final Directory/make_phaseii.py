@@ -36,7 +36,7 @@ def make_phaseii(lstfile, savedir = ''):
         for i,target in enumerate(targets):
             ra = c[i].split(' ')[0].replace('h',':').replace('m',':').replace('s','')
             dec = c[i].split(' ')[1].replace('d',':').replace('m',':').replace('s','')
-            f.write('GW{}\t{}\t{}\t{}\n'.format(target[1]+target[2],ra,dec,str(int(target[0]))))
+            f.write('Target{}\t{}\t{}\t{}\n'.format(target[0],ra,dec,str(int(target[0]))))
 def main():
     make_phaseii(sys.argv[1])
 if __name__=='__main__':

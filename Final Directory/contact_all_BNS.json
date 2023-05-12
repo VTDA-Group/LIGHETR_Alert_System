@@ -1,23 +1,15 @@
 {
     "caller_list":{
-        "Kaylee":"+17863973538",
         "Karthik":"+16789006318",
         "Ashley": "+17726438132",
-        "Karl": "512-590-5206",
-        "Justin": "9524863043"
-    },
-    "texter_list":{
-        "Kaylee":"+17863973538",
-        "Karthik":"+16789006318",
-        "Ashley": "+17726438132",
-        "Karl": "512-590-5206",
-        "Justin": "9524863043",
-        "Oleg":"5056958489",
-        
+        "Oleg":"+15056958489"
     },
         "email_list":{
         "Karthik":"yadavallikarthik99@gmail.com",
         "Karthik_PSU":"s.karthik.yadavalli@psu.edu",
-        "Ashley": "vav5084@psu.edu"
+        "SKY":"yadavallio@gmail.com",
+        "sKy":"sky5265@psu.edu",
+        "Ashley": "vav5084@psu.edu",
+        "Oleg":"o.korobkin@gmail.com"
     }
 }

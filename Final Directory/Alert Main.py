@@ -185,8 +185,6 @@ def process_fits(fits_file, alert_message = None):
             cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir)
             
             if len(cattop) == 0:
-                print("Only visible during the day, I think")
-                write_to_file(obs_time_dir+" observability.txt", "This object is only visible during the day, I think.")
                 return
                 
             #print("Source has a {:.1f}% chance of being observable now.".format(int(round(100 * prob))))
@@ -200,26 +198,25 @@ def process_fits(fits_file, alert_message = None):
             
             
             
-            print("people to contact: "+str(people_to_contact))
-            
-            
-            
-            email_body = 'A Neutron Star Merger has been detected by LIGO.\n{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90)+"\n\nPlease join this zoom call: https://us06web.zoom.us/j/87536495694"
-            email(contact_list_file_loc = contact_list_file_loc, subject='LIGHETR Alert: NS Merger Detected', body = email_body, files_to_attach = [obs_time_dir+"HET_Full_Visibility.pdf"], people_to_contact = people_to_contact)
+            email_body = 'A Neutron Star Merger has been detected by LIGO.\n{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90)+"\nI have attached a figure here, showing the 90% contour of the sky localization where LIGO found a merger. The portion in bright green is not visible to HET because of declination limitations or because of sun constraints. The portion in the dimmer blue-green is visible to HET tonight. \n\nPlease join this zoom call: https://us06web.zoom.us/j/87536495694"
+            email(contact_list_file_loc = contact_list_file_loc, subject='[TEST, Can Safely Disregard!] LIGHETR Alert: NS Merger Detected', body = email_body, files_to_attach = [obs_time_dir+"HET_Full_Visibility.pdf"], people_to_contact = people_to_contact)
             
             
             calling_dict = get_caller_list(contact_list_file_loc)
-            texting_dict = get_texter_list(contact_list_file_loc)
             
             make_phaseii.make_phaseii(lstfile = obs_time_dir+'LSTs_Visible.out', savedir = obs_time_dir)
             
-            call_people(calling_dict = calling_dict, people_to_contact = people_to_contact, message_to_say = 'NS Event Detected. Check email for information.')
+            email_body = '[TEST, Can Safely Disregard!] Attached is a phase submission file to HET with the list of galaxies we wish to observe, along with a file with LSTs of when they are visible.\nThanks for your help! \n\nZoom call: https://us06web.zoom.us/j/87536495694'
+            #email(contact_list_file_loc = contact_list_file_loc, subject='LIGHETR Alert: NS Merger Detected', body = email_body, files_to_attach = [obs_time_dir+"submission_to_HET.tsl", obs_time_dir+"LSTs_Visible.pdf"], people_to_contact = ['astronomer@het.as.utexas.edu'])
+            
+            
+            #call_people(calling_dict = calling_dict, people_to_contact = people_to_contact, message_to_say = 'NS Event Detected. Check email for information.')
             
             
             
 ###########Things start here####################
 contact_list_file_loc = 'contact_only_HET_BNS.json'
-people_to_contact = ['Karthik', 'Srisurya']
+people_to_contact = []
 
 
 #stream_start_pos = 1600
