@@ -54,6 +54,7 @@ def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nsid
     '''
     This will take a pandas-read in csv file, and will return a ordered list of galaxies within that catalog that are ordered by probability map
     '''
+    
     theta = 0.5*np.pi - cat['DEJ2000']*np.pi/180
     theta = np.asarray([float(i) for i in theta])
     phi = cat['RAJ2000']*np.pi/180

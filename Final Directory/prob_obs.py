@@ -147,8 +147,6 @@ def prob_observable(m, header, time, savedir, plot = True):
     nside = hp.npix2nside(npix)
 
     # Geodetic coordinates of MacDonald Obs
-
-
     hetpupil = np.loadtxt('hetpix.dat')
     hetfullpix = hp.query_strip(nside, minhetdec_rad, \
                             maxhetdec_rad)
@@ -293,7 +291,7 @@ def prob_observable(m, header, time, savedir, plot = True):
     mplot[altaz.alt < 0] = 0.99 #salmon-region below the horizon
     
     
-    mplot[newpixp] = 0.2 #purple, color of HET pixels
+    mplot[newpixp] = 0.2 #black, color of HET pixels
     mplot[p90i] = 0.4 #blue, location of 90% region contours
     #for i in range(24*6):
     delta_time = np.linspace(0, 24, 24)*u.hour
@@ -340,13 +338,11 @@ def prob_observable(m, header, time, savedir, plot = True):
     
 
     
-
+    '''
     mask_arraynow = np.zeros(len(m), dtype=int)
     mask_arraynow[newpixp] = 1
     mask_arraynow *= (altaz.secz <= 2.5)&(sun_altaz.alt <= -18*u.deg)
-
-    
-    m[np.setdiff1d(np.arange(len(m)),np.intersect1d(p90i,hetfullpix),assume_unique=True)]=m.min()
+    m[np.setdiff1d(np.arange(len(m)),np.intersect1d(p90i,hetfullpix),assume_unique=True)]=m.min()'''
     
 
     # Done!

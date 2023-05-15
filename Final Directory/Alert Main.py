@@ -90,11 +90,11 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
         superevent_id = alert_message['superevent_id']
         if superevent_id[0] == 'T' or superevent_id[0] == 'M':
             test_event = True
-        if skip_test_alerts and test_event:
+        if skip_test_alerts and test_event: #if we want to ignore test events, and this is a test event, ignore it.
             return
         
         
-        #so we've found a time that we want to look at. I'll make a directory for this time.
+        #so we've found an alert that we want to look at. I'll make a directory for this time.
         obs_time_dir = str(alert_time.mjd)+"/"
         
         if not os.path.exists(obs_time_dir):
@@ -163,7 +163,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
         
         
         
-        #find probabilities and list of galaxies visible to HET
+        #find pixels in the 90% confidence region that will be visible to HET in the next 24 hours
         timetill90, m, frac_visible = prob_observable(skymap, header, time, savedir = obs_time_dir, plot=True)
 
         print("Two-dimensionally, percentage of pixels visible to HET: "+str(frac_visible*100)+"%")
@@ -172,15 +172,16 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
         alert_message['skymap_array'] = m
         
         #if False:
-        if timetill90 ==-99 or frac_visible < 0.0:
+        if timetill90 ==-99 or frac_visible <= 0.0:
             print("HET can't observe the source.")
-            
+            write_to_file(obs_time_dir+" observability.txt", "HET can't observe this source.")
             return
         else:
             cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir)
             
             if len(cattop) == 0:
                 return
+                
             print('{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90)+"\nPercentage of visible pixels to HET: "+str(round(frac_visible*100, 3))+"%")
             write_to_file(obs_time_dir+" observability.txt", '{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90)+"\nPercentage of visible pixels to HET: "+str(round(frac_visible*100, 3))+"%", append = True)
             mincontour = get_LST.get_LST(savedir = obs_time_dir,targf = obs_time_dir+'HET_Visible_Galaxies_prob_list.dat')
