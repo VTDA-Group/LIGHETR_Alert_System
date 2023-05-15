@@ -218,7 +218,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
                 email_body = '[TEST, Can Safely Disregard!] ' + email_body
                 subject = '[TEST, Can Safely Disregard!] ' + subject
                 
-            email(contact_list_file_loc = contact_list_file_loc, subject = subject, body = email_body, files_to_attach = [obs_time_dir+"submission_to_HET.tsl", obs_time_dir+"LSTs_Visible.pdf"], people_to_contact = ['HET'])
+            #email(contact_list_file_loc = contact_list_file_loc, subject = subject, body = email_body, files_to_attach = [obs_time_dir+"submission_to_HET.tsl", obs_time_dir+"LSTs_Visible.pdf"], people_to_contact = ['HET'])
             
             
             
@@ -227,8 +227,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
             
 ###########Things start here####################
 contact_list_file_loc = 'contact_only_HET_BNS.json'
-people_to_contact = ["Karthik", "Srisurya"]
-people_to_contact = []
+people_to_contact = ["Karthik", "Srisurya", "Karl", "Steven"]
 
 
 #stream_start_pos = 1600
