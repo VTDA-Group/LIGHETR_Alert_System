@@ -5,6 +5,7 @@ import ssl
 import smtplib
 import mimetypes
 import healpy as hp
+import datetime
 
 
 
@@ -26,7 +27,8 @@ def send_email(email_sender, email_password, all_email_recipients, files, subjec
     everyone = " , ".join(all_email_recipients)
     subject = subject
     body = body+"\nList of all Recipients of this email: "+str(everyone)
-    
+    now = datetime.datetime.now()
+    body = body + "\nAttempted send at time: "+str(now)
     for recipients in all_email_recipients:
         
         print("recipients: "+str(recipients))
