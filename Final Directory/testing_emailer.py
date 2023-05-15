@@ -27,6 +27,9 @@ def email(contact_list_file_loc = 'contact_all_BNS.json', subject = None, body =
     print("people to contact: "+str(people_to_contact))
     all_email_recipients = []
     for person in people_to_contact:
+        if person not in email_list.keys():
+            print("No email for person: "+str(person))
+            continue
         address = email_list[person]
         all_email_recipients.append(address)
     
