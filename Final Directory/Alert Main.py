@@ -204,7 +204,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
             message_to_say = 'NS Event Detected. Check email for information.'
             if test_event:
                 message_to_say = 'This is a Test Alert. ' + message_to_say
-            #call_people(calling_dict = calling_dict, people_to_contact = people_to_contact, message_to_say = message_to_say)
+            call_people(calling_dict = calling_dict, people_to_contact = people_to_contact, message_to_say = message_to_say)
             
             
             
@@ -218,7 +218,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
                 email_body = '[TEST, Can Safely Disregard!] ' + email_body
                 subject = '[TEST, Can Safely Disregard!] ' + subject
                 
-            #email(contact_list_file_loc = contact_list_file_loc, subject = subject, body = email_body, files_to_attach = [obs_time_dir+"submission_to_HET.tsl", obs_time_dir+"LSTs_Visible.pdf"], people_to_contact = ['HET'])
+            email(contact_list_file_loc = contact_list_file_loc, subject = subject, body = email_body, files_to_attach = [obs_time_dir+"submission_to_HET.tsl", obs_time_dir+"LSTs_Visible.pdf"], people_to_contact = ['HET'])
             
             
             
@@ -227,8 +227,8 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
             
 ###########Things start here####################
 contact_list_file_loc = 'contact_only_HET_BNS.json'
-people_to_contact = ["Karthik", "Srisurya", "Karl", "Steven", "Kaylee", "Ashley", "Greg"]
-
+#people_to_contact = ["Karthik", "Srisurya", "Karl", "Steven", "Kaylee", "Ashley", "Greg"]
+people_to_contact = []
 
 #stream_start_pos = 1600
 stream_start_pos = StartPosition.EARLIEST
