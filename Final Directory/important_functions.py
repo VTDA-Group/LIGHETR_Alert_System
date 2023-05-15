@@ -21,7 +21,7 @@ def dial_numbers(numbers_list):
 
 def send_email(email_sender, email_password, all_email_recipients, files, subject, body):
     
-    print("Sending email, sender: "+str(email_sender)+" pass: "+str(email_password)+" recipients: "+str(all_email_recipients))
+    #print("Sending email, sender: "+str(email_sender)+" pass: "+str(email_password)+" recipients: "+str(all_email_recipients))
     
     everyone = " , ".join(all_email_recipients)
     subject = subject
@@ -51,10 +51,10 @@ def send_email(email_sender, email_password, all_email_recipients, files, subjec
             with open(path, 'rb') as fp:
                 em.add_attachment(fp.read(), maintype = maintype, subtype = subtype, filename = path)
 
-        '''
+        
         #sending email
         context = ssl.create_default_context()
 
         with smtplib.SMTP_SSL("smtp.gmail.com", 465, context = context) as smtp:
             smtp.login(email_sender, email_password)
-            smtp.sendmail(email_sender, recipients, em.as_string())'''
+            smtp.sendmail(email_sender, recipients, em.as_string())
