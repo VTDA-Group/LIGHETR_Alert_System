@@ -204,7 +204,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
             message_to_say = 'NS Event Detected. Check email for information.'
             if test_event:
                 message_to_say = 'This is a Test Alert. ' + message_to_say
-            call_people(calling_dict = calling_dict, people_to_contact = people_to_contact, message_to_say = message_to_say)
+            #call_people(calling_dict = calling_dict, people_to_contact = people_to_contact, message_to_say = message_to_say)
             
             
             
