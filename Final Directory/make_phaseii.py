@@ -38,7 +38,6 @@ def make_phaseii(lstfile, savedir = ''):
                 dtype=float)* u.degree, frame='icrs')
         c = c.to_string('hmsdms')
         for i,target in enumerate(targets):
-            print("c: "+str(c[i]))
             
             #process ra into format:
             ra = c[i].split(' ')[0]

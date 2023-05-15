@@ -29,34 +29,6 @@ def email(contact_list_file_loc = 'contact_all_BNS.json', subject = None, body =
     for person in people_to_contact:
         address = email_list[person]
         all_email_recipients.append(address)
-        if 'psu.edu' in address:
-            
-            psu_email_receivers+=str(email_list[person])+", "
-        elif 'utexas.edu' in address:
-            texas_email_recievers+=str(email_list[person])+', '
-        else:
-            non_academic_email_receivers+=str(email_list[person])+", "
-            
-    if psu_email_receivers[-2:] == ', ':
-        psu_email_receivers = psu_email_receivers[:-2]
-        
-    if non_academic_email_receivers[-2:] == ', ':
-        non_academic_email_receivers = non_academic_email_receivers[:-2]
-    
-    if texas_email_recievers[-2:] == ', ':
-        texas_email_recievers = texas_email_recievers[:-2]
-       
-    
-    for i in psu_email_receivers:
-        if len(i) > 0:
-            all_email_recipients.append(i)
-    for i in texas_email_recievers:
-        if len(i) > 0:
-            all_email_recipients.append(i)
-    for i in non_academic_email_receivers:
-        if len(i) > 0:
-            all_email_recipients.append(i)
-    
     
     print('all email recipients: '+str(all_email_recipients))
         
