@@ -24,8 +24,11 @@ def email(contact_list_file_loc = 'contact_all_BNS.json', subject = None, body =
         people_to_contact = email_list.keys()
     
     
+    print("people to contact: "+str(people_to_contact))
+    all_email_recipients = []
     for person in people_to_contact:
         address = email_list[person]
+        all_email_recipients.append(address)
         if 'psu.edu' in address:
             
             psu_email_receivers+=str(email_list[person])+", "
@@ -43,7 +46,6 @@ def email(contact_list_file_loc = 'contact_all_BNS.json', subject = None, body =
     if texas_email_recievers[-2:] == ', ':
         texas_email_recievers = texas_email_recievers[:-2]
        
-    all_email_recipients = []
     
     for i in psu_email_receivers:
         if len(i) > 0:
