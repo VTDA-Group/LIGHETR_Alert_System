@@ -227,7 +227,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
             
 ###########Things start here####################
 contact_list_file_loc = 'contact_only_HET_BNS.json'
-people_to_contact = ["Karthik", "Srisurya", "Karl", "Steven", "Kaylee", "Ashley"]
+people_to_contact = ["Karthik", "Srisurya", "Karl", "Steven", "Kaylee", "Ashley", "Greg"]
 
 
 #stream_start_pos = 1600
