@@ -199,10 +199,10 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
             
             #calling people
             calling_dict = get_caller_list(contact_list_file_loc)
-            message_to_say = 'Lie Go Gravitational Wave Neutron Star Event Detected. Check email for information.'
+            message_to_say = 'Lie Go Gravitational Wave Neutron Star Event Detected. Check email for information. '
             if test_event:
                 message_to_say = 'This is a Test Alert. ' + message_to_say
-            message_to_say = message_to_say * 30
+            message_to_say = message_to_say * 10
             call_people(calling_dict = calling_dict, people_to_contact = people_to_contact, message_to_say = message_to_say)
             
             
@@ -228,15 +228,15 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
             
 ###########Things start here####################
 contact_list_file_loc = 'contact_only_HET_BNS.json'
-people_to_contact = ["Karthik", "Srisurya"]
-#people_to_contact = []
+#people_to_contact = ["Karthik", "Srisurya", "HET"]
+people_to_contact = []
 
 #stream_start_pos = 1600
 stream_start_pos = StartPosition.EARLIEST
 #print("Starting stream at "+str(stream_start_pos))
-stream = Stream(start_at=stream_start_pos)
+#stream = Stream(start_at=stream_start_pos)
 
-#stream = Stream()
+stream = Stream()
 
 num_messages = 0
 
