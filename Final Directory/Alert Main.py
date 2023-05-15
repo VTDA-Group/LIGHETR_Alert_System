@@ -156,8 +156,8 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
         ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
         plt.savefig(obs_time_dir+'piechart.png')
         
-        #if it's not at least 75% a BNS signal, ignore it.
-        if sizes[1]/(sizes[0]+sizes[1]+sizes[2]+sizes[3]) < 0.75:
+        #if it's not at least 30% a (BNS or NSBH) signal, ignore it.
+        if (sizes[1]+sizes[2])/(sizes[0]+sizes[1]+sizes[2]+sizes[3]) < 0.3:
             return
 
         
