@@ -229,14 +229,14 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
 ###########Things start here####################
 contact_list_file_loc = 'contact_only_HET_BNS.json'
 #people_to_contact = ["Karthik", "Srisurya", "HET"]
-people_to_contact = []
+people_to_contact = ["Karthik","Craig"]
 
 #stream_start_pos = 1600
 stream_start_pos = StartPosition.EARLIEST
 #print("Starting stream at "+str(stream_start_pos))
-#stream = Stream(start_at=stream_start_pos)
+stream = Stream(start_at=stream_start_pos)
 
-stream = Stream()
+#stream = Stream()
 
 num_messages = 0
 
