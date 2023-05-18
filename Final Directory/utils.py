@@ -66,9 +66,12 @@ def distribute_pixel_prob(pixel_probs, pixel_idxs, cat, distinfo):
     return pixel_probs * normed_probs # so all probs sum to pixel_prob
     
     
-def get_gal_idxs_flattened(theta, phi):
+def get_gal_idxs_flattened(theta, phi, nside):
     """
     From list of thetas and phis, gets galaxy indices associated with each pixel.
+    
+    Returned as a 2d binary matrix, where each row is a pixel, and each column is a galaxy.
+    Each cell is 1 if that galaxy is in that pixel, and 0 otherwise.
     
     Parameters
     ----------
@@ -76,8 +79,22 @@ def get_gal_idxs_flattened(theta, phi):
         theta values in radians for galaxies
     phi : 1d numpy array
         phi values in radians for galaxies
+        
+    Returns
+    ----------
+    binary_matrix : 2d numpy array
+        1 if galaxy j is in pixel i, 0 otherwise
     """
-    pass
+    ipix = hp.ang2pix(nside, theta, phi)
+    unique_i, inverse_idxs = np.unique(ipix, return_inverse=True)
+    gal_idxs = np.arange(len(ipix))
+    
+    binary_matrix = np.zeros( (len(unique_i), len(ipix)) )
+    binary_matrix[inverse_idxs, gal_idxs] = 1
+    
+    return binary_matrix
+    
+    
     
     
     
