@@ -202,7 +202,7 @@ def process_fits_1(superevent_id, skip_test_alerts = False, test_event = False, 
         print("Two-dimensionally, percentage of pixels visible to HET: "+str(frac_visible_HET*100)+"%")
 
         alert_message['skymap_fits'] = singleorder_file_name
-        alert_message['skymap_array_HET'] = m
+        alert_message['skymap_array_HET'] = m_HET
         alert_message['skymap_array'] = skymap
         
         cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir, HET_Specific_constraints = False)
