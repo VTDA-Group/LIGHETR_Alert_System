@@ -17,8 +17,18 @@ from twilio_texter import *
 from testing_emailer import *
 import time as TIme
 import make_phaseii
+import urllib, json
+import urllib.request, json
+from bs4 import BeautifulSoup
+import requests
 
-recent_April = Time('2023-02-16T00:00:00.00')
+def find_files(url):
+
+    soup = BeautifulSoup(requests.get(url).text)
+
+    for a in soup.find_all('a'):
+        yield a['href']
+
 
 def write_to_file(file_loc, data_out, separator = ' ', headers=None, append=False):
     '''inputs: file_loc-location to which to write to, data_to_write-this is a 2d array that will be written to a file
@@ -44,6 +54,15 @@ def write_to_file(file_loc, data_out, separator = ' ', headers=None, append=Fals
             out.write("\n")
     out.close()
 
+def file_on_website_exists(file):
+
+    return False
+    '''
+    import requests
+    r = requests.head(file, allow_redirects = True)
+    if r.status_code == 200:
+        return True
+    return False'''
 
 def get_email_list(file_loc = 'contact_all_BNS.json'):
     f = open( file_loc , "rb" )
@@ -60,47 +79,54 @@ def get_texter_list(file_loc = 'contact_all_BNS.json'):
     jsonObject = json.load(f)
     return jsonObject['texter_list']
     
+    
+def process_fits_1(superevent_id, skip_test_alerts = False, test_event = False, fits_url = 'bayestar.multiorder.fits'):
+        
+        obs_time_dir = superevent_id+"/"
+        
+        print("inside process fits 2")
+        
+        
+        
+        
+        #print(data)
+        #print("data: " +str(data))
+        
+        
+        #get the alert json file
+        #get the real website where the json file may exist
+        
+        print("file existing: "+str(file_on_website_exists("https://gracedb.ligo.org/api/superevents/S230518h/files/S230518h-preliminary.json")))
+        
+        site = "https://gracedb.ligo.org/api/superevents/"+superevent_id+"/files/"
+        
+        #check if the prelim json exists
+        found_file = False
+        possible_filenames = ["preliminary", "update"]
+        for filename in possible_filenames:
+            file_to_try = site+superevent_id+"-"+filename+".json"
+            print("trying: "+str(file_to_try))
+            if file_on_website_exists(file_to_try):
+                found_file = True
+                url = "https://gracedb.ligo.org/api/superevents/"+superevent_id+"/files/"+superevent_id+"-"+str(filename)+".json"
 
-def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
-        '''
-        The format of these alerts is given in this website:
-        https://emfollow.docs.ligo.org/userguide/content.html
+        if not found_file:
+            url = "https://gracedb.ligo.org/api/superevents/"+superevent_id+"/files/"+superevent_id+"-preliminary.json"
+            print("Cannot automatically find the json file on the website. Will attempt the default: "+str(url))
         
-        So, the probabilities of BBH, BNS, and so on is located in:
-        alert_message['event']['classification']['BNS']
-        alert_message['event']['classification']['BBH']
-        alert_message['event']['classification']['NSBH']
-        alert_message['event']['classification']['Noise']
+        with urllib.request.urlopen(url) as url:
+            alert_message = json.load(url)
+                
         
-        it's unclear whether the key for noise will be either 'Noise' or 'Terrestrial', so I'll make the code flexible enough to use both
+        print("alert message: "+str(alert_message))
         
-        If you look at alert_message['superevent_id'], it will be [{T,M}]SYYMMDDabc. The first character can be either T or M. T means test, M means mock. Then, the S just means it's a superevent. Then you have the name of the event.
-        
-        '''
 
-        alert_time = alert_message['time_created']
-        
-        alert_time = Time(alert_time)
-        
-        if alert_time.jd < recent_April.jd:
-            return
-        
-        test_event = False #this value will be set to true if the event turns out to be a test/mock event
-        superevent_id = alert_message['superevent_id']
-        if superevent_id[0] == 'T' or superevent_id[0] == 'M':
-            test_event = True
-        if skip_test_alerts and test_event: #if we want to ignore test events, and this is a test event, ignore it.
-            return
-        
-        
-        #so we've found an alert that we want to look at. I'll make a directory for this time.
-        obs_time_dir = str(alert_time.mjd)+"/"
+        fits_url = 'https://gracedb.ligo.org/api/superevents/'+str(superevent_id)+'/files/'+fits_url
         
         if not os.path.exists(obs_time_dir):
             os.mkdir(obs_time_dir)
         
-        fits_url = 'https://gracedb.ligo.org/api/superevents/'+str(superevent_id)+'/files/bayestar.multiorder.fits'
-        
+
         
         #download the multi-order fits file from the fits_url file location
         url = fits_url
@@ -129,13 +155,10 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
         time = Time.now()
         dist = str(header['DISTMEAN']) + ' +/- ' + str(header['DISTSTD'])
         header['id'] = superevent_id
-
-
-        
-        
         
         
         # Making a pie chart of the type of event for the email
+        
         noise_or_terrestrial = 'Terrestrial'
         if noise_or_terrestrial not in  alert_message['event']['classification'].keys():
             noise_or_terrestrial = 'Noise'
@@ -158,7 +181,6 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
         #if it's not at least 30% a (BNS or NSBH) signal, ignore it.
         if (sizes[1]+sizes[2])/(sizes[0]+sizes[1]+sizes[2]+sizes[3]) < 0.3:
             return
-        
 
         
         
@@ -168,8 +190,8 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
 
         print("Two-dimensionally, percentage of pixels visible to HET: "+str(frac_visible*100)+"%")
 
-        alert_message['skymap_fits'] = singleorder_file_name
-        alert_message['skymap_array'] = m
+        #alert_message['skymap_fits'] = singleorder_file_name
+        #alert_message['skymap_array'] = m
         
         #if False:
         if timetill90 ==-99 or frac_visible <= 0.0:
@@ -221,16 +243,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
             if "HET" in people_to_contact:
 
     
-            	email(contact_list_file_loc = contact_list_file_loc, subject = subject, body = email_body, files_to_attach = [obs_time_dir+"submission_to_HET.tsl", obs_time_dir+"LSTs_Visible.pdf"], people_to_contact = ['HET'])
-            
-            
-
-
-
-
-
-
-            
+                email(contact_list_file_loc = contact_list_file_loc, subject = subject, body = email_body, files_to_attach = [obs_time_dir+"submission_to_HET.tsl", obs_time_dir+"LSTs_Visible.pdf"], people_to_contact = ['HET'])
             
             
 ###########Things start here####################
@@ -238,43 +251,8 @@ contact_list_file_loc = 'contact_only_HET_BNS.json'
 #people_to_contact = ["Karthik", "Srisurya", "HET"]
 people_to_contact = ["Karthik"]
 
-#stream_start_pos = 1600
-stream_start_pos = StartPosition.EARLIEST
-#print("Starting stream at "+str(stream_start_pos))
-stream = Stream(start_at=stream_start_pos)
+print("Running")
 
-#stream = Stream()
+process_fits_1(superevent_id = "S230518h")
 
-num_messages = 0
-
-print("Listening for Alerts from kafka")
-
-with stream.open("kafka://kafka.scimma.org/igwn.gwalert", "r") as s:
-    for message in s:
-        event = message.content[0]['event']
-        message_content = message.content[0]
-        alert_type = message_content['alert_type']
-        alert_time = message_content['time_created']
-        
-        alert_time = Time(alert_time)
-        
-        num_messages+=1
-        #if num_messages > 2:
-        #    sys.exit()
-        
-        # Is this from testing?
-        if alert_time.jd < recent_April.jd:
-            num_messages+=1
-            continue
-        
-                
-        skymap = None
-        if 'skymap' in message_content.keys():
-            skymap = message_content['skymap']
-        if event is not None and 'skymap' in event.keys():
-            skymap = event['skymap']
-
-        '''send that fits file into process_fits'''
-        if skymap is not None and event is not None:
-            print('Calling process_fits')
-            process_fits(fits_file = skymap, alert_message = message_content)
+print("did process fits 2")
