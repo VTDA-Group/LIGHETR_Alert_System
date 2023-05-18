@@ -10,8 +10,14 @@ import matplotlib.pyplot as plt
 import sys
 import os
 from astropy.time import TimeDelta
-maxhetdec = 74
-minhetdec = -12
+
+
+#maxhetdec = 74
+#minhetdec = -12
+
+
+maxhetdec = 90
+minhetdec = -25
 minhetdec_rad = (90-maxhetdec)*np.pi/180
 maxhetdec_rad = (90-minhetdec)*np.pi/180
 
@@ -80,7 +86,8 @@ def make_visibility_figure(savedir, time, m, plot = True):
     p90i_HET_visible = None
     
     if sun_altaz.alt < -18*u.deg:
-        p90i_HET_visible = np.intersect1d(p90i,newpix)
+        #p90i_HET_visible = np.intersect1d(p90i,newpix)
+        p90i_HET_visible = np.intersect1d(p90i,hetfullpix)
 
     
     if plot:
@@ -314,7 +321,8 @@ def prob_observable(m, header, time, savedir, plot = True):
     frac_visible = len(visible_mask)/(len(never_visible_mask) + len(visible_mask))
     
     
-    m[never_visible_mask] = 0.0
+    #m[never_visible_mask] = 0.0
+    m[mplot!=0.5] = 0.0
     
     
     

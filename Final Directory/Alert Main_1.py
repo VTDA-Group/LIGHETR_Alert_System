@@ -140,15 +140,15 @@ def process_fits_1(superevent_id, skip_test_alerts = False, test_event = False, 
         url = fits_url
         multiorder_file_name = obs_time_dir+'multiorder_fits_'+str(superevent_id)+'.fits'
         
-        req = requests.get(url)
+        '''req = requests.get(url)
         file = open(multiorder_file_name, 'wb')
         for chunk in req.iter_content(100000):
             file.write(chunk)
-        file.close()
+        file.close()'''
         
         #flatten the multi-order fits file into single-order
         singleorder_file_name = obs_time_dir+'flattened_multiorder_fits_'+superevent_id+'.fits'
-        os.system('ligo-skymap-flatten '+str(multiorder_file_name)+' '+singleorder_file_name+' --nside 256')
+        #os.system('ligo-skymap-flatten '+str(multiorder_file_name)+' '+singleorder_file_name+' --nside 256')
         
         #get the skymap and header of the flattened, single-order fits file
         skymap,header = hp.read_map(singleorder_file_name, h=True, verbose=False)
@@ -203,17 +203,18 @@ def process_fits_1(superevent_id, skip_test_alerts = False, test_event = False, 
 
         alert_message['skymap_fits'] = singleorder_file_name
         alert_message['skymap_array_HET'] = m_HET
-        alert_message['skymap_array'] = skymap
+        #alert_message['skymap_array'] = skymap
+        alert_message['skymap_array'] = m_HET
         
-        cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir, HET_Specific_constraints = False)
+        cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir, HET_specific_constraints = False)
         #if False:
-        if timetill90 ==-99 or frac_visible <= 0.0:
+        if timetill90_HET ==-99 or frac_visible_HET <= 0.0:
             print("HET can't observe the source.")
             write_to_file(obs_time_dir+" observability.txt", "HET can't observe this source.")
             return
         else:
             
-            cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir, HET_Specific_constraints = True)
+            cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir, HET_specific_constraints = True)
             if len(cattop) == 0:
                 return
                 

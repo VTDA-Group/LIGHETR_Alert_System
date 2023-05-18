@@ -83,17 +83,30 @@ def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nsid
     logdp_dV = pixel_log_prob + distance_log_prob + np.log(stellar_mass) - np.log(pixarea)
     #logdp_dV = pixel_log_prob + distance_log_prob - np.log(pixarea)
     
+    print("logdp_dV: "+str(logdp_dV))
     
+
     
     cls = cls[ipix]
     #cutting to select only 90 % confidence in position
     cattop = cat[cls<90]
     logdp_dV= logdp_dV[cls<90]
     cls = cls[cls<90]
+    
+    print("cls < 90: "+str(cls<90))
+    print("logdp_dV: "+str(logdp_dV))
+    
+    print("max logdp_dV: "+str(np.nanmax(logdp_dV)))
+    print("min logdp_dV: "+str(np.nanmin(logdp_dV)))
+    
+    print("length of cls: "+str(len(cls)))
     #Now working only with event with overall probability 99% lower than the most probable
     
-    gg = np.where((logdp_dV is not np.nan) & (logdp_dV-np.max(logdp_dV) > np.log(1/100)))
-    top99i = logdp_dV-np.max(logdp_dV) > np.log(1/1000)
+    #top99i = (~np.isnan(logdp_dV)) & (logdp_dV-np.max(logdp_dV) > np.log(1/100))
+    #top99i = ~np.isnan(logdp_dV)
+    top99i = (logdp_dV-np.nanmax(logdp_dV)) > np.log(1/100)
+    #top99i = (logdp_dV is not np.nan) & (logdp_dV-np.nanmax(logdp_dV) > np.log(1/100))
+    print("top99i: "+str(top99i))
 
     cattop = cattop[top99i]
     logdp_dV = logdp_dV[top99i]
@@ -105,13 +118,13 @@ def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nsid
     cattop = Table.from_pandas(cattop.iloc[isort])
     logptop = logdp_dV[isort]
     cls = cls[isort]
+    print("cls: "+str(cls))
     
     
     return cattop, logptop, cls
 
 def write_catalog(params, savedir='', HET_specific_constraints = True):
     fits = params['skymap_fits']
-    event = params['superevent_id']
     
     if HET_specific_constraints:
         probability = params['skymap_array_HET']
@@ -133,7 +146,7 @@ def write_catalog(params, savedir='', HET_specific_constraints = True):
     #working with list of galaxies visble to HET
     cat1 = pd.read_csv("Glade_Visible_Galaxies.csv", sep=',',header=0,dtype=np.float64)
     #plt.show()
-    #print("cat1: "+str(cat1))
+    print("cat1: "+str(len((cat1))))
     cattop, logptop, cls = get_probability_index(cat1, probb, distmu, distsigma, distnorm, pixarea, nside, probability)
     #print("cattop: "+str(cattop))
 
