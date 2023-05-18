@@ -19,13 +19,15 @@ def get_relative_probs(M, dist, distinfo):
     1d numpy array
         Relative probs of every galaxy (not normalized or corrected for pixel prob)
     """
-    
     #all arrays should be the same length
     assert len(M) == len(dist)
     assert len(dist) == len(distinfo)
     
-    c_pdf = conditional_pdf(dist, *distinfo)
-    
+    distmu, distsigma, distnorm = distinfo.T
+    ignore_idxs = (distsigma <= 0) | (distnorm <= 0)
+    c_pdf = conditional_pdf(dist, *distinfo.T)
+    c_pdf[ignore_idxs] = 0.
+
     return c_pdf * M
     
 
@@ -56,17 +58,22 @@ def distribute_pixel_prob(pixel_probs, pixel_idxs, cat, distinfo):
     stellar_M = np.array(cat['M*']) # masses
     
     relative_probs = get_relative_probs(stellar_M, dist, distinfo)
-    probs_tiled = np.tile(relative_probs, (1, len(pixel_probs)))
+
+    #probs_tiled = np.repeat(relative_probs[np.newaxis,:], len(pixel_probs), axis=0)
     
-    normed_probs_tiled = probs_tiled * gal_idxs / np.sum(probs_tiled * gal_idxs, axis=1) # distributes probability 1 among the galaxies within each pixel
+    normed_consts = np.sum(relative_probs[np.newaxis,:] * pixel_idxs, axis=1)
+    
+    normed_consts[normed_consts <= 0] = np.inf
+
+    normed_probs_tiled = relative_probs[np.newaxis,:] * pixel_idxs * pixel_probs[:,np.newaxis] / normed_consts[:,np.newaxis] # distributes probability 1 among the galaxies within each pixel
     
     # condense back down into 1d
     normed_probs = np.sum(normed_probs_tiled, axis=0)
+
+    return normed_probs # so all probs sum to pixel_prob
     
-    return pixel_probs * normed_probs # so all probs sum to pixel_prob
     
-    
-def get_gal_idxs_flattened(theta, phi, nside):
+def get_gal_binary_matrix(ipix):
     """
     From list of thetas and phis, gets galaxy indices associated with each pixel.
     
@@ -75,7 +82,7 @@ def get_gal_idxs_flattened(theta, phi, nside):
     
     Parameters
     ----------
-    theta : 1d numpy array
+    theta : 1d numpy array (TODO: update this)
         theta values in radians for galaxies
     phi : 1d numpy array
         phi values in radians for galaxies
@@ -85,14 +92,14 @@ def get_gal_idxs_flattened(theta, phi, nside):
     binary_matrix : 2d numpy array
         1 if galaxy j is in pixel i, 0 otherwise
     """
-    ipix = hp.ang2pix(nside, theta, phi)
     unique_i, inverse_idxs = np.unique(ipix, return_inverse=True)
     gal_idxs = np.arange(len(ipix))
     
     binary_matrix = np.zeros( (len(unique_i), len(ipix)) )
     binary_matrix[inverse_idxs, gal_idxs] = 1
     
-    return binary_matrix
+    return binary_matrix, unique_i
+
     
     
     

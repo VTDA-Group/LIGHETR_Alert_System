@@ -12,9 +12,9 @@ from prob_obs import *
 from get_galaxies import *
 import get_galaxies
 import get_LST
-from twilio_caller import *
-from twilio_texter import *
-from testing_emailer import *
+#from twilio_caller import *
+#from twilio_texter import *
+#from testing_emailer import *
 import time as TIme
 import make_phaseii
 
@@ -100,21 +100,30 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
         
         fits_url = 'https://gracedb.ligo.org/api/superevents/'+str(superevent_id)+'/files/bayestar.multiorder.fits'
         
-        
-        #download the multi-order fits file from the fits_url file location
-        url = fits_url
-        multiorder_file_name = obs_time_dir+'multiorder_fits_'+str(superevent_id)+'.fits'
-        req = requests.get(url)
-        file = open(multiorder_file_name, 'wb')
-        for chunk in req.iter_content(100000):
-            file.write(chunk)
-        file.close()
+        """
+        try:
+            print("Saving multiorder file")
+            #download the multi-order fits file from the fits_url file location
+            url = fits_url
+            multiorder_file_name = obs_time_dir+'multiorder_fits_'+str(superevent_id)+'.fits'
+            req = requests.get(url)
+            file = open(multiorder_file_name, 'wb')
+            for chunk in req.iter_content(100000):
+                file.write(chunk)
+            file.close()
+        except:
+            print("URL request error")
+            returnx
+        """
+        multiorder_file_name = "multiorder_fits_MS230401b.fits"
         
         #flatten the multi-order fits file into single-order
+        print("Flattening...")
         singleorder_file_name = obs_time_dir+'flattened_multiorder_fits_'+superevent_id+'.fits'
         os.system('ligo-skymap-flatten '+str(multiorder_file_name)+' '+singleorder_file_name+' --nside 256')
         
         #get the skymap and header of the flattened, single-order fits file
+        print("Processing FITS...")
         skymap,header = hp.read_map(singleorder_file_name, h=True, verbose=False)
         
         
@@ -130,10 +139,6 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
         header['id'] = superevent_id
 
 
-        
-        
-        
-        
         # Making a pie chart of the type of event for the email
         noise_or_terrestrial = 'Terrestrial'
         if noise_or_terrestrial not in  alert_message['event']['classification'].keys():
@@ -160,7 +165,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
 
         
         
-        
+        print("Calculating probabilities")
         #find pixels in the 90% confidence region that will be visible to HET in the next 24 hours
         timetill90, m, frac_visible = prob_observable(skymap, header, time, savedir = obs_time_dir, plot=True)
 
@@ -175,9 +180,9 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
             write_to_file(obs_time_dir+" observability.txt", "HET can't observe this source.")
             return
         else:
-            cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir)
+            logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir)
             
-            if len(cattop) == 0:
+            if len(logptop) == 0:
                 return
                 
             print('{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90)+"\nPercentage of visible pixels to HET: "+str(round(frac_visible*100, 3))+"%")
@@ -229,7 +234,8 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
 ###########Things start here####################
 contact_list_file_loc = 'contact_only_HET_BNS.json'
 #people_to_contact = ["Karthik", "Srisurya", "HET"]
-people_to_contact = ["Karthik","Craig"]
+#people_to_contact = ["Karthik","Craig"]
+people_to_contact = ["Kaylee",]
 
 #stream_start_pos = 1600
 stream_start_pos = StartPosition.EARLIEST
@@ -248,9 +254,9 @@ with stream.open("kafka://kafka.scimma.org/igwn.gwalert", "r") as s:
         message_content = message.content[0]
         alert_type = message_content['alert_type']
         alert_time = message_content['time_created']
-        
+
         alert_time = Time(alert_time)
-        
+        print(alert_time)
         num_messages+=1
         #if num_messages > 2:
         #    sys.exit()
@@ -260,7 +266,6 @@ with stream.open("kafka://kafka.scimma.org/igwn.gwalert", "r") as s:
             num_messages+=1
             continue
         
-                
         skymap = None
         if 'skymap' in message_content.keys():
             skymap = message_content['skymap']
@@ -271,3 +276,4 @@ with stream.open("kafka://kafka.scimma.org/igwn.gwalert", "r") as s:
         if skymap is not None and event is not None:
             print('Calling process_fits')
             process_fits(fits_file = skymap, alert_message = message_content)
+

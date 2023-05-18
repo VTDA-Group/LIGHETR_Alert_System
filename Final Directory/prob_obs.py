@@ -314,8 +314,8 @@ def prob_observable(m, header, time, savedir, plot = True):
     frac_visible = len(visible_mask)/(len(never_visible_mask) + len(visible_mask))
     
     
-    m[never_visible_mask] = 0.0
-    
+    #m[never_visible_mask] = 0.0
+    m[mplot != 0.5] = 0.0 # for speedup, also mask out every pixel not in 90% region at all
     
     
         
