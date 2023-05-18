@@ -42,6 +42,7 @@ print("There are "+str(len(df))+" total galaxies in this catalog")
 #print("There are "+str(len(df.loc[(df['DEJ2000'] > -12) & (df['DEJ2000'] < 74)]))+" total galaxies in this catalog within the HET field of view")
 
 HET_visible_galaxies = df.loc[(df['DEJ2000'] > -12) & (df['DEJ2000'] < 74) & (df['dist_flag']>0) & (df['dist_Mpc'].notnull()) & (df['M*'].notnull())]
+All_visible_galaxies = df.loc[(df['dist_flag']>0) & (df['dist_Mpc'].notnull()) & (df['M*'].notnull())]
 print("There are "+str(len(HET_visible_galaxies))+" HET visible galaxies")
 
 print(HET_visible_galaxies)
@@ -58,3 +59,4 @@ print("max dec = "+str(max(Dec)))
 print("min dec = "+str(min(Dec)))
 
 HET_visible_galaxies.to_csv("Glade_HET_Visible_Galaxies.csv", sep=',')
+All_visible_galaxies.to_csv("Glade_Visible_Galaxies.csv", sep=',')

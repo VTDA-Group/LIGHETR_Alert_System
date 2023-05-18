@@ -109,10 +109,14 @@ def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nsid
     
     return cattop, logptop, cls
 
-def write_catalog(params, savedir=''):
+def write_catalog(params, savedir='', HET_specific_constraints = True):
     fits = params['skymap_fits']
     event = params['superevent_id']
-    probability = params['skymap_array']
+    
+    if HET_specific_constraints:
+        probability = params['skymap_array_HET']
+    else:
+        probability = params['skymap_array']
     
     
     # Reading in the skymap prob and header
@@ -127,7 +131,7 @@ def write_catalog(params, savedir=''):
     
     
     #working with list of galaxies visble to HET
-    cat1 = pd.read_csv("Glade_HET_Visible_Galaxies.csv", sep=',',header=0,dtype=np.float64)
+    cat1 = pd.read_csv("Glade_Visible_Galaxies.csv", sep=',',header=0,dtype=np.float64)
     #plt.show()
     #print("cat1: "+str(cat1))
     cattop, logptop, cls = get_probability_index(cat1, probb, distmu, distsigma, distnorm, pixarea, nside, probability)
@@ -139,8 +143,11 @@ def write_catalog(params, savedir=''):
     contour = Column(name='contour',data = cls)
     Nvis = Column(name='Nvis',data=np.ones(len(cattop)))
     cattop.add_columns([index,logprob,exptime,Nvis,contour])
-    ascii.write(cattop['index','RAJ2000','DEJ2000','dist_Mpc','exptime','Nvis','LogProb','contour'], savedir+'HET_Visible_Galaxies_prob_list.dat', overwrite=True)
     
+    if HET_specific_constraints:
+        ascii.write(cattop['index','RAJ2000','DEJ2000','dist_Mpc','exptime','Nvis','LogProb','contour'], savedir+'HET_Visible_Galaxies_prob_list.dat', overwrite=True)
+    else:
+        ascii.write(cattop['index','RAJ2000','DEJ2000','dist_Mpc','exptime','Nvis','LogProb','contour'], savedir+'Visible_Galaxies_prob_list.dat', overwrite=True)
     
     return cattop,logptop
 

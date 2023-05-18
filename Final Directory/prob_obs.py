@@ -237,7 +237,7 @@ def prob_observable(m, header, time, savedir, plot = True):
     phi90HET = phi90[theta90HETi]
     timetill90 = 0
 
-
+    '''
     if len(np.intersect1d(p90i,newpix)) == 0: #if the region doesn't intersect HET now
 
         #if the region doesn't intersect HET at all
@@ -264,7 +264,7 @@ def prob_observable(m, header, time, savedir, plot = True):
         timetill90 = (wsecs+timetilldark.value)/3600
     elif timetilldark.value > 0:
         timetill90 = timetilldark.value/3600
-    
+    '''
 
     
     

@@ -80,7 +80,7 @@ def get_texter_list(file_loc = 'contact_all_BNS.json'):
     return jsonObject['texter_list']
     
     
-def process_fits_1(superevent_id, skip_test_alerts = False, test_event = False, fits_url = 'bayestar.multiorder.fits'):
+def process_fits_1(superevent_id, skip_test_alerts = False, test_event = False, fits_url = 'bayestar.multiorder.fits', try_BNS_prob_frac = False):
         
         obs_time_dir = superevent_id+"/"
         
@@ -95,30 +95,38 @@ def process_fits_1(superevent_id, skip_test_alerts = False, test_event = False, 
         
         #get the alert json file
         #get the real website where the json file may exist
+        if try_BNS_prob_frac:
         
-        print("file existing: "+str(file_on_website_exists("https://gracedb.ligo.org/api/superevents/S230518h/files/S230518h-preliminary.json")))
-        
-        site = "https://gracedb.ligo.org/api/superevents/"+superevent_id+"/files/"
-        
-        #check if the prelim json exists
-        found_file = False
-        possible_filenames = ["preliminary", "update"]
-        for filename in possible_filenames:
-            file_to_try = site+superevent_id+"-"+filename+".json"
-            print("trying: "+str(file_to_try))
-            if file_on_website_exists(file_to_try):
-                found_file = True
-                url = "https://gracedb.ligo.org/api/superevents/"+superevent_id+"/files/"+superevent_id+"-"+str(filename)+".json"
+            print("file existing: "+str(file_on_website_exists("https://gracedb.ligo.org/api/superevents/S230518h/files/S230518h-preliminary.json")))
+            
+            site = "https://gracedb.ligo.org/api/superevents/"+superevent_id+"/files/"
+            
+            #check if the prelim json exists
+            found_file = False
+            possible_filenames = ["preliminary", "update"]
+            for filename in possible_filenames:
+                file_to_try = site+superevent_id+"-"+filename+".json"
+                print("trying: "+str(file_to_try))
+                if file_on_website_exists(file_to_try):
+                    found_file = True
+                    url = "https://gracedb.ligo.org/api/superevents/"+superevent_id+"/files/"+superevent_id+"-"+str(filename)+".json"
 
-        if not found_file:
-            url = "https://gracedb.ligo.org/api/superevents/"+superevent_id+"/files/"+superevent_id+"-preliminary.json"
-            print("Cannot automatically find the json file on the website. Will attempt the default: "+str(url))
+            if not found_file:
+                url = "https://gracedb.ligo.org/api/superevents/"+superevent_id+"/files/"+superevent_id+"-preliminary.json"
+                print("Cannot automatically find the json file on the website. Will attempt the default: "+str(url))
+            
+            cannot_open_JSON = True
+            
+            try:
+                with urllib.request.urlopen(url) as url:
+                    alert_message = json.load(url)
+                cannot_open_JSON = False
+            except:
+                alert_message = {}
+                cannot_open_JSON = True
+        else:
+            alert_message = {}
         
-        with urllib.request.urlopen(url) as url:
-            alert_message = json.load(url)
-                
-        
-        print("alert message: "+str(alert_message))
         
 
         fits_url = 'https://gracedb.ligo.org/api/superevents/'+str(superevent_id)+'/files/'+fits_url
@@ -129,6 +137,7 @@ def process_fits_1(superevent_id, skip_test_alerts = False, test_event = False, 
 
         
         #download the multi-order fits file from the fits_url file location
+        pdb.set_trace()
         url = fits_url
         multiorder_file_name = obs_time_dir+'multiorder_fits_'+str(superevent_id)+'.fits'
         req = requests.get(url)
@@ -159,53 +168,57 @@ def process_fits_1(superevent_id, skip_test_alerts = False, test_event = False, 
         
         # Making a pie chart of the type of event for the email
         
-        noise_or_terrestrial = 'Terrestrial'
-        if noise_or_terrestrial not in  alert_message['event']['classification'].keys():
-            noise_or_terrestrial = 'Noise'
-        event_poss = ['BBH', 'BNS', 'NSBH', noise_or_terrestrial]
-        labels = []
-        sizes = []
+        if len(alert_message.keys()) > 0:
         
-        for label in event_poss:
-            val = float(alert_message['event']['classification'][label])
-            if val >= 0:
-                sizes.append(val)
-                labels.append(label)
-        #labels = ['%s (%.1f %%)'%(lab,pct) for lab,pct in zip(labels,sizes)]
-        fig1, ax1 = plt.subplots()
-        patches,texts = ax1.pie(sizes, startangle=90)
-        ax1.legend(patches, labels, loc="best")
-        ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-        plt.savefig(obs_time_dir+'piechart.png')
-        
-        #if it's not at least 30% a (BNS or NSBH) signal, ignore it.
-        if (sizes[1]+sizes[2])/(sizes[0]+sizes[1]+sizes[2]+sizes[3]) < 0.3:
-            return
+            noise_or_terrestrial = 'Terrestrial'
+            if noise_or_terrestrial not in  alert_message['event']['classification'].keys():
+                noise_or_terrestrial = 'Noise'
+            event_poss = ['BBH', 'BNS', 'NSBH', noise_or_terrestrial]
+            labels = []
+            sizes = []
+            
+            for label in event_poss:
+                val = float(alert_message['event']['classification'][label])
+                if val >= 0:
+                    sizes.append(val)
+                    labels.append(label)
+            #labels = ['%s (%.1f %%)'%(lab,pct) for lab,pct in zip(labels,sizes)]
+            fig1, ax1 = plt.subplots()
+            patches,texts = ax1.pie(sizes, startangle=90)
+            ax1.legend(patches, labels, loc="best")
+            ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+            plt.savefig(obs_time_dir+'piechart.png')
+            
+            #if it's not at least 30% a (BNS or NSBH) signal, ignore it.
+            if (sizes[1]+sizes[2])/(sizes[0]+sizes[1]+sizes[2]+sizes[3]) < 0.3:
+                return
 
         
         
         
         #find pixels in the 90% confidence region that will be visible to HET in the next 24 hours
-        timetill90, m, frac_visible = prob_observable(skymap, header, time, savedir = obs_time_dir, plot=True)
+        timetill90_HET, m_HET, frac_visible_HET = prob_observable(skymap, header, time, savedir = obs_time_dir, plot=True)
 
-        print("Two-dimensionally, percentage of pixels visible to HET: "+str(frac_visible*100)+"%")
+        print("Two-dimensionally, percentage of pixels visible to HET: "+str(frac_visible_HET*100)+"%")
 
-        #alert_message['skymap_fits'] = singleorder_file_name
-        #alert_message['skymap_array'] = m
+        alert_message['skymap_fits'] = singleorder_file_name
+        alert_message['skymap_array_HET'] = m
+        alert_message['skymap_array'] = skymap
         
+        cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir, HET_Specific_constraints = False)
         #if False:
         if timetill90 ==-99 or frac_visible <= 0.0:
             print("HET can't observe the source.")
             write_to_file(obs_time_dir+" observability.txt", "HET can't observe this source.")
             return
         else:
-            cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir)
             
+            cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir, HET_Specific_constraints = True)
             if len(cattop) == 0:
                 return
                 
-            print('{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90)+"\nPercentage of visible pixels to HET: "+str(round(frac_visible*100, 3))+"%")
-            write_to_file(obs_time_dir+" observability.txt", '{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90)+"\nPercentage of visible pixels to HET: "+str(round(frac_visible*100, 3))+"%", append = True)
+            print('{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET+"\nPercentage of visible pixels to HET: "+str(round(frac_visible_HET*100, 3))+"%"))
+            write_to_file(obs_time_dir+" observability.txt", '{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET)+"\nPercentage of visible pixels to HET: "+str(round(frac_visible_HET*100, 3))+"%", append = True)
             mincontour = get_LST.get_LST(savedir = obs_time_dir,targf = obs_time_dir+'HET_Visible_Galaxies_prob_list.dat')
             
             
@@ -240,7 +253,7 @@ def process_fits_1(superevent_id, skip_test_alerts = False, test_event = False, 
             if test_event:
                 email_body = '[TEST, Can Safely Disregard!] ' + email_body
                 subject = '[TEST, Can Safely Disregard!] ' + subject
-            if "HET" in people_to_contact:
+            if "HET" in people_to_contact or len(people_to_contact)==0:
 
     
                 email(contact_list_file_loc = contact_list_file_loc, subject = subject, body = email_body, files_to_attach = [obs_time_dir+"submission_to_HET.tsl", obs_time_dir+"LSTs_Visible.pdf"], people_to_contact = ['HET'])
