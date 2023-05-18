@@ -137,9 +137,9 @@ def process_fits_1(superevent_id, skip_test_alerts = False, test_event = False, 
 
         
         #download the multi-order fits file from the fits_url file location
-        pdb.set_trace()
         url = fits_url
         multiorder_file_name = obs_time_dir+'multiorder_fits_'+str(superevent_id)+'.fits'
+        
         req = requests.get(url)
         file = open(multiorder_file_name, 'wb')
         for chunk in req.iter_content(100000):
