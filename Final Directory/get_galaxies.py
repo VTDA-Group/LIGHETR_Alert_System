@@ -1,7 +1,5 @@
 #Mainly a simplified copy of HET_obs.py
 #https://github.com/sjanowiecki/HET_observability
-#and the ligo skymaps tutorials
-#https://github.com/gw-odw/odw-2018/tree/master/skymaps
 
 import healpy as hp # for working with HEALPix files
 import numpy as np # needed for vector operations
@@ -80,17 +78,20 @@ def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nsid
     gal_probs = distribute_pixel_prob(pixel_prob, pixel_binary_matrix, cat, distinfo)
     logdp_dV = np.log(gal_probs)
     
+
     cls = cls[ipix_reduced]
-    
-    # 90% confidence cut
+    #cutting to select only 90 % confidence in position
     cattop = cat.iloc[cls<90]
     logdp_dV= logdp_dV[cls<90]
     cls = cls[cls<90]
+    #Now working only with event with overall probability 99% lower than the most probable
     
-    top99i = (logdp_dV is not np.nan) & (logdp_dV-np.max(logdp_dV) > np.log(1/100))
-
+    #top99i = (~np.isnan(logdp_dV)) & (logdp_dV-np.max(logdp_dV) > np.log(1/100))
+    #top99i = ~np.isnan(logdp_dV)
+    top99i = (logdp_dV-np.nanmax(logdp_dV)) > np.log(1/100)
+    
     cattop = cattop.iloc[top99i]
-
+    
     logdp_dV = logdp_dV[top99i]
     cls = cls[top99i]
     
@@ -100,13 +101,17 @@ def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nsid
     logptop = logdp_dV[isort]
     cls = cls[isort]
     cattop = cattop.iloc[isort]
+
     
     return cattop, logptop, cls
 
-def write_catalog(params, savedir=''):
+def write_catalog(params, savedir='', HET_specific_constraints = True):
     fits = params['skymap_fits']
-    event = params['superevent_id']
-    probability = params['skymap_array']
+    
+    if HET_specific_constraints:
+        probability = params['skymap_array_HET']
+    else:
+        probability = params['skymap_array']
     
     
     # Reading in the skymap prob and header
@@ -140,10 +145,7 @@ def write_catalog(params, savedir=''):
         cls = np.append(cls, c)
         
     #working with list of galaxies visble to HET
-    #cat1 = pd.read_csv("Glade_HET_Visible_Galaxies.csv", sep=',',header=0,dtype=np.float64)
-    #plt.show()
-    #print("cat1: "+str(cat1))
-    #logptop, cls = get_probability_index(cat1, probb, distmu, distsigma, distnorm, pixarea, nside, probability)
+
     #print("cattop: "+str(cattop))
 
 
@@ -166,15 +168,7 @@ def write_catalog(params, savedir=''):
     decs = decs[isort]
     dists = dists[isort]
     
-    """
-    index = Column(name='index',data=np.arange(len(logptop)))
-    logprob = Column(name='LogProb',data=logptop)
-    exptime = Column(name='exptime',data=60*20*np.ones(len(logptop)))
-    contour = Column(name='contour',data = cls)
-    Nvis = Column(name='Nvis',data=np.ones(len(logptop)))
-    cattop.add_columns([index,logprob,exptime,Nvis,contour])
-    ascii.write(cattop['index','RAJ2000','DEJ2000','dist_Mpc','exptime','Nvis','LogProb','contour'], savedir+'HET_Visible_Galaxies_prob_list.dat', overwrite=True)
-    """
+
     
     index = Column(name='index',data=np.arange(len(ras)))
     ra_col = Column(name='RAJ2000',data=ras)
@@ -184,11 +178,14 @@ def write_catalog(params, savedir=''):
     exptime = Column(name='exptime',data=60*20*np.ones(len(ras)))
     contour = Column(name='contour',data = cls)
     Nvis = Column(name='Nvis',data=np.ones(len(ras)))
-    
     cattop = Table()
     cattop.add_columns([index,ra_col, dec_col, dist_col,logprob,exptime,Nvis,contour])
-    ascii.write(cattop['index','RAJ2000','DEJ2000','dist_Mpc','exptime','Nvis','LogProb','contour'], savedir+'HET_Visible_Galaxies_prob_list.dat', overwrite=True)
     
+    if HET_specific_constraints:
+        ascii.write(cattop['index','RAJ2000','DEJ2000','dist_Mpc','exptime','Nvis','LogProb','contour'], savedir+'HET_Visible_Galaxies_prob_list.dat', overwrite=True)
+    else:
+        ascii.write(cattop['index','RAJ2000','DEJ2000','dist_Mpc','exptime','Nvis','LogProb','contour'], savedir+'Visible_Galaxies_prob_list.dat', overwrite=True)
+
     return cattop, logptop
 
 def main():
