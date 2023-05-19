@@ -20,8 +20,6 @@ import time as TIme
 import make_phaseii
 import urllib, json
 import urllib.request, json
-from bs4 import BeautifulSoup
-import requests
 
 def find_files(url):
 

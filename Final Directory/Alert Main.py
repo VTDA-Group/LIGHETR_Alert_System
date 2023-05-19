@@ -8,8 +8,8 @@ from hop.io import StartPosition
 import healpy as hp
 from astropy.io import fits
 import requests
-from prob_obs import *
-from get_galaxies import *
+import prob_obs_gen
+import prob_obs_HET
 import get_galaxies
 import get_LST
 from twilio_caller import *
@@ -164,21 +164,26 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
         
         
         #find pixels in the 90% confidence region that will be visible to HET in the next 24 hours
-        timetill90, m, frac_visible = prob_observable(skymap, header, time, savedir = obs_time_dir, plot=True)
+        skymap1 = np.copy(skymap)
+        m_gen, frac_visible_gen = prob_obs_gen.prob_observable(skymap, header, time, savedir = obs_time_dir, plot=True)
+        timetill90_HET, m_HET, frac_visible_HET = prob_obs_HET.prob_observable(skymap1, header, time, savedir = obs_time_dir, plot=True)
+        
 
-        print("Two-dimensionally, percentage of pixels visible to HET: "+str(frac_visible*100)+"%")
+        print("Two-dimensionally, percentage of pixels visible to HET: "+str(frac_visible_HET*100)+"%")
 
         alert_message['skymap_fits'] = singleorder_file_name
-        alert_message['skymap_array'] = m
+        alert_message['skymap_array_HET'] = m_HET
+        alert_message['skymap_array'] = m_gen
         
+        cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir, HET_specific_constraints = False)
         #if False:
-        if timetill90 ==-99 or frac_visible <= 0.0:
+        if timetill90_HET ==-99 or frac_visible_HET <= 0.0:
             print("HET can't observe the source.")
             write_to_file(obs_time_dir+" observability.txt", "HET can't observe this source.")
             return
         else:
-            cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir)
             
+            cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir, HET_specific_constraints = True)
             if len(cattop) == 0:
                 return
                 
