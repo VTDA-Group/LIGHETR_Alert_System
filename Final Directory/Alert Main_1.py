@@ -20,6 +20,7 @@ import time as TIme
 import make_phaseii
 import urllib, json
 import urllib.request, json
+import numpy as np
 
 def find_files(url):
 
