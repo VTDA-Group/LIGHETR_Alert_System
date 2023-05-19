@@ -8,7 +8,8 @@ from hop.io import StartPosition
 import healpy as hp
 from astropy.io import fits
 import requests
-from prob_obs import *
+import prob_obs_gen
+import prob_obs_HET
 from get_galaxies import *
 import get_galaxies
 import get_LST
@@ -140,15 +141,15 @@ def process_fits_1(superevent_id, skip_test_alerts = False, test_event = False, 
         url = fits_url
         multiorder_file_name = obs_time_dir+'multiorder_fits_'+str(superevent_id)+'.fits'
         
-        '''req = requests.get(url)
+        req = requests.get(url)
         file = open(multiorder_file_name, 'wb')
         for chunk in req.iter_content(100000):
             file.write(chunk)
-        file.close()'''
+        file.close()
         
         #flatten the multi-order fits file into single-order
         singleorder_file_name = obs_time_dir+'flattened_multiorder_fits_'+superevent_id+'.fits'
-        #os.system('ligo-skymap-flatten '+str(multiorder_file_name)+' '+singleorder_file_name+' --nside 256')
+        os.system('ligo-skymap-flatten '+str(multiorder_file_name)+' '+singleorder_file_name+' --nside 256')
         
         #get the skymap and header of the flattened, single-order fits file
         skymap,header = hp.read_map(singleorder_file_name, h=True, verbose=False)
@@ -197,14 +198,16 @@ def process_fits_1(superevent_id, skip_test_alerts = False, test_event = False, 
         
         
         #find pixels in the 90% confidence region that will be visible to HET in the next 24 hours
-        timetill90_HET, m_HET, frac_visible_HET = prob_observable(skymap, header, time, savedir = obs_time_dir, plot=True)
+        skymap1 = np.copy(skymap)
+        m_gen, frac_visible_gen = prob_obs_gen.prob_observable(skymap, header, time, savedir = obs_time_dir, plot=True)
+        timetill90_HET, m_HET, frac_visible_HET = prob_obs_HET.prob_observable(skymap1, header, time, savedir = obs_time_dir, plot=True)
+        
 
         print("Two-dimensionally, percentage of pixels visible to HET: "+str(frac_visible_HET*100)+"%")
 
         alert_message['skymap_fits'] = singleorder_file_name
         alert_message['skymap_array_HET'] = m_HET
-        #alert_message['skymap_array'] = skymap
-        alert_message['skymap_array'] = m_HET
+        alert_message['skymap_array'] = m_gen
         
         cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir, HET_specific_constraints = False)
         #if False:

@@ -1,7 +1,5 @@
 #Mainly a simplified copy of HET_obs.py
 #https://github.com/sjanowiecki/HET_observability
-#and the ligo skymaps tutorials
-#https://github.com/gw-odw/odw-2018/tree/master/skymaps
 
 import healpy as hp # for working with HEALPix files
 import numpy as np # needed for vector operations
