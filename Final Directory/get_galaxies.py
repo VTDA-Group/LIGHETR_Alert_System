@@ -124,7 +124,10 @@ def write_catalog(params, savedir='', HET_specific_constraints = True):
     pixarea = hp.nside2pixarea(nside)
     # Get the catalog
     
-    reader = pd.read_csv("Glade_HET_Visible_Galaxies.csv", chunksize=100000, sep=',',header=0,dtype=np.float64)
+    if HET_specific_constraints:
+        reader = pd.read_csv("Glade_HET_Visible_Galaxies.csv", chunksize=100000, sep=',',header=0,dtype=np.float64)
+    else:
+        reader = pd.read_csv("Glade_Visible_Galaxies.csv", chunksize=100000, sep=',',header=0,dtype=np.float64)
     #plt.show()
     
     ras = np.array([])
