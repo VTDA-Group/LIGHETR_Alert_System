@@ -209,7 +209,7 @@ def prob_observable(m, header, time, savedir, plot = True):
     for dt in delta_time:
         future_time = time + dt
     
-        p90i_visible = make_visibility_figure(savedir=savedir, m = m, time = future_time, plot = True)
+        p90i_visible = make_visibility_figure(savedir=savedir, m = m, time = future_time, plot = False)
         
         if p90i_visible is not None:
             #print("m of the visible region is to be: "+str(m[p90i_HET_visible])+", mplot is being set to 0.5")
