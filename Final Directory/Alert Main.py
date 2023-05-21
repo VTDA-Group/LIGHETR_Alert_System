@@ -102,7 +102,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
         
         fits_url = 'https://gracedb.ligo.org/api/superevents/'+str(superevent_id)+'/files/bayestar.multiorder.fits'
         
-        """
+        
         try:
             print("Saving multiorder file")
             #download the multi-order fits file from the fits_url file location
@@ -115,9 +115,8 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
             file.close()
         except:
             print("URL request error")
-            returnx
-        """
-        multiorder_file_name = "multiorder_fits_MS230401b.fits"
+            return
+        
         
         #flatten the multi-order fits file into single-order
         print("Flattening...")
@@ -186,6 +185,15 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
         if timetill90_HET ==-99 or frac_visible_HET <= 0.0:
             print("HET can't observe the source.")
             write_to_file(obs_time_dir+" observability.txt", "HET can't observe this source.")
+            #sending emails out to everybody about the alert.
+            email_subject = 'LIGHETR Alert: NS Merger Detected, NOT VISIBLE TO HET'
+            email_body = 'A Neutron Star Merger has been detected by LIGO. This event is not visible to HET. None of the 90% localization region of this event is visible to HET. This is a courtesy email stating that an event was detected by LIGO."
+            if test_event:
+                email_subject = '[TEST, Can Safely Disregard!] '+email_subject
+                email_body = '[TEST EVENT!]' + email_body
+                
+                
+            email(contact_list_file_loc = contact_list_file_loc, subject=email_subject, body = email_body, files_to_attach = [obs_time_dir+"HET_Full_Visibility.pdf"], people_to_contact = people_to_contact)
             return
         else:
             cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir, HET_specific_constraints = True)
