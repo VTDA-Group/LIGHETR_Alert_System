@@ -187,7 +187,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
             write_to_file(obs_time_dir+" observability.txt", "HET can't observe this source.")
             #sending emails out to everybody about the alert.
             email_subject = 'LIGHETR Alert: NS Merger Detected, NOT VISIBLE TO HET'
-            email_body = 'A Neutron Star Merger has been detected by LIGO. This event is not visible to HET. None of the 90% localization region of this event is visible to HET. This is a courtesy email stating that an event was detected by LIGO."
+            email_body = 'A Neutron Star Merger has been detected by LIGO. This event is not visible to HET. None of the 90% localization region of this event is visible to HET. This is a courtesy email stating that an event was detected by LIGO.'
             if test_event:
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
                 email_body = '[TEST EVENT!]' + email_body
