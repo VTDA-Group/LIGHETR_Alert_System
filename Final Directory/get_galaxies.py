@@ -191,11 +191,13 @@ def write_catalog(params, savedir='', HET_specific_constraints = True):
     isort = np.argsort(logptop)[::-1]
     
     num_keep = 1000 # number of galaxies in output
-    logptop = logptop[isort][:num_keep]
-    cls = cls[isort][:num_keep]
-    ras = ras[isort][:num_keep]
-    decs = decs[isort][:num_keep]
-    dists = dists[isort][:num_keep]
+    
+    if len(logptop) > num_keep:
+        logptop = logptop[isort][:num_keep]
+        cls = cls[isort][:num_keep]
+        ras = ras[isort][:num_keep]
+        decs = decs[isort][:num_keep]
+        dists = dists[isort][:num_keep]
     
     
     index = Column(name='index',data=np.arange(len(ras)))
