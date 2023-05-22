@@ -95,39 +95,27 @@ def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nsid
     logdp_dV = logdp_dV[top99i]
     cls = cls[top99i]
     
+    # sorting happens after aggregation anyways
+    """
     #sorting by probability
     isort = np.argsort(logdp_dV)[::-1]
     
     logptop = logdp_dV[isort]
     cls = cls[isort]
     cattop = cattop.iloc[isort]
-
+    """
     
     return cattop, logptop, cls
 
-def write_catalog(params, savedir='', HET_specific_constraints = True):
-    fits = params['skymap_fits']
-    
+
+def aggregate_galaxies(chunksize, probb, distmu, distsigma, distnorm, pixarea, nside, probability, HET_specific_constraints):
+    """
+    Helper function to attempt galaxy file imports with different chunksizes.
+    """
     if HET_specific_constraints:
-        probability = params['skymap_array_HET']
+        reader = pd.read_csv("Glade_HET_Visible_Galaxies.csv", chunksize=chunksize, sep=',',header=0,dtype=np.float64)
     else:
-        probability = params['skymap_array']
-    
-    
-    # Reading in the skymap prob and header
-    locinfo, header = hp.read_map(fits, field=range(4), h=True)
-    probb, distmu, distsigma, distnorm = locinfo
-    # Getting healpix resolution and pixel area in deg^2
-    npix = len(probb)
-    nside = hp.npix2nside(npix)
-    # Area per pixel in steradians
-    pixarea = hp.nside2pixarea(nside)
-    # Get the catalog
-    
-    if HET_specific_constraints:
-        reader = pd.read_csv("Glade_HET_Visible_Galaxies.csv", chunksize=100000, sep=',',header=0,dtype=np.float64)
-    else:
-        reader = pd.read_csv("Glade_Visible_Galaxies.csv", chunksize=100000, sep=',',header=0,dtype=np.float64)
+        reader = pd.read_csv("Glade_Visible_Galaxies.csv", chunksize=chunksize, sep=',',header=0,dtype=np.float64)
     #plt.show()
     
     ras = np.array([])
@@ -147,10 +135,47 @@ def write_catalog(params, savedir='', HET_specific_constraints = True):
         logptop = np.append(logptop, l)
         cls = np.append(cls, c)
         
+    return ras, decs, dists, logptop, cls
+ 
+ 
+def write_catalog(params, savedir='', HET_specific_constraints = True):
+    fits = params['skymap_fits']
+    
+    if HET_specific_constraints:
+        probability = params['skymap_array_HET']
+    else:
+        probability = params['skymap_array']
+    
+    
+    # Reading in the skymap prob and header
+    locinfo, header = hp.read_map(fits, field=range(4), h=True)
+    probb, distmu, distsigma, distnorm = locinfo
+    # Getting healpix resolution and pixel area in deg^2
+    npix = len(probb)
+    nside = hp.npix2nside(npix)
+    # Area per pixel in steradians
+    pixarea = hp.nside2pixarea(nside)
+    # Get the catalog
+    
+        
     #working with list of galaxies visble to HET
-
-    #print("cattop: "+str(cattop))
-
+    chunksize = 50000 # initial chunksize
+    while True:
+        try:
+            ras, decs, dists, logptop, cls = aggregate_galaxies(
+                chunksize,
+                probb,
+                distmu,
+                distsigma,
+                distnorm,
+                pixarea,
+                nside,
+                probability,
+                HET_specific_constraints
+            )
+            break
+        except:
+            chunksize /= 5 # if crashed from chunksize
 
     # 90% confidence cut redundant, removed
     
@@ -165,13 +190,13 @@ def write_catalog(params, savedir='', HET_specific_constraints = True):
     #sorting by probability
     isort = np.argsort(logptop)[::-1]
     
-    logptop = logptop[isort]
-    cls = cls[isort]
-    ras = ras[isort]
-    decs = decs[isort]
-    dists = dists[isort]
+    num_keep = 1000 # number of galaxies in output
+    logptop = logptop[isort][:num_keep]
+    cls = cls[isort][:num_keep]
+    ras = ras[isort][:num_keep]
+    decs = decs[isort][:num_keep]
+    dists = dists[isort][:num_keep]
     
-
     
     index = Column(name='index',data=np.arange(len(ras)))
     ra_col = Column(name='RAJ2000',data=ras)
