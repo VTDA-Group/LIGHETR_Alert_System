@@ -92,7 +92,7 @@ def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nsid
     
     cattop = cattop.iloc[top99i]
     
-    logdptop = logdp_dV[top99i]
+    logptop = logdp_dV[top99i]
     cls = cls[top99i]
     
     # sorting happens after aggregation anyways
