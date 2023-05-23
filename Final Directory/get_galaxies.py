@@ -198,6 +198,12 @@ def write_catalog(params, savedir='', HET_specific_constraints = True):
         ras = ras[isort][:num_keep]
         decs = decs[isort][:num_keep]
         dists = dists[isort][:num_keep]
+    else:
+        logptop = logptop[isort]
+        cls = cls[isort]
+        ras = ras[isort]
+        decs = decs[isort]
+        dists = dists[isort]
     
     
     index = Column(name='index',data=np.arange(len(ras)))
