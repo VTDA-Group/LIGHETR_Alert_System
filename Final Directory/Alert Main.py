@@ -12,9 +12,9 @@ import prob_obs_gen
 import prob_obs_HET
 import get_galaxies
 import get_LST
-#from twilio_caller import *
-#from twilio_texter import *
-#from testing_emailer import *
+from twilio_caller import *
+from twilio_texter import *
+from testing_emailer import *
 import time as TIme
 import make_phaseii
 import numpy as np
@@ -162,6 +162,16 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
         
         #if it's not at least 30% a (BNS or NSBH) signal, ignore it.
         if (sizes[1]+sizes[2])/(sizes[0]+sizes[1]+sizes[2]+sizes[3]) < 0.3:
+            #sending emails out to everybody about the alert.
+            email_subject = 'LIGHETR Alert: GW Event Detected (No Optical Counterpart)'
+            email_body = 'A gravitational wave event was detected. Event: '+str(superevent_id)+'.\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nWe will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!'
+            if test_event:
+                email_subject = '[TEST, Can Safely Disregard!] '+email_subject
+                email_body = '[TEST EVENT!]' + email_body
+                
+                
+            email(contact_list_file_loc = contact_list_file_loc, subject=email_subject, body = email_body, files_to_attach = [obs_time_dir+"HET_Full_Visibility.pdf"], people_to_contact = people_to_contact)
+            print("LIGHETR Alert: GW Event Detected (No Optical Counterpart)\n"+'A gravitational wave event was detected. Event: '+str(superevent_id)+'\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nWe will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!')
             return
         
 
@@ -186,7 +196,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
             print("HET can't observe the source.")
             write_to_file(obs_time_dir+" observability.txt", "HET can't observe this source.")
             #sending emails out to everybody about the alert.
-            email_subject = 'LIGHETR Alert: NS Merger Detected, NOT VISIBLE TO HET'
+            email_subject = 'LIGHETR Alert: NS Merger Detected, NOT VISIBLE TO HET. Event: '+str(superevent_id)
             email_body = 'A Neutron Star Merger has been detected by LIGO. This event is not visible to HET. None of the 90% localization region of this event is visible to HET. This is a courtesy email stating that an event was detected by LIGO.'
             if test_event:
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
@@ -207,7 +217,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
             
             
             #sending emails out to everybody about the alert.
-            email_subject = 'LIGHETR Alert: NS Merger Detected'
+            email_subject = 'LIGHETR Alert: NS Merger Detected. Event: '+str(superevent_id)
             email_body = 'A Neutron Star Merger has been detected by LIGO.\n{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET)+"\nI have attached a figure here, showing the 90% contour of the sky localization where LIGO found a merger. The portion in bright green is not visible to HET because of declination limitations or because of sun constraints. The portion in the dimmer blue-green is visible to HET tonight. The percentage of pixels that are visible to HET is "+str(round(frac_visible_HET*100, 3))+"% \n\nPlease join this zoom call: https://us06web.zoom.us/j/87536495694"
             if test_event:
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
@@ -254,14 +264,14 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
 ###########Things start here####################
 contact_list_file_loc = 'contact_only_HET_BNS.json'
 #people_to_contact = ["Karthik", "Srisurya", "HET"]
-people_to_contact = ["Karthik"]
+people_to_contact = []
 
 #stream_start_pos = 1600
 stream_start_pos = StartPosition.EARLIEST
 #print("Starting stream at "+str(stream_start_pos))
-stream = Stream(start_at=stream_start_pos)
+#stream = Stream(start_at=stream_start_pos)
 
-#stream = Stream()
+stream = Stream()
 
 num_messages = 0
 
