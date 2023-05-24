@@ -28,7 +28,7 @@ def get_relative_probs(M, dist, distinfo):
     c_pdf = conditional_pdf(dist, *distinfo.T)
     c_pdf[ignore_idxs] = 0.
 
-    return c_pdf * M
+    return c_pdf * np.log10(M)
     
 
 def distribute_pixel_prob(pixel_probs, pixel_idxs, cat, distinfo):
