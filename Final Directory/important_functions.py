@@ -60,7 +60,9 @@ def send_email(email_sender, email_password, all_email_recipients, files, subjec
         
         #sending email
         context = ssl.create_default_context()
-
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context = context) as smtp:
-            smtp.login(email_sender, email_password)
-            smtp.sendmail(email_sender, recipients, em.as_string())
+        try:
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465, context = context) as smtp:
+                smtp.login(email_sender, email_password)
+                smtp.sendmail(email_sender, recipients, em.as_string())
+        except:
+            print("Wasn't able to send email to: "+str(recipients))

@@ -19,8 +19,6 @@ import time as TIme
 import make_phaseii
 import numpy as np
 
-recent_April = Time('2023-02-16T00:00:00.00')
-
 def write_to_file(file_loc, data_out, separator = ' ', headers=None, append=False):
     '''inputs: file_loc-location to which to write to, data_to_write-this is a 2d array that will be written to a file
        outputs: none
@@ -62,7 +60,7 @@ def get_texter_list(file_loc = 'contact_all_BNS.json'):
     return jsonObject['texter_list']
     
 
-def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
+def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         '''
         The format of these alerts is given in this website:
         https://emfollow.docs.ligo.org/userguide/content.html
@@ -82,9 +80,6 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
         alert_time = alert_message['time_created']
         
         alert_time = Time(alert_time)
-        
-        if alert_time.jd < recent_April.jd:
-            return
         
         test_event = False #this value will be set to true if the event turns out to be a test/mock event
         superevent_id = alert_message['superevent_id']
@@ -137,6 +132,8 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
         obs_time = Time(header['DATE-OBS'],format='isot',scale='utc')
         time = Time.now()
         dist = str(header['DISTMEAN']) + ' +/- ' + str(header['DISTSTD'])
+        
+        print("dist: "+str(dist))
         header['id'] = superevent_id
 
 
@@ -164,14 +161,14 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
         if (sizes[1]+sizes[2])/(sizes[0]+sizes[1]+sizes[2]+sizes[3]) < 0.3:
             #sending emails out to everybody about the alert.
             email_subject = 'LIGHETR Alert: GW Event Detected (No Optical Counterpart)'
-            email_body = 'A gravitational wave event was detected. Event: '+str(superevent_id)+'.\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nWe will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!'
+            email_body = 'A gravitational wave event was detected. Event: '+str(superevent_id)+'.\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!'
             if test_event:
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
                 email_body = '[TEST EVENT!]' + email_body
                 
                 
             email(contact_list_file_loc = contact_list_file_loc, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
-            print("LIGHETR Alert: GW Event Detected (No Optical Counterpart)\n"+'A gravitational wave event was detected. Event: '+str(superevent_id)+'\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nWe will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!')
+            print("LIGHETR Alert: GW Event Detected (No Optical Counterpart)\n"+'A gravitational wave event was detected. Event: '+str(superevent_id)+'\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!')
             return
         
 
@@ -197,7 +194,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
             write_to_file(obs_time_dir+" observability.txt", "HET can't observe this source.")
             #sending emails out to everybody about the alert.
             email_subject = 'LIGHETR Alert: NS Merger Detected, NOT VISIBLE TO HET. Event: '+str(superevent_id)
-            email_body = 'A Neutron Star Merger has been detected by LIGO. This event is not visible to HET. None of the 90% localization region of this event is visible to HET. This is a courtesy email stating that an event was detected by LIGO.'
+            email_body = 'A Neutron Star Merger has been detected by LIGO. This event is not visible to HET. None of the 90% localization region of this event is visible to HET. This is a courtesy email stating that an event was detected by LIGO. Distance to object: '+str(dist)+' Mpc'
             if test_event:
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
                 email_body = '[TEST EVENT!]' + email_body
@@ -217,7 +214,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
             
             #sending emails out to everybody about the alert.
             email_subject = 'LIGHETR Alert: NS Merger Detected. Event: '+str(superevent_id)
-            email_body = 'A Neutron Star Merger has been detected by LIGO.\n{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET)+"\nI have attached a figure here, showing the 90% contour of the sky localization where LIGO found a merger. The portion in bright green is not visible to HET because of declination limitations or because of sun constraints. The portion in the dimmer blue-green is visible to HET tonight. The percentage of pixels that are visible to HET is "+str(round(frac_visible_HET*100, 3))+"% \n\nPlease join this zoom call: https://us06web.zoom.us/j/87536495694"
+            email_body = 'A Neutron Star Merger has been detected by LIGO.\n{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET)+"\nI have attached a figure here, showing the 90% contour of the sky localization where LIGO found a merger. The portion in bright green is not visible to HET because of declination limitations or because of sun constraints. The portion in the dimmer blue-green is visible to HET tonight. The percentage of pixels that are visible to HET is "+str(round(frac_visible_HET*100, 3))+"%\nDistance to object: "+str(dist)+' Mpc \n\nPlease join this zoom call: https://us06web.zoom.us/j/87536495694'
             if test_event:
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
                 email_body = '[TEST EVENT!]\n' + email_body
@@ -245,7 +242,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
             if test_event:
                 email_body = '[TEST, Can Safely Disregard!] ' + email_body
                 subject = '[TEST, Can Safely Disregard!] ' + subject
-            if "HET" in people_to_contact:
+            if "HET" in people_to_contact or len(people_to_contact) == 0:
 
     
             	email(contact_list_file_loc = contact_list_file_loc, subject = subject, body = email_body, files_to_attach = [obs_time_dir+"submission_to_HET.tsl", obs_time_dir+"LSTs_Visible.pdf"], people_to_contact = ['HET'])
@@ -263,14 +260,14 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
 ###########Things start here####################
 contact_list_file_loc = 'contact_only_HET_BNS.json'
 #people_to_contact = ["Karthik"]
-people_to_contact = ["Karthik"]
+people_to_contact = []
 
 #stream_start_pos = 1600
 stream_start_pos = StartPosition.EARLIEST
 #print("Starting stream at "+str(stream_start_pos))
-stream = Stream(start_at=stream_start_pos)
+#stream = Stream(start_at=stream_start_pos)
 
-#stream = Stream()
+stream = Stream()
 
 num_messages = 0
 
@@ -289,11 +286,6 @@ with stream.open("kafka://kafka.scimma.org/igwn.gwalert", "r") as s:
         #if num_messages > 2:
         #    sys.exit()
         
-        # Is this from testing?
-        if alert_time.jd < recent_April.jd:
-            num_messages+=1
-            continue
-        
         skymap = None
         if 'skymap' in message_content.keys():
             skymap = message_content['skymap']
@@ -303,5 +295,5 @@ with stream.open("kafka://kafka.scimma.org/igwn.gwalert", "r") as s:
         '''send that fits file into process_fits'''
         if skymap is not None and event is not None:
             print('Calling process_fits')
-            process_fits(fits_file = skymap, alert_message = message_content)
+            process_fits(fits_file = skymap, alert_message = message_content,  skip_test_alerts = True)
 

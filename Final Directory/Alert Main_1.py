@@ -265,7 +265,7 @@ def process_fits_1(superevent_id, skip_test_alerts = False, test_event = False, 
 ###########Things start here####################
 contact_list_file_loc = 'contact_only_HET_BNS.json'
 #people_to_contact = ["Karthik", "Srisurya", "HET"]
-people_to_contact = ["Karthik"]
+people_to_contact = ["Karthik", "Justen"]
 
 print("Running")
 
