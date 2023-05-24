@@ -5,6 +5,7 @@ import ssl
 import smtplib
 import mimetypes
 import healpy as hp
+import os.path
 import datetime
 
 
@@ -43,6 +44,9 @@ def send_email(email_sender, email_password, all_email_recipients, files, subjec
         
         #attaching files
         for path in files:
+            if not os.path.isfile(path):
+                print("File: "+str(path)+" doesn't exist. Cannot attach it.")
+                continue
             ctype, encoding = mimetypes.guess_type(path)
             if ctype is None or encoding is not None:
                 # No guess could be made, or the file is encoded (compressed), so

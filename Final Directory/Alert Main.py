@@ -170,7 +170,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
                 email_body = '[TEST EVENT!]' + email_body
                 
                 
-            email(contact_list_file_loc = contact_list_file_loc, subject=email_subject, body = email_body, files_to_attach = [obs_time_dir+"HET_Full_Visibility.pdf"], people_to_contact = people_to_contact)
+            email(contact_list_file_loc = contact_list_file_loc, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
             print("LIGHETR Alert: GW Event Detected (No Optical Counterpart)\n"+'A gravitational wave event was detected. Event: '+str(superevent_id)+'\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nWe will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!')
             return
         
@@ -202,8 +202,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
                 email_body = '[TEST EVENT!]' + email_body
                 
-                
-            email(contact_list_file_loc = contact_list_file_loc, subject=email_subject, body = email_body, files_to_attach = [obs_time_dir+"HET_Full_Visibility.pdf"], people_to_contact = people_to_contact)
+            email(contact_list_file_loc = contact_list_file_loc, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
             return
         else:
             cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir, HET_specific_constraints = True)
@@ -221,7 +220,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
             email_body = 'A Neutron Star Merger has been detected by LIGO.\n{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET)+"\nI have attached a figure here, showing the 90% contour of the sky localization where LIGO found a merger. The portion in bright green is not visible to HET because of declination limitations or because of sun constraints. The portion in the dimmer blue-green is visible to HET tonight. The percentage of pixels that are visible to HET is "+str(round(frac_visible_HET*100, 3))+"% \n\nPlease join this zoom call: https://us06web.zoom.us/j/87536495694"
             if test_event:
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
-                email_body = '[TEST EVENT!]' + email_body
+                email_body = '[TEST EVENT!]\n' + email_body
                 
                 
             email(contact_list_file_loc = contact_list_file_loc, subject=email_subject, body = email_body, files_to_attach = [obs_time_dir+"HET_Full_Visibility.pdf"], people_to_contact = people_to_contact)
@@ -263,15 +262,15 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = False):
             
 ###########Things start here####################
 contact_list_file_loc = 'contact_only_HET_BNS.json'
-#people_to_contact = ["Karthik", "Srisurya", "HET"]
-people_to_contact = []
+#people_to_contact = ["Karthik"]
+people_to_contact = ["Karthik"]
 
 #stream_start_pos = 1600
 stream_start_pos = StartPosition.EARLIEST
 #print("Starting stream at "+str(stream_start_pos))
-#stream = Stream(start_at=stream_start_pos)
+stream = Stream(start_at=stream_start_pos)
 
-stream = Stream()
+#stream = Stream()
 
 num_messages = 0
 
