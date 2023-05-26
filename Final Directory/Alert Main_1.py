@@ -80,7 +80,7 @@ def get_texter_list(file_loc = 'contact_all_BNS.json'):
     return jsonObject['texter_list']
     
     
-def process_fits_1(superevent_id, skip_test_alerts = False, test_event = False, fits_url = 'bayestar.multiorder.fits', try_BNS_prob_frac = False):
+def process_fits_1(superevent_id, skip_test_alerts = False, test_event = False, fits_url = 'bayestar.multiorder.fits', try_BNS_prob_frac = True):
         
         obs_time_dir = superevent_id+"/"
         
@@ -191,6 +191,17 @@ def process_fits_1(superevent_id, skip_test_alerts = False, test_event = False, 
             
             #if it's not at least 30% a (BNS or NSBH) signal, ignore it.
             if (sizes[1]+sizes[2])/(sizes[0]+sizes[1]+sizes[2]+sizes[3]) < 0.3:
+                
+                #sending emails out to only people on the contact_list_file_loc_all_events file about the alert. Because there is likely no remnant.
+                email_subject = 'LIGHETR Alert: GW Event Detected (No Optical Counterpart) Event: '+str(superevent_id)
+                email_body = 'A gravitational wave event was detected.\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!'
+                if test_event:
+                    email_subject = '[TEST, Can Safely Disregard!] '+email_subject
+                    email_body = '[TEST EVENT!]\n' + email_body
+                    
+                    
+                email(contact_list_file_loc = contact_list_file_loc_all_events, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
+                print("LIGHETR Alert: GW Event Detected (No Optical Counterpart)\n"+'A gravitational wave event was detected. Event: '+str(superevent_id)+'\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!')
                 return
 
         
@@ -210,9 +221,17 @@ def process_fits_1(superevent_id, skip_test_alerts = False, test_event = False, 
         
         cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir, HET_specific_constraints = False)
         #if False:
-        if timetill90_HET ==-99 or frac_visible_HET <= 0.0:
+        if timetill90_HET ==-99 or frac_visible_HET <= 10.0:
             print("HET can't observe the source.")
             write_to_file(obs_time_dir+" observability.txt", "HET can't observe this source.")
+            #sending emails out to only people on the contact_list_file_loc_all_events file about the alert. Because HET cannot observe the source.
+            email_subject = 'LIGHETR Alert: NS Merger Detected, NOT VISIBLE TO HET. Event: '+str(superevent_id)
+            email_body = 'A Neutron Star Merger has been detected by LIGO. This event is not visible to HET. Percentage of the 90% localization region of this event visible to HET: '+str(frac_visible_HET)+'. This is too small to be worth following up. This is a courtesy email stating that an event was detected by LIGO. Distance to object: '+str(dist)+' Mpc'
+            if test_event:
+                email_subject = '[TEST, Can Safely Disregard!] '+email_subject
+                email_body = '[TEST EVENT!]' + email_body
+                
+            email(contact_list_file_loc = contact_list_file_loc_all_events, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
             return
         else:
             
@@ -220,18 +239,18 @@ def process_fits_1(superevent_id, skip_test_alerts = False, test_event = False, 
             if len(cattop) == 0:
                 return
                 
-            print('{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET+"\nPercentage of visible pixels to HET: "+str(round(frac_visible_HET*100, 3))+"%"))
+            print('{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET)+"\nPercentage of visible pixels to HET: "+str(round(frac_visible_HET*100, 3))+"%")
             write_to_file(obs_time_dir+" observability.txt", '{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET)+"\nPercentage of visible pixels to HET: "+str(round(frac_visible_HET*100, 3))+"%", append = True)
             mincontour = get_LST.get_LST(savedir = obs_time_dir,targf = obs_time_dir+'HET_Visible_Galaxies_prob_list.dat')
             
             
             
             #sending emails out to everybody about the alert.
-            email_subject = 'LIGHETR Alert: NS Merger Detected'
-            email_body = 'A Neutron Star Merger has been detected by LIGO.\n{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90)+"\nI have attached a figure here, showing the 90% contour of the sky localization where LIGO found a merger. The portion in bright green is not visible to HET because of declination limitations or because of sun constraints. The portion in the dimmer blue-green is visible to HET tonight. The percentage of pixels that are visible to HET is "+str(round(frac_visible*100, 3))+"% \n\nPlease join this zoom call: https://us06web.zoom.us/j/87536495694"
+            email_subject = 'LIGHETR Alert: NS Merger Detected. Event: '+str(superevent_id)
+            email_body = 'A Neutron Star Merger has been detected by LIGO.\n{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET)+"\nI have attached a figure here, showing the 90% contour of the sky localization where LIGO found a merger. The portion in bright green is not visible to HET because of declination limitations or because of sun constraints. The portion in the dimmer blue-green is visible to HET tonight. The percentage of pixels that are visible to HET is "+str(round(frac_visible_HET*100, 3))+"%\nDistance to object: "+str(dist)+' Mpc \n\nPlease join this zoom call: https://us06web.zoom.us/j/87536495694'
             if test_event:
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
-                email_body = '[TEST EVENT!]' + email_body
+                email_body = '[TEST EVENT!]\n' + email_body
                 
                 
             email(contact_list_file_loc = contact_list_file_loc, subject=email_subject, body = email_body, files_to_attach = [obs_time_dir+"HET_Full_Visibility.pdf"], people_to_contact = people_to_contact)
