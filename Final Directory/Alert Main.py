@@ -88,6 +88,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         if skip_test_alerts and test_event: #if we want to ignore test events, and this is a test event, ignore it.
             return
         
+        print("\n\n=============================\nFound a real LIGO event: "+str(superevent_id)+"\n")
         
         #so we've found an alert that we want to look at. I'll make a directory for this time.
         obs_time_dir = str(alert_time.mjd)+"/"
@@ -159,15 +160,15 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         
         #if it's not at least 30% a (BNS or NSBH) signal, ignore it.
         if (sizes[1]+sizes[2])/(sizes[0]+sizes[1]+sizes[2]+sizes[3]) < 0.3:
-            #sending emails out to everybody about the alert.
-            email_subject = 'LIGHETR Alert: GW Event Detected (No Optical Counterpart)'
-            email_body = 'A gravitational wave event was detected. Event: '+str(superevent_id)+'.\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!'
+            #sending emails out to only people on the contact_list_file_loc_all_events file about the alert. Because there is likely no remnant.
+            email_subject = 'LIGHETR Alert: GW Event Detected (No Optical Counterpart) Event: '+str(superevent_id)
+            email_body = 'A gravitational wave event was detected.\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!'
             if test_event:
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
-                email_body = '[TEST EVENT!]' + email_body
+                email_body = '[TEST EVENT!]\n' + email_body
                 
                 
-            email(contact_list_file_loc = contact_list_file_loc, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
+            email(contact_list_file_loc = contact_list_file_loc_all_events, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
             print("LIGHETR Alert: GW Event Detected (No Optical Counterpart)\n"+'A gravitational wave event was detected. Event: '+str(superevent_id)+'\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!')
             return
         
@@ -192,14 +193,14 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         if timetill90_HET ==-99 or frac_visible_HET <= 0.0:
             print("HET can't observe the source.")
             write_to_file(obs_time_dir+" observability.txt", "HET can't observe this source.")
-            #sending emails out to everybody about the alert.
+            #sending emails out to only people on the contact_list_file_loc_all_events file about the alert. Because HET cannot observe the source.
             email_subject = 'LIGHETR Alert: NS Merger Detected, NOT VISIBLE TO HET. Event: '+str(superevent_id)
             email_body = 'A Neutron Star Merger has been detected by LIGO. This event is not visible to HET. None of the 90% localization region of this event is visible to HET. This is a courtesy email stating that an event was detected by LIGO. Distance to object: '+str(dist)+' Mpc'
             if test_event:
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
                 email_body = '[TEST EVENT!]' + email_body
                 
-            email(contact_list_file_loc = contact_list_file_loc, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
+            email(contact_list_file_loc = contact_list_file_loc_all_events, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
             return
         else:
             cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir, HET_specific_constraints = True)
@@ -259,6 +260,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
             
 ###########Things start here####################
 contact_list_file_loc = 'contact_only_HET_BNS.json'
+contact_list_file_loc_all_events = 'contact_all_LIGO.json'
 #people_to_contact = ["Karthik"]
 people_to_contact = []
 
