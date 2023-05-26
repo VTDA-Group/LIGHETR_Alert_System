@@ -190,12 +190,12 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         
         cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir, HET_specific_constraints = False)
         #if False:
-        if timetill90_HET ==-99 or frac_visible_HET <= 0.0:
+        if timetill90_HET ==-99 or frac_visible_HET <= 10.0:
             print("HET can't observe the source.")
             write_to_file(obs_time_dir+" observability.txt", "HET can't observe this source.")
             #sending emails out to only people on the contact_list_file_loc_all_events file about the alert. Because HET cannot observe the source.
             email_subject = 'LIGHETR Alert: NS Merger Detected, NOT VISIBLE TO HET. Event: '+str(superevent_id)
-            email_body = 'A Neutron Star Merger has been detected by LIGO. This event is not visible to HET. None of the 90% localization region of this event is visible to HET. This is a courtesy email stating that an event was detected by LIGO. Distance to object: '+str(dist)+' Mpc'
+            email_body = 'A Neutron Star Merger has been detected by LIGO. This event is not visible to HET. Percentage of the 90% localization region of this event visible to HET: '+str(frac_visible_HET)+'. This is too small to be worth following up. This is a courtesy email stating that an event was detected by LIGO. Distance to object: '+str(dist)+' Mpc'
             if test_event:
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
                 email_body = '[TEST EVENT!]' + email_body
