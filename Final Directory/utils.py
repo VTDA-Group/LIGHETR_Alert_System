@@ -28,7 +28,7 @@ def get_relative_probs(M, dist, distinfo):
     c_pdf = conditional_pdf(dist, *distinfo.T)
     c_pdf[ignore_idxs] = 0.
 
-    return c_pdf * np.log10(M)
+    return c_pdf * M
     
 
 def distribute_pixel_prob(pixel_probs, pixel_idxs, cat, distinfo):
@@ -58,18 +58,21 @@ def distribute_pixel_prob(pixel_probs, pixel_idxs, cat, distinfo):
     stellar_M = np.array(cat['M*']) # masses
     
     relative_probs = get_relative_probs(stellar_M, dist, distinfo)
-
+    top_mass_idxs = np.argsort(relative_probs)[::-1][:10]
+    
     #probs_tiled = np.repeat(relative_probs[np.newaxis,:], len(pixel_probs), axis=0)
     
-    normed_consts = np.sum(relative_probs[np.newaxis,:] * pixel_idxs, axis=1)
+    rel_tiled = relative_probs[np.newaxis,:] * pixel_idxs
+    normed_consts = np.sum(rel_tiled, axis=1)
     
     normed_consts[normed_consts <= 0] = np.inf
 
-    normed_probs_tiled = relative_probs[np.newaxis,:] * pixel_idxs * pixel_probs[:,np.newaxis] / normed_consts[:,np.newaxis] # distributes probability 1 among the galaxies within each pixel
+    normed_probs_tiled = rel_tiled * (pixel_probs / normed_consts)[:,np.newaxis] # distributes probability 1 among the galaxies within each pixel
     
+    print(pixel_probs[:2], normed_probs_tiled[:2])
     # condense back down into 1d
     normed_probs = np.sum(normed_probs_tiled, axis=0)
-
+    
     return normed_probs # so all probs sum to pixel_prob
     
     
@@ -97,6 +100,8 @@ def get_gal_binary_matrix(ipix):
     
     binary_matrix = np.zeros( (len(unique_i), len(ipix)) )
     binary_matrix[inverse_idxs, gal_idxs] = 1
+    
+    assert ~np.any(np.sum(binary_matrix, axis=0) != 1)
     
     return binary_matrix, unique_i
 

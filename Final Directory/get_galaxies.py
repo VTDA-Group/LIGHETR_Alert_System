@@ -54,56 +54,47 @@ def get_probability_index(cat, probb, distmu, distsigma, distnorm, pixarea, nsid
     This will take a pandas-read in csv file, and will return a ordered list of galaxies within that catalog that are ordered by probability map
     '''
     theta = 0.5*np.pi - cat['DEJ2000']*np.pi/180
-    theta = np.asarray([float(i) for i in theta])
+    #theta = np.asarray([float(i) for i in theta])
     phi = cat['RAJ2000']*np.pi/180
-    phi = np.asarray([float(i) for i in phi])
+    #phi = np.asarray([float(i) for i in phi])
     cls = cdf(probb)
 
     distinfo = np.array([distmu, distsigma, distnorm]).T
     
     #accounting for probability distribution along the sky
     ipix = hp.ang2pix(nside, theta, phi)
-    
-    ipix_reduced = ipix[probability[ipix] > 0] # speedup
-    
-    if len(ipix_reduced) == 0:
-        return np.array([]), np.array([]), np.array([])
-        
-    cat = cat[probability[ipix] > 0]
    
+    cls = cls[ipix]
+    #cutting to select only 90 % confidence in position
+    cattop = cat.iloc[cls<90]
+    ipix_reduced = ipix[cls<90]
+    cls = cls[cls<90]
+    
     pixel_binary_matrix, unique_ipix = get_gal_binary_matrix(ipix_reduced)
     pixel_prob = probability[unique_ipix]
     distinfo = distinfo[ipix_reduced]
     
-    gal_probs = distribute_pixel_prob(pixel_prob, pixel_binary_matrix, cat, distinfo)
+    gal_probs = distribute_pixel_prob(pixel_prob, pixel_binary_matrix, cattop, distinfo)
     logdp_dV = np.log(gal_probs)
+    #logdp_dV= logdp_dV[cls<90]
     
-
-    cls = cls[ipix_reduced]
-    #cutting to select only 90 % confidence in position
-    cattop = cat.iloc[cls<90]
-    logdp_dV= logdp_dV[cls<90]
-    cls = cls[cls<90]
-    #Now working only with event with overall probability 99% lower than the most probable
-    
-    #top99i = (~np.isnan(logdp_dV)) & (logdp_dV-np.max(logdp_dV) > np.log(1/100))
-    #top99i = ~np.isnan(logdp_dV)
-    top99i = (logdp_dV-np.nanmax(logdp_dV)) > np.log(1/100)
+    top99i = np.where((logdp_dV-np.nanmax(logdp_dV)) > np.log(1/100))[0]
     
     cattop = cattop.iloc[top99i]
-    
     logptop = logdp_dV[top99i]
     cls = cls[top99i]
     
-    # sorting happens after aggregation anyways
-    """
     #sorting by probability
-    isort = np.argsort(logdp_dV)[::-1]
+    isort = np.argsort(logptop)[::-1]
     
-    logptop = logdp_dV[isort]
+    num_keep = 1000 # number of galaxies in output
+    
+    if len(logptop) > num_keep:
+        isort = isort[:num_keep]
+
+    logptop = logptop[isort]
     cls = cls[isort]
     cattop = cattop.iloc[isort]
-    """
     
     return cattop, logptop, cls
 
@@ -113,29 +104,34 @@ def aggregate_galaxies(chunksize, probb, distmu, distsigma, distnorm, pixarea, n
     Helper function to attempt galaxy file imports with different chunksizes.
     """
     if HET_specific_constraints:
-        reader = pd.read_csv("Glade_HET_Visible_Galaxies.csv", chunksize=chunksize, sep=',',header=0,dtype=np.float64)
+        reader = pd.read_csv("Glade_Visible_Galaxies.csv", chunksize=chunksize, sep=',',header=0,dtype=np.float64)
     else:
         reader = pd.read_csv("Glade_Visible_Galaxies.csv", chunksize=chunksize, sep=',',header=0,dtype=np.float64)
     #plt.show()
     
-    ras = np.array([])
-    decs = np.array([])
-    dists = np.array([])
-    logptop = np.array([])
-    cls = np.array([])
-    
+    cattop = None
     for chunk in reader:
-        cattop, l, c = get_probability_index(chunk, probb, distmu, distsigma, distnorm, pixarea, nside, probability)
-        if len(cattop) == 0:
-            continue
+        dists = chunk['dist_Mpc']
+        theta = 0.5*np.pi - chunk['DEJ2000']*np.pi/180
+        phi = chunk['RAJ2000']*np.pi/180
+        ipix = hp.ang2pix(nside, theta, phi)
         
-        ras = np.append(ras, np.array(cattop['RAJ2000']))
-        decs = np.append(decs, np.array(cattop['DEJ2000']))
-        dists = np.append(dists, np.array(cattop['dist_Mpc']))
-        logptop = np.append(logptop, l)
-        cls = np.append(cls, c)
+        #phi = np.asarray([float(i) for i in phi])
+        #theta = np.asarray([float(i) for i in theta])
         
-    return ras, decs, dists, logptop, cls
+        # 3 sigma cut
+        keep_idxs = np.where(((dists - distmu[ipix])**2 <= (3 * distsigma[ipix])**2) & (probability[ipix] > 0.))[0] # dont include masked out pixels
+        #keep_idxs = np.where(probability[ipix] > 0.)[0]
+        if cattop is None:
+            cattop = chunk.iloc[keep_idxs]
+        else:
+            cattop = pd.concat((cattop, chunk.iloc[keep_idxs]), axis=0)
+            
+        
+    #accounting for probability distribution along the sky
+    cattop, l, c = get_probability_index(cattop, probb, distmu, distsigma, distnorm, pixarea, nside, probability)
+        
+    return cattop, l, c
  
  
 def write_catalog(params, savedir='', HET_specific_constraints = True):
@@ -150,6 +146,8 @@ def write_catalog(params, savedir='', HET_specific_constraints = True):
     # Reading in the skymap prob and header
     locinfo, header = hp.read_map(fits, field=range(4), h=True)
     probb, distmu, distsigma, distnorm = locinfo
+    
+    print(np.sum(probb * distmu), np.sum(probb * distsigma))
     # Getting healpix resolution and pixel area in deg^2
     npix = len(probb)
     nside = hp.npix2nside(npix)
@@ -161,68 +159,39 @@ def write_catalog(params, savedir='', HET_specific_constraints = True):
     #working with list of galaxies visble to HET
     chunksize = 50000 # initial chunksize
     while True:
-        try:
-            ras, decs, dists, logptop, cls = aggregate_galaxies(
-                chunksize,
-                probb,
-                distmu,
-                distsigma,
-                distnorm,
-                pixarea,
-                nside,
-                probability,
-                HET_specific_constraints
-            )
-            break
-        except:
-            chunksize /= 5 # if crashed from chunksize
-
-    # 90% confidence cut redundant, removed
+        #try:
+        cattop, logptop, cls = aggregate_galaxies(
+            chunksize,
+            probb,
+            distmu,
+            distsigma,
+            distnorm,
+            pixarea,
+            nside,
+            probability,
+            HET_specific_constraints
+        )
+        break
+        #except:
+        chunksize /= 5 # if crashed from chunksize
+        print(chunksize)
     
-    top99i = (logptop is not np.nan) & (logptop-np.max(logptop) > np.log(1/100))
-
-    logptop = logptop[top99i]
-    cls = cls[top99i]
-    ras = ras[top99i]
-    decs = decs[top99i]
-    dists = dists[top99i]
-    
-    #sorting by probability
-    isort = np.argsort(logptop)[::-1]
-    
-    num_keep = 1000 # number of galaxies in output
-    
-    if len(logptop) > num_keep:
-        logptop = logptop[isort][:num_keep]
-        cls = cls[isort][:num_keep]
-        ras = ras[isort][:num_keep]
-        decs = decs[isort][:num_keep]
-        dists = dists[isort][:num_keep]
-    else:
-        logptop = logptop[isort]
-        cls = cls[isort]
-        ras = ras[isort]
-        decs = decs[isort]
-        dists = dists[isort]
-    
-    
-    index = Column(name='index',data=np.arange(len(ras)))
-    ra_col = Column(name='RAJ2000',data=ras)
-    dec_col = Column(name='DEJ2000',data=decs)
-    dist_col = Column(name='dist_Mpc',data=dists)
+    index = Column(name='index',data=np.ones(len(cattop)))
     logprob = Column(name='LogProb',data=logptop)
-    exptime = Column(name='exptime',data=60*20*np.ones(len(ras)))
+    exptime = Column(name='exptime',data=60*20*np.ones(len(cattop)))
     contour = Column(name='contour',data = cls)
-    Nvis = Column(name='Nvis',data=np.ones(len(ras)))
-    cattop = Table()
-    cattop.add_columns([index,ra_col, dec_col, dist_col,logprob,exptime,Nvis,contour])
+    Nvis = Column(name='Nvis',data=np.ones(len(cattop)))
+    
+    cattop = Table.from_pandas(cattop)
+    cattop.add_columns([index, logprob,exptime,Nvis,contour])
     
     if HET_specific_constraints:
-        ascii.write(cattop['index','RAJ2000','DEJ2000','dist_Mpc','exptime','Nvis','LogProb','contour'], savedir+'HET_Visible_Galaxies_prob_list.dat', overwrite=True)
+        ascii.write(cattop['index','RAJ2000','DEJ2000','dist_Mpc', 'M*', 'exptime','Nvis','LogProb','contour'], savedir+'HET_Visible_Galaxies_prob_list.dat', overwrite=True)
     else:
-        ascii.write(cattop['index','RAJ2000','DEJ2000','dist_Mpc','exptime','Nvis','LogProb','contour'], savedir+'Visible_Galaxies_prob_list.dat', overwrite=True)
+        ascii.write(cattop['index','RAJ2000','DEJ2000','dist_Mpc', 'M*', 'exptime','Nvis','LogProb','contour'], savedir+'Visible_Galaxies_prob_list.dat', overwrite=True)
 
     return cattop, logptop
+
 
 def main():
     args = parseargs()

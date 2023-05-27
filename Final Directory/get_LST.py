@@ -151,10 +151,11 @@ def get_LST(targf = 'galaxies2MASS.dat', savedir=''):
     targ_ra = targs.columns[1].data
     targ_dec = targs.columns[2].data
     targ_dist = targs.columns[3].data
-    targ_exptime = targs.columns[4].data
-    targ_nvis = targs.columns[5].data
-    targ_logprob = targs.columns[6].data
-    targ_contour = targs.columns[7].data
+    targ_mass = targs.columns[4].data
+    targ_exptime = targs.columns[5].data
+    targ_nvis = targs.columns[6].data
+    targ_logprob = targs.columns[7].data
+    targ_contour = targs.columns[8].data
 
     #read in HET observability data file
     hetf = HET_track
