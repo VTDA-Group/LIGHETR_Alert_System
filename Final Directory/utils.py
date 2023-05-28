@@ -31,7 +31,7 @@ def get_relative_probs(M, dist, distinfo):
     return c_pdf * M
     
 
-def distribute_pixel_prob(pixel_probs, pixel_idxs, cat, distinfo):
+def distribute_pixel_prob(pixel_probs, pixel_mappings, cat, distinfo):
     """
     Distribute the probability of a single pixel across the galaxies
     in that pixel.
@@ -58,10 +58,15 @@ def distribute_pixel_prob(pixel_probs, pixel_idxs, cat, distinfo):
     stellar_M = np.array(cat['M*']) # masses
     
     relative_probs = get_relative_probs(stellar_M, dist, distinfo)
-    top_mass_idxs = np.argsort(relative_probs)[::-1][:10]
-    
     #probs_tiled = np.repeat(relative_probs[np.newaxis,:], len(pixel_probs), axis=0)
+    uniq_idxs = np.unique(pixel_mappings)
+    normed_probs = np.zeros(len(relative_probs))
     
+    for i in range(len(uniq_idxs)):
+        normed_c = np.sum(relative_probs[pixel_mappings == i])
+        normed_probs[pixel_mappings == i] = relative_probs[pixel_mappings == i] * pixel_probs[i] / normed_c
+        
+    """
     rel_tiled = relative_probs[np.newaxis,:] * pixel_idxs
     normed_consts = np.sum(rel_tiled, axis=1)
     
@@ -72,11 +77,11 @@ def distribute_pixel_prob(pixel_probs, pixel_idxs, cat, distinfo):
     print(pixel_probs[:2], normed_probs_tiled[:2])
     # condense back down into 1d
     normed_probs = np.sum(normed_probs_tiled, axis=0)
-    
+    """
     return normed_probs # so all probs sum to pixel_prob
     
     
-def get_gal_binary_matrix(ipix):
+def get_gal_pixel_mapping(ipix):
     """
     From list of thetas and phis, gets galaxy indices associated with each pixel.
     
@@ -96,14 +101,18 @@ def get_gal_binary_matrix(ipix):
         1 if galaxy j is in pixel i, 0 otherwise
     """
     unique_i, inverse_idxs = np.unique(ipix, return_inverse=True)
+    """
     gal_idxs = np.arange(len(ipix))
     
     binary_matrix = np.zeros( (len(unique_i), len(ipix)) )
     binary_matrix[inverse_idxs, gal_idxs] = 1
     
     assert ~np.any(np.sum(binary_matrix, axis=0) != 1)
+    """
+    print(inverse_idxs)
     
-    return binary_matrix, unique_i
+    
+    return inverse_idxs, unique_i
 
     
     
