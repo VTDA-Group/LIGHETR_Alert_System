@@ -57,15 +57,18 @@ def get_probability_index(cat, cls_all, distmu, distsigma, distnorm, pixarea, ns
     phi = cat['RAJ2000']*np.pi/180
 
     distinfo = np.array([distmu, distsigma, distnorm]).T
-    
-    #accounting for probability distribution along the sky
     ipix_reduced = hp.ang2pix(nside, theta, phi)
+    
+    # get all pixels of 90% confidence region
+    all_banana_pixs = (probability > 0.) & (cls_all < 90.)
+    all_completenesses = calculate_integrated_completeness(distmu[all_banana_pixs], distsigma[all_banana_pixs])
 
-    pixel_mapping, unique_ipix = get_gal_pixel_mapping(ipix_reduced)
+    unique_ipix, pixel_mapping = np.unique(ipix_reduced, return_inverse=True)
     pixel_prob = probability[unique_ipix]
     distinfo = distinfo[ipix_reduced]
     
-    print(len(pixel_prob), len(ipix_reduced))
+    #redistribute probabilities of "empty" pixels accounting for completeness
+    
     gal_probs = distribute_pixel_prob(pixel_prob, pixel_mapping, cat, distinfo)
     logdp_dV = np.log(gal_probs)
     #logdp_dV= logdp_dV[cls<90]
@@ -115,7 +118,7 @@ def aggregate_galaxies(chunksize, probb, distmu, distsigma, distnorm, pixarea, n
                         ((dists - distmu[ipix])**2 <= (3 * distsigma[ipix])**2) \
                         & (probability[ipix] > 0.) \
                         & (cls_red < 90.) \
-                        & (dists < 400.) # Mpc
+                        #& (dists < 400.) # Mpc
                     )[0] # dont include masked out pixels
         #keep_idxs = np.where(probability[ipix] > 0.)[0]
         
