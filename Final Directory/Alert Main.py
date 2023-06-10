@@ -121,8 +121,11 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         
         #get the skymap and header of the flattened, single-order fits file
         print("Processing FITS...")
-        skymap,header = hp.read_map(singleorder_file_name, h=True, verbose=False)
-        
+        try:
+            skymap,header = hp.read_map(singleorder_file_name, h=True, verbose=False)
+        except:
+            print("Unable to read map")
+            return
         
         #plot the sky-localization from the flattened, single-order fits file
         os.system("ligo-skymap-plot %s -o %s" % (singleorder_file_name, obs_time_dir+"fits_plotted.png"))
