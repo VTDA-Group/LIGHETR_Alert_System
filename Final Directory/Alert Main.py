@@ -193,7 +193,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         
         cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir, HET_specific_constraints = False)
         #if False:
-        if timetill90_HET ==-99 or frac_visible_HET <= 10.0:
+        if timetill90_HET ==-99 or frac_visible_HET <= 0.1:
             print("HET can't observe the source.")
             write_to_file(obs_time_dir+" observability.txt", "HET can't observe this source.")
             #sending emails out to only people on the contact_list_file_loc_all_events file about the alert. Because HET cannot observe the source.
