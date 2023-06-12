@@ -124,7 +124,16 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         try:
             skymap,header = hp.read_map(singleorder_file_name, h=True, verbose=False)
         except:
+        
             print("Unable to read map")
+            email_subject = 'LIGHETR Alert: GW Burst Event Detected (No Optical Counterpart) Event: '+str(superevent_id)
+            email_body = 'A gravitational wave burst event was detected. This means there is no sky localization from LIGO. We should ignore this event.\n Happy days!'
+            if test_event:
+                email_subject = '[TEST, Can Safely Disregard!] '+email_subject
+                email_body = '[TEST EVENT!]\n' + email_body
+                
+                
+            email(contact_list_file_loc = contact_list_file_loc_all_events, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
             return
         
         #plot the sky-localization from the flattened, single-order fits file
