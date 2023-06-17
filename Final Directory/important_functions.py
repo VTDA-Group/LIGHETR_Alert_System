@@ -7,8 +7,90 @@ import mimetypes
 import healpy as hp
 import os.path
 import datetime
+import numpy as np
+
+email_signature_wholesome = """.         _  .          .          .    +     .          .          .      .
+        .(_)          .            .            .            .       :
+        .   .      .    .     .     .    .      .   .      . .  .  -+-        .
+          .           .   .        .           .          /         :  .
+    . .        .  .      /.   .      .    .     .     .  / .      . ' .
+        .  +       .    /     .          .          .   /      .
+       .            .  /         .            .        *   .         .     .
+      .   .      .    *     .     .    .      .   .       .  .
+          .           .           .           .           .         +  .
+  . .        .  .       .   .      .    .     .     .    .      .   .
+
+ .   +      .          ___/\_._/~~\_...__/\__.._._/~\        .         .   .
+       .          _.--'                              `--./\          .   .
+           /~~\/~\                                         `-/~\_            .
+ .      .-'                                                      `-/\_
+  _/\.-'                                                          __/~\/\-.__
+.'                                                                           `.""""
 
 
+email_signature_peace = """
+       _.od8888888bo._
+     .dP"'   @#@   '"Yb.
+   .d"'      #@#      '"b.
+  d"'        @#@        '"b
+ d'          #@#          'b
+dP           @#@           Yb
+8l          oDWBo          l8
+Yb        o@#@B@#@o        dP
+ YI     o@#* #P# *#@o     IP
+  YI  o@#*   @#@   *#@o  IP
+   "9@#*     #@#     *#@P"
+     "8b     @#@     d8"
+       `"Y888888888P"`"""
+
+
+
+email_signature_derranged = """
+
+         =*===
+       $$- - $$$
+       $ <    D$$
+       $ -   $$$
+ ,     $$$$  |
+///; ,---' _ |----.
+ \ )(           /  )
+ | \/ \.   '  _.|  \              $
+ |  \ /(   /    /\_ \          $$$$$
+  \ /  (       / /  )         $$$ $$$
+       (  ,   /_/ ,`_,-----.,$$  $$$
+       |   <----|  \---##     \   $$
+       /         \\\           |    $
+      '   '                    |
+      |                 \      /
+      /  \_|    /______,/     /
+     /   / |   /    |   |    /
+    (   /--|  /.     \  (\  (_
+     `----,( ( _\     \ / / ,/
+           | /        /,_/,/
+          _|/        / / (
+         / (        ^-/, |
+        /, |          ^-    b'ger
+        ^-
+"""
+
+
+email_signature_weird = """
+.-.
+         heehee      /aa \_
+                   __\-  / )                 .-.
+         .-.      (__/    /        haha    _/oo \
+       _/ ..\       /     \               ( \v  /__
+      ( \  u/__    /       \__             \/   ___)
+       \    \__)   \_.-._._   )  .-.       /     \
+       /     \             `-`  / ee\_    /       \_
+    __/       \               __\  o/ )   \_.-.__   )
+   (   _._.-._/     hoho     (___   \/           '-'
+    '-'                        /     \
+                             _/       \    teehee
+                            (   __.-._/
+"""
+
+email_signatures = [email_signature_peace, email_signature_weird, email_signature_derranged, email_signature_wholesome]
 
 def dial_numbers(numbers_list):
     """Dials one or more phone numbers from a Twilio phone number."""
@@ -30,6 +112,8 @@ def send_email(email_sender, email_password, all_email_recipients, files, subjec
     body = body+"\nList of all Recipients of this email: "+str(everyone)
     now = datetime.datetime.now()
     body = body + "\nAttempted send at time: "+str(now)
+    signature = np.random.choice(email_signatures)
+    body = body + "\n\n"+signature
     for recipients in all_email_recipients:
         
         print("recipients: "+str(recipients))
