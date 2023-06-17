@@ -25,7 +25,7 @@ email_signature_wholesome = """.         _  .          .          .    +     .  
            /~~\/~\                                         `-/~\_            .
  .      .-'                                                      `-/\_
   _/\.-'                                                          __/~\/\-.__
-.'                                                                           `.""""
+.'                                                                           `."""
 
 
 email_signature_peace = """
@@ -113,7 +113,7 @@ def send_email(email_sender, email_password, all_email_recipients, files, subjec
     now = datetime.datetime.now()
     body = body + "\nAttempted send at time: "+str(now)
     signature = np.random.choice(email_signatures)
-    body = body + "\n\n"+signature
+    body = body + "\n\n\n"+signature
     for recipients in all_email_recipients:
         
         print("recipients: "+str(recipients))
