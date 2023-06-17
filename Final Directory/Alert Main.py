@@ -207,7 +207,8 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
             write_to_file(obs_time_dir+" observability.txt", "HET can't observe this source.")
             #sending emails out to only people on the contact_list_file_loc_all_events file about the alert. Because HET cannot observe the source.
             email_subject = 'LIGHETR Alert: NS Merger Detected, NOT VISIBLE TO HET. Event: '+str(superevent_id)
-            email_body = 'A Neutron Star Merger has been detected by LIGO. This event is not visible to HET. Percentage of the 90% localization region of this event visible to HET: '+str(frac_visible_HET)+'. This is too small to be worth following up. This is a courtesy email stating that an event was detected by LIGO. Distance to object: '+str(dist)+' Mpc'
+            email_body = 'A Neutron Star Merger has been detected by LIGO. This event is not visible to HET. Percentage of the 90% localization region of this event visible to HET: '+str(frac_visible_HET)+'. This is too small to be worth following up. This is a courtesy email stating that an event was detected by LIGO. Distance to object: '+str(dist)+' Mpc\n\n\n=================\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc'
+            
             if test_event:
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
                 email_body = '[TEST EVENT!]' + email_body
@@ -227,7 +228,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
             
             #sending emails out to everybody about the alert.
             email_subject = 'LIGHETR Alert: NS Merger Detected. Event: '+str(superevent_id)
-            email_body = 'A Neutron Star Merger has been detected by LIGO.\n{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET)+"\nI have attached a figure here, showing the 90% contour of the sky localization where LIGO found a merger. The portion in bright green is not visible to HET because of declination limitations or because of sun constraints. The portion in the dimmer blue-green is visible to HET tonight. The percentage of pixels that are visible to HET is "+str(round(frac_visible_HET*100, 3))+"%\nDistance to object: "+str(dist)+' Mpc \n\nPlease join this zoom call: https://us06web.zoom.us/j/87536495694'
+            email_body = 'A Neutron Star Merger has been detected by LIGO.\n{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET)+"\n\nI have attached a figure here, showing the 90% contour of the sky localization where LIGO found a merger. The portion in bright green is not visible to HET because of declination limitations or because of sun constraints. The portion in the dimmer blue-green is visible to HET tonight. The percentage of pixels that are visible to HET is "+str(round(frac_visible_HET*100, 3))+"%\nDistance to object: "+str(dist)+' Mpc\n=================\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc \n\nPlease join this zoom call: https://us06web.zoom.us/j/87536495694'
             if test_event:
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
                 email_body = '[TEST EVENT!]\n' + email_body
