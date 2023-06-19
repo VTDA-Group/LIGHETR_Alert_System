@@ -186,7 +186,9 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
                 
                 
             email(contact_list_file_loc = contact_list_file_loc_all_events, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
-            print("LIGHETR Alert: GW Event Detected (No Optical Counterpart)\n"+'A gravitational wave event was detected. Event: '+str(superevent_id)+'\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because it is unlikely to have a meaningful optical counterpart.\nThis had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)+'\n Happy days!')
+            print("LIGHETR Alert: GW Event Detected (No Optical Counterpart)\n"+'A gravitational wave event was detected. Event: '+str(superevent_id)+'\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because of FAR and significance cuts.\nThis had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)+'\n Happy days!')
+            
+            return
         
         #if it's not at least 30% a (BNS or NSBH) signal, ignore it.
         if (sizes[1]+sizes[2])/(sizes[0]+sizes[1]+sizes[2]+sizes[3]) < 0.3:
