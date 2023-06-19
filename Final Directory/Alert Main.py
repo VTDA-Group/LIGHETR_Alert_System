@@ -152,20 +152,6 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         dist_mu = float(header['DISTMEAN'])
         dist_std = float(header['DISTSTD'])
         
-        if dist_mu - dist_std > max_dist:
-            #sending emails out to only people on the contact_list_file_loc_all_events file about the alert. Because there is likely no remnant.
-            email_subject = 'LIGHETR Alert: GW Event Detected (No Optical Counterpart) Event: '+str(superevent_id)
-            email_body = 'A gravitational wave event was detected.\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because of distance cuts. We\'re using a distance cut of mu-1sigma distance needs to be < '+str(max_dist)+' Mpc.\nThis had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)+'\n Happy days!'
-            if test_event:
-                email_subject = '[TEST, Can Safely Disregard!] '+email_subject
-                email_body = '[TEST EVENT!]\n' + email_body
-                
-                
-            email(contact_list_file_loc = contact_list_file_loc_all_events, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
-            print("LIGHETR Alert: GW Event Detected (No Optical Counterpart)\n"+'A gravitational wave event was detected. Event: '+str(superevent_id)+'\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because of FAR and significance cuts.\nThis had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)+'\n Happy days!')
-            
-            return
-        
         header['id'] = superevent_id
         
         
@@ -223,7 +209,19 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
             print("LIGHETR Alert: GW Event Detected (No Optical Counterpart)\n"+'A gravitational wave event was detected. Event: '+str(superevent_id)+'\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because it is unlikely to have a meaningful optical counterpart.\nThis had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)+'\n Happy days!')
             return
         
-
+        if dist_mu - dist_std > max_dist:
+            #sending emails out to only people on the contact_list_file_loc_all_events file about the alert. Because there is likely no remnant.
+            email_subject = 'LIGHETR Alert: GW Event Detected (No Optical Counterpart) Event: '+str(superevent_id)
+            email_body = 'A gravitational wave event was detected.\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because of distance cuts. We\'re using a distance cut of mu-1sigma distance needs to be < '+str(max_dist)+' Mpc.\nThis had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)+'\n Happy days!'
+            if test_event:
+                email_subject = '[TEST, Can Safely Disregard!] '+email_subject
+                email_body = '[TEST EVENT!]\n' + email_body
+                
+                
+            email(contact_list_file_loc = contact_list_file_loc_all_events, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
+            print("LIGHETR Alert: GW Event Detected (No Optical Counterpart)\n"+'A gravitational wave event was detected. Event: '+str(superevent_id)+'\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because of FAR and significance cuts.\nThis had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)+'\n Happy days!')
+            
+            return
         
         
         print("Calculating probabilities")
