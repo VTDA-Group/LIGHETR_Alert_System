@@ -34,7 +34,16 @@ def get_relative_probs(M, dist, distinfo):
 def distribute_pixel_prob(pixel_probs, pixel_mappings, cat, distinfo):
     """
     Distribute the probability of a single pixel across the galaxies
-    in that pixel.
+    in that pixel. Also accounts for < 100% completeness.
+    
+    STEPS TO GET PROPER MISSING PROBS:
+    - For each pixel:
+        - Get completeness for each distance bin
+        - Calculate conditional_pdf for each distance bin
+        - Treat unseen galaxies per bin as an effective single galaxy
+        - For that effective galaxy, ranked prob = completeness * M_bin * conditional_pdf
+        - Distribute pixel prob among "effective" galaxies and real galaxies
+        - Sum probs of effective galaxies as "missing prob"
     
     Parameters
     ----------
@@ -52,33 +61,38 @@ def distribute_pixel_prob(pixel_probs, pixel_mappings, cat, distinfo):
     ----------
     1d numpy array
         The probabilities of each galaxy corrected for pixel probs
+    missing_prob : float
+        Total probability across sky occupied by galaxies we cannot see
     """
     
     dist = np.array(cat['dist_Mpc']) # get distances in Mpc
     stellar_M = np.array(cat['M*']) # masses
     
+    #uniq_idxs = np.unique(pixel_mappings)
     relative_probs = get_relative_probs(stellar_M, dist, distinfo)
-    #probs_tiled = np.repeat(relative_probs[np.newaxis,:], len(pixel_probs), axis=0)
-    uniq_idxs = np.unique(pixel_mappings)
     normed_probs = np.zeros(len(relative_probs))
-    
-    for i in range(len(uniq_idxs)):
-        normed_c = np.sum(relative_probs[pixel_mappings == i])
-        normed_probs[pixel_mappings == i] = relative_probs[pixel_mappings == i] * pixel_probs[i] / normed_c
-        
-    """
-    rel_tiled = relative_probs[np.newaxis,:] * pixel_idxs
-    normed_consts = np.sum(rel_tiled, axis=1)
-    
-    normed_consts[normed_consts <= 0] = np.inf
 
-    normed_probs_tiled = rel_tiled * (pixel_probs / normed_consts)[:,np.newaxis] # distributes probability 1 among the galaxies within each pixel
-    
-    print(pixel_probs[:2], normed_probs_tiled[:2])
-    # condense back down into 1d
-    normed_probs = np.sum(normed_probs_tiled, axis=0)
-    """
-    return normed_probs # so all probs sum to pixel_prob
+    completeness_per_bin, dist_bins = calculate_completeness_per_bin(distinfo[:,0], distinfo[:,1])
+    total_visible_mass = np.sum(stellar_M)
+    vis_mass_per_pixel = total_visible_mass / len(pixel_probs)
+    missing_prob = 0.
+    for i in range(len(pixel_probs)):
+        gals_in_pixel = np.where(pixel_mappings == i)[0]
+        #if len(gals_in_pixel) == 0:
+        #    #missing_prob += (1. - completeness_per_bin[i]) * pixel_probs[i]
+        #    continue
+        missing_M_per_bin = (1. / completeness_per_bin[i] - 1.) * distribute_val_among_volume_space(vis_mass_per_pixel, dist_bins[i])
+        distinfo_single = distinfo[np.newaxis,i] * np.ones((len(dist_bins[i]),3))
+        relative_miss_probs_sum = np.sum(get_relative_probs(missing_M_per_bin, dist_bins[i], distinfo_single))
+        # incorporate missing galaxies when normalizing probabilities
+        normed_c = np.sum(relative_probs[gals_in_pixel]) + relative_miss_probs_sum
+        if normed_c == 0.:
+            normed_c = 1.
+        normed_probs[gals_in_pixel] = relative_probs[gals_in_pixel] * pixel_probs[i] / normed_c
+        missing_prob += relative_miss_probs_sum * pixel_probs[i] / normed_c
+        
+    assert np.all(normed_probs >= 0)
+    return normed_probs, missing_prob # so all probs sum to pixel_prob
 
     
 def glade_completeness(dists):
@@ -94,14 +108,13 @@ def glade_completeness(dists):
     """
     # in intervals of 50 Mpc, then 100 Mpc
     dist_refs = np.array([0, 50., 100., 150., 200., 300., 400., 500., 600., 700., 800.])
-    dist_to_comp = np.array([100., 80, 65., 50., 45., 42., 40., 35., 30., 25., 20.])
+    dist_to_comp = np.array([80., 80., 65., 50., 45., 42., 40., 35., 30., 25., 20.]) / 100.
     
-    closest_dist_idxs = np.array([np.argmin(d - dist_refs) for d in dists)])
+    closest_dist_idxs = np.array([np.argmin((d - dist_refs)**2) for d in dists])
     return dist_to_comp[closest_dist_idxs]
     
-    
 
-def calculate_integrated_completeness(dist_mu, dist_sigma):
+def calculate_completeness_per_bin(dist_mu, dist_sigma):
     """
     Assuming we're using a 3-sigma distance cut for each pixel, determine
     the completeness we expect for that pixel integrated across that distance range.
@@ -109,32 +122,24 @@ def calculate_integrated_completeness(dist_mu, dist_sigma):
     Approximates integral as 20-bin Riemann sum.
     """
     dist_min = dist_mu - 3. * dist_sigma
+    dist_min[(dist_min <= 0.) | np.isinf(dist_min) | np.isnan(dist_min)] = 0.0001
     dist_max = dist_mu + 3. * dist_sigma
-    
+    dist_max[(dist_max <= 0.) | np.isinf(dist_max) | np.isnan(dist_max)] = 1e10
+            
     dist_bins = np.array([np.linspace(dist_min[i], dist_max[i], num=20) for i in range(len(dist_mu))])
     
     pix_comp_per_dist = np.array([glade_completeness(d_bin) for d_bin in dist_bins])
-    pix_comp_summed = np.sum(3. * dist_bins**2 * pix_comp_per_dist, axis=1)
-    pix_comp_avged = pix_comp_summed * (dist_bins[:,1] - dist_bins[:,0]) / (dist_max**3 - dist_min**3)
-    return pix_comped_avged
+    
+    return pix_comp_per_dist, dist_bins
+    #pix_comp_summed = np.sum(3. * dist_bins**2 * pix_comp_per_dist, axis=1)
+    #pix_comp_avged = pix_comp_summed * (dist_bins[:,1] - dist_bins[:,0]) / (dist_max**3 - dist_min**3)
+    #return pix_comped_avged
+    
 
-    
-    
-def adjust_probs_for_completeness(normed_probs, dists):
+def distribute_val_among_volume_space(val, dists):
     """
-    Reduce effective probabilities to account for GLADE+ completeness at different
-    distances. Assumes that, for each galaxy at distance d, there are (1 / completeness - 1)
-    similar galaxies not visible at that distance, so the adjusted probability is:
-    
-    prob_adj = prob_norm / (1 / completeness) = prob_norm * completeness
-    
-    Note that
-    
-    Parameters
-    ----------
-    normed_probs : numpy array
-        normed probabilities of each galaxy, accounting for GW signal pixel probs
-    dists : numpy array
-        galaxy distances, in Mpc
+    Used to distribute value accordng to weights and spherical shell size at each distance.
     """
+    return dists**2 * val / np.sum(dists**2) # more volume space occupied by further out distances
+
     
