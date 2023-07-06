@@ -78,23 +78,31 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         '''
 
         alert_time = alert_message['time_created']
-        
         alert_time = Time(alert_time)
+        alert_type = alert_message['alert_type']
         
         test_event = False #this value will be set to true if the event turns out to be a test/mock event
         superevent_id = alert_message['superevent_id']
+        gracedb_site = 'https://gracedb.ligo.org/superevents/'+str(superevent_id)+'/'
         if superevent_id[0] == 'T' or superevent_id[0] == 'M':
             test_event = True
         if skip_test_alerts and test_event: #if we want to ignore test events, and this is a test event, ignore it.
             return
         
-        print("\n\n=============================\nFound a real LIGO event: "+str(superevent_id)+"\n")
+        print("\n\n=============================\nFound a real LIGO event: "+str(superevent_id)+" | "+str(alert_type)+" Alert\n")
         
         #so we've found an alert that we want to look at. I'll make a directory for this time.
-        obs_time_dir = str(alert_time.mjd)+"/"
+        obs_time_dir = str(superevent_id)+"/"+str(alert_time.mjd)+"/"
         
+
+        if not os.path.exists(superevent_id+"/"):
+            os.mkdir(superevent_id+"/")
         if not os.path.exists(obs_time_dir):
             os.mkdir(obs_time_dir)
+
+        data_out = open(obs_time_dir+'Basic_Info_About_Event.txt', 'w')
+        data_out.write('Found an event: '+str(superevent_id)+" | "+str(alert_type)+" Alert\nFound at time: "+str(alert_time.mjd)+" MJD\n")
+        data_out.close()
         
         fits_url = 'https://gracedb.ligo.org/api/superevents/'+str(superevent_id)+'/files/bayestar.multiorder.fits'
         
@@ -131,9 +139,11 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
             if test_event:
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
                 email_body = '[TEST EVENT!]\n' + email_body
-                
-                
             email(contact_list_file_loc = contact_list_file_loc_all_events, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
+            
+            data_out = open(obs_time_dir+'Basic_Info_About_Event.txt', 'a')
+            data_out.write('This is a burst event: '+str(superevent_id)+" | "+str(alert_type)+" Alert\n")
+            data_out.close()
             return
         
         #plot the sky-localization from the flattened, single-order fits file
@@ -176,46 +186,62 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         ax1.legend(patches, labels, loc="best")
         ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
         plt.savefig(obs_time_dir+'piechart.png')
-        
-        
+
         far = alert_message['event']['far']
         significance = alert_message['event']['significant']
+
+        probabilities_text = 'Probability of BBH: '+str(sizes[0])+'Probability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])
+        distance_text = 'Distance to object: '+str(dist)+' Mpc'
+        FAR_sig_gracedb_text = 'This had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)+'\nGracedb Site: '+str(gracedb_site)
+        
+
         
         if float(far) > 3.9E-7 and significance == 'False':
             #sending emails out to only people on the contact_list_file_loc_all_events file about the alert. Because there is likely no remnant.
-            email_subject = 'LIGHETR Alert: GW Event Detected (No Optical Counterpart) Event: '+str(superevent_id)
-            email_body = 'A gravitational wave event was detected.\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because of FAR and significance cuts.\nThis had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)+'\n Happy days!'
+            email_subject = '('+str(superevent_id)+" "+str(alert_type)+') LIGHETR Alert: GW Event Detected (No Optical Counterpart)'
+            email_body = 'A gravitational wave event was detected.\n\n'+str(probabilities_text)+'\n'+str(distance_text)+'\n\nWe will ignore this event because of FAR and significance cuts.\n'+FAR_sig_gracedb_text+'\n\nHappy days!'
             if test_event:
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
                 email_body = '[TEST EVENT!]\n' + email_body
                 
                 
             email(contact_list_file_loc = contact_list_file_loc_all_events, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
-            print("LIGHETR Alert: GW Event Detected (No Optical Counterpart)\n"+'A gravitational wave event was detected. Event: '+str(superevent_id)+'\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because of FAR and significance cuts.\nThis had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)+'\n Happy days!')
+
+            data_out = open(obs_time_dir+'Basic_Info_About_Event.txt', 'a')
+            data_out.write(email_body)
+            data_out.close()
+            print("LIGHETR Alert: GW Event Detected (No Optical Counterpart)\n"+'A gravitational wave event was detected. Event: '+str(superevent_id)+'\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because of FAR and significance cuts.\nThis had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)+'\nGracedb Site: '+str(gracedb_site)+'\n\n Happy days!')
             
             return
         
         #if it's not at least 30% a (BNS or NSBH) signal, ignore it.
         if (sizes[1]+sizes[2])/(sizes[0]+sizes[1]+sizes[2]+sizes[3]) < 0.3:
             #sending emails out to only people on the contact_list_file_loc_all_events file about the alert. Because there is likely no remnant.
-            email_subject = 'LIGHETR Alert: GW Event Detected (No Optical Counterpart) Event: '+str(superevent_id)
-            email_body = 'A gravitational wave event was detected.\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because it is unlikely to have a meaningful optical counterpart.\nThis had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)+'\n Happy days!'
+            email_subject = '('+str(superevent_id)+" "+str(alert_type)+') LIGHETR Alert: GW Event Detected (No Optical Counterpart)'
+            email_body = 'A gravitational wave event was detected.\n\n'+str(probabilities_text)+'\n'+str(distance_text)+'\n\nWe will ignore this event because it is unlikely to have a meaningful optical counterpart.\n'+FAR_sig_gracedb_text+'\n\n Happy days!'
             if test_event:
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
                 email_body = '[TEST EVENT!]\n' + email_body
-                
+            
+            data_out = open(obs_time_dir+'Basic_Info_About_Event.txt', 'a')
+            data_out.write(email_body)
+            data_out.close()
                 
             email(contact_list_file_loc = contact_list_file_loc_all_events, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
-            print("LIGHETR Alert: GW Event Detected (No Optical Counterpart)\n"+'A gravitational wave event was detected. Event: '+str(superevent_id)+'\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because it is unlikely to have a meaningful optical counterpart.\nThis had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)+'\n Happy days!')
+            print("LIGHETR Alert: GW Event Detected (No Optical Counterpart)\n"+'A gravitational wave event was detected. Event: '+str(superevent_id)+'\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because it is unlikely to have a meaningful optical counterpart.\nThis had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)+'\nGracedb Site: '+str(gracedb_site)+'\n\n Happy days!')
             return
         
         if dist_mu - dist_std > max_dist:
             #sending emails out to only people on the contact_list_file_loc_all_events file about the alert. Because there is likely no remnant.
-            email_subject = 'LIGHETR Alert: GW Event Detected (No Optical Counterpart) Event: '+str(superevent_id)
-            email_body = 'A gravitational wave event was detected.\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because of distance cuts. We\'re using a distance cut of mu-1sigma distance needs to be < '+str(max_dist)+' Mpc.\nThis had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)+'\n Happy days!'
+            email_subject = '('+str(superevent_id)+" "+str(alert_type)+') LIGHETR Alert: GW Event Detected (No Optical Counterpart)'
+            email_body = 'A gravitational wave event was detected\n\n'+str(probabilities_text)+'\n'+str(distance_text)+'\n\nWe will ignore this event because of distance cuts. We\'re using a distance cut of mu-1sigma distance needs to be < '+str(max_dist)+' Mpc..\n'+FAR_sig_gracedb_text+'\n\n Happy days!'
             if test_event:
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
                 email_body = '[TEST EVENT!]\n' + email_body
+
+            data_out = open(obs_time_dir+'Basic_Info_About_Event.txt', 'a')
+            data_out.write(email_body)
+            data_out.close()
                 
                 
             email(contact_list_file_loc = contact_list_file_loc_all_events, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
@@ -243,14 +269,18 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
             print("HET can't observe the source.")
             write_to_file(obs_time_dir+" observability.txt", "HET can't observe this source.")
             #sending emails out to only people on the contact_list_file_loc_all_events file about the alert. Because HET cannot observe the source.
-            email_subject = 'LIGHETR Alert: NS Merger Detected, NOT VISIBLE TO HET. Event: '+str(superevent_id)
-            email_body = 'A Neutron Star Merger has been detected by LIGO. This event is not visible to HET. Percentage of the 90% localization region of this event visible to HET: '+str(frac_visible_HET)+'. This is too small to be worth following up. This is a courtesy email stating that an event was detected by LIGO. Distance to object: '+str(dist)+' Mpc\n\n\n=================\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nThis had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)
+            email_subject = '('+str(superevent_id)+" "+str(alert_type)+') LIGHETR Alert: NS Merger Detected, NOT VISIBLE TO HET.'
+            email_body = 'A Neutron Star Merger has been detected by LIGO. This event is not visible to HET. Percentage of the 90% localization region of this event visible to HET: '+str(frac_visible_HET)+'. This is too small to be worth following up. This is a courtesy email stating that an event was detected by LIGO. Distance to object: '+str(dist)+' Mpc\n\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\n\nThis had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)+'\nGracedb Site: '+str(gracedb_site)+'\n\n Happy days!\n'
             
+            data_out = open(obs_time_dir+'Basic_Info_About_Event.txt', 'a')
+            data_out.write(email_body)
+            data_out.close()
+
             if test_event:
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
                 email_body = '[TEST EVENT!]' + email_body
                 
-            email(contact_list_file_loc = contact_list_file_loc_all_events, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
+            email(contact_list_file_loc = contact_list_file_loc_all_events, subject=email_subject, body = email_body, files_to_attach = [obs_time_dir+"HET_Full_Visibility.pdf"], people_to_contact = people_to_contact)
             return
         else:
             cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir, HET_specific_constraints = True)
@@ -264,11 +294,15 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
             
             
             #sending emails out to everybody about the alert.
-            email_subject = 'LIGHETR Alert: NS Merger Detected. Event: '+str(superevent_id)
-            email_body = 'A Neutron Star Merger has been detected by LIGO.\n{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET)+"\n\nI have attached a figure here, showing the 90% contour of the sky localization where LIGO found a merger. The portion in bright green is not visible to HET because of declination limitations or because of sun constraints. The portion in the dimmer blue-green is visible to HET tonight. The percentage of pixels that are visible to HET is "+str(round(frac_visible_HET*100, 3))+"%\nDistance to object: "+str(dist)+' Mpc\n=================\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\n=================\nThis had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)+' \n\nPlease join this zoom call: https://us06web.zoom.us/j/87536495694'
+            email_subject = '('+str(superevent_id)+" "+str(alert_type)+') LIGHETR Alert: NS Merger Detected.'
+            email_body = 'A Neutron Star Merger has been detected by LIGO.\n{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET)+"\n\nI have attached a figure here, showing the 90% contour of the sky localization where LIGO found a merger. The portion in bright green is not visible to HET because of declination limitations or because of sun constraints. The portion in the dimmer blue-green is visible to HET tonight. The percentage of pixels that are visible to HET is "+str(round(frac_visible_HET*100, 3))+'\n\n=================\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\n=================\nThis had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)+'\nGracedb Site: '+str(gracedb_site)+' \n\nPlease join this zoom call: https://us06web.zoom.us/j/87536495694\n'
             if test_event:
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
                 email_body = '[TEST EVENT!]\n' + email_body
+
+            data_out = open(obs_time_dir+'Basic_Info_About_Event.txt', 'a')
+            data_out.write(email_body)
+            data_out.close()
                 
                 
             email(contact_list_file_loc = contact_list_file_loc, subject=email_subject, body = email_body, files_to_attach = [obs_time_dir+"HET_Full_Visibility.pdf"], people_to_contact = people_to_contact)
@@ -287,8 +321,8 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
             #sending phaseII file out to astronomer at HET
             make_phaseii.make_phaseii(lstfile = obs_time_dir+'LSTs_Visible.out', savedir = obs_time_dir)
             
-            email_body = 'Attached is a phase ii submission file to HET with the list of galaxies we wish to observe, along with a file with LSTs of when they are visible.\nThanks for your help! \n\nZoom call: https://us06web.zoom.us/j/87536495694'
-            subject='LIGHETR Alert: NS Merger Detected'
+            email_body = 'Attached is a phase ii submission file to HET with the list of galaxies we wish to observe, along with a file with LSTs of when they are visible'+'\nGracedb Site: '+str(gracedb_site)+'\n Happy days!'+'.\nThanks for your help! \n\nZoom call: https://us06web.zoom.us/j/87536495694'
+            subject= '('+str(superevent_id)+" "+str(alert_type)+') LIGHETR Alert: NS Merger Detected'
             
             if test_event:
                 email_body = '[TEST, Can Safely Disregard!] ' + email_body
