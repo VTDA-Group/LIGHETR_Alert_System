@@ -92,11 +92,12 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         print("\n\n=============================\nFound a real LIGO event: "+str(superevent_id)+" | "+str(alert_type)+" Alert\n")
         
         #so we've found an alert that we want to look at. I'll make a directory for this time.
-        obs_time_dir = str(superevent_id)+"/"+str(alert_time.mjd)+"/"
+        obs_time_dir = "Events/"+str(superevent_id)+"/"+str(alert_time.mjd)+"/"
         
-
+        if not os.path.exists("Events/"):
+            os.path.mkdir('Events/')
         if not os.path.exists(superevent_id+"/"):
-            os.mkdir(superevent_id+"/")
+            os.mkdir("Events/"+superevent_id+"/")
         if not os.path.exists(obs_time_dir):
             os.mkdir(obs_time_dir)
 
