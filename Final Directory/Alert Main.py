@@ -191,7 +191,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         far = alert_message['event']['far']
         significance = alert_message['event']['significant']
 
-        probabilities_text = 'Probability of BBH: '+str(sizes[0])+'Probability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])
+        probabilities_text = 'Probability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])
         distance_text = 'Distance to object: '+str(dist)+' Mpc'
         FAR_sig_gracedb_text = 'This had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)+'\nGracedb Site: '+str(gracedb_site)
         
