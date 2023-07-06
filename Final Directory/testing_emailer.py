@@ -44,4 +44,4 @@ def email(contact_list_file_loc = 'contact_all_BNS.json', subject = None, body =
     email_password = ligo_list_password
     send_email(email_sender = email_sender, email_password = email_password, all_email_recipients = all_email_recipients, files = files_to_attach, subject = subject, body = body)
 
-    email(contact_list_file_loc = 'contact_only_HET_BNS.json', subject = "IGNORE RECENT LIGO ALERT", body = 'Hello Everyone!\nThe recent alert that just got sent out was an update for the event S230529ay, which was detected back in May. We will not be following up on this event. Please disregard the alert regarding the event S230529ay.\nHave a wonderful day!\n~LIGHETR Alert Team')
+#email(contact_list_file_loc = 'contact_only_HET_BNS.json', subject = "IGNORE RECENT LIGO ALERT", body = 'Hello Everyone!\nThe recent alert that just got sent out was an update for the event S230529ay, which was detected back in May. We will not be following up on this event. Please disregard the alert regarding the event S230529ay.\nHave a wonderful day!\n~LIGHETR Alert Team')
