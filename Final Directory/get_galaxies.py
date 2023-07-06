@@ -57,16 +57,28 @@ def get_probability_index(cat, cls_all, distmu, distsigma, distnorm, pixarea, ns
     phi = cat['RAJ2000']*np.pi/180
 
     distinfo = np.array([distmu, distsigma, distnorm]).T
-    
-    #accounting for probability distribution along the sky
     ipix_reduced = hp.ang2pix(nside, theta, phi)
-
-    pixel_mapping, unique_ipix = get_gal_pixel_mapping(ipix_reduced)
+    
+    # get all pixels of 90% confidence region
+    #all_banana_pixs = np.where((probability > 0.) & (cls_all < 90.))[0]
+    
+    unique_ipix, pixel_mapping = np.unique(ipix_reduced, return_inverse=True)
     pixel_prob = probability[unique_ipix]
     distinfo = distinfo[ipix_reduced]
     
-    print(len(pixel_prob), len(ipix_reduced))
-    gal_probs = distribute_pixel_prob(pixel_prob, pixel_mapping, cat, distinfo)
+    # missing prob is probability occupied by < 100% completeness, galaxies we cannot see
+    gal_probs, missing_prob = distribute_pixel_prob(
+                                                pixel_prob,
+                                                pixel_mapping,
+                                                cat,
+                                                distinfo
+                                            )
+    gal_sum = np.sum(gal_probs)
+    print("norm", gal_sum, missing_prob)
+    # we can normalize the non-missing prob to sum up to (1 - missing_prob)
+    gal_probs /= (gal_sum + missing_prob)
+    missing_prob /= (gal_sum + missing_prob)
+    print("norm", np.sum(gal_probs), missing_prob)
     logdp_dV = np.log(gal_probs)
     #logdp_dV= logdp_dV[cls<90]
     cls = cls_all[ipix_reduced]
@@ -97,9 +109,9 @@ def aggregate_galaxies(chunksize, probb, distmu, distsigma, distnorm, pixarea, n
     Helper function to attempt galaxy file imports with different chunksizes.
     """
     if HET_specific_constraints:
-        reader = pd.read_csv("Glade_Visible_Galaxies.csv", chunksize=chunksize, sep=',',header=0,dtype=np.float64)
+        reader = pd.read_csv("Glade_Visible_Galaxies.csv", chunksize=chunksize, sep=',',header=0)
     else:
-        reader = pd.read_csv("Glade_Visible_Galaxies.csv", chunksize=chunksize, sep=',',header=0,dtype=np.float64)
+        reader = pd.read_csv("Glade_Visible_Galaxies.csv", chunksize=chunksize, sep=',',header=0)
     #plt.show()
     cls = cdf(probb)
     cattop = None
@@ -115,7 +127,7 @@ def aggregate_galaxies(chunksize, probb, distmu, distsigma, distnorm, pixarea, n
                         ((dists - distmu[ipix])**2 <= (3 * distsigma[ipix])**2) \
                         & (probability[ipix] > 0.) \
                         & (cls_red < 90.) \
-                        & (dists < 400.) # Mpc
+                        #& (dists < 400.) # Mpc
                     )[0] # dont include masked out pixels
         #keep_idxs = np.where(probability[ipix] > 0.)[0]
         
