@@ -58,6 +58,13 @@ def get_texter_list(file_loc = 'contact_all_BNS.json'):
     f = open( file_loc , "rb" )
     jsonObject = json.load(f)
     return jsonObject['texter_list']
+
+def mkdir(dir_loc):
+    '''inputs: dir_loc-location of directory to create
+       outputs: none
+       This function creates the directory at dir_loc if it doesn't exist. If it does exist, nothing happens'''
+    if not os.path.isdir(dir_loc):
+        os.mkdir(dir_loc)
     
 
 def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
@@ -94,12 +101,9 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         #so we've found an alert that we want to look at. I'll make a directory for this time.
         obs_time_dir = "Events/"+str(superevent_id)+"/"+str(alert_time.mjd)+"/"
         
-        if not os.path.exists("Events/"):
-            os.path.mkdir('Events/')
-        if not os.path.exists(superevent_id+"/"):
-            os.mkdir("Events/"+superevent_id+"/")
-        if not os.path.exists(obs_time_dir):
-            os.mkdir(obs_time_dir)
+        mkdir('Events/')
+        mkdir('Events/'+str(superevent_id)+'/')
+        mkdir(obs_time_dir)
 
         data_out = open(obs_time_dir+'Basic_Info_About_Event.txt', 'w')
         data_out.write('Found an event: '+str(superevent_id)+" | "+str(alert_type)+" Alert\nFound at time: "+str(alert_time.mjd)+" MJD\n")
