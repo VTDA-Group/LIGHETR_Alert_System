@@ -225,7 +225,7 @@ def get_LST(targf = 'galaxies2MASS.dat', savedir=''):
                     #print(ha1,ha2,ha3,ha4)
                     print("{:.2f}h on first track available. you requested: {:.2f}h per ({:.0f}) visit".format(ha_total, req_h.value,n))
                     #how many visits would it need?
-                    fix_nv = np.int(1.+(e/3600.)/ha_total)
+                    fix_nv = int(1.+(e/3600.)/ha_total)
                     print('   that is a PROBLEM -- need more visits. for now you get '+str(fix_nv)+' visits instead')
                     print('epv before '+str(epv))
                     epv = e/fix_nv
