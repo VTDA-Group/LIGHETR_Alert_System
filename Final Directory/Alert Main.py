@@ -144,7 +144,9 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
             if test_event:
                 email_subject = '[TEST, Can Safely Disregard!] '+email_subject
                 email_body = '[TEST EVENT!]\n' + email_body
-            email(contact_list_file_loc = contact_list_file_loc_all_events, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
+            
+            #Let's NOT send emails for burst events.
+            #email(contact_list_file_loc = contact_list_file_loc_all_events, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
             
             data_out = open(obs_time_dir+'Basic_Info_About_Event.txt', 'a')
             data_out.write('This is a burst event: '+str(superevent_id)+" | "+str(alert_type)+" Alert\n")
@@ -221,6 +223,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         
         #if it's not at least 30% a (BNS or NSBH) signal, ignore it.
         if (sizes[1]+sizes[2])/(sizes[0]+sizes[1]+sizes[2]+sizes[3]) < 0.3:
+
             #sending emails out to only people on the contact_list_file_loc_all_events file about the alert. Because there is likely no remnant.
             email_subject = '('+str(superevent_id)+" "+str(alert_type)+') LIGHETR Alert: GW Event Detected (No Optical Counterpart)'
             email_body = 'A gravitational wave event was detected.\n\n'+str(probabilities_text)+'\n'+str(distance_text)+'\n\nWe will ignore this event because it is unlikely to have a meaningful optical counterpart.\n'+FAR_sig_gracedb_text+'\n\n Happy days!'
@@ -232,7 +235,10 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
             data_out.write(email_body)
             data_out.close()
                 
-            email(contact_list_file_loc = contact_list_file_loc_all_events, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
+
+            if sizes[3] < 0.9:
+                #send the email only if the terrestrial signal is less than 0.9
+                email(contact_list_file_loc = contact_list_file_loc_all_events, subject=email_subject, body = email_body, files_to_attach = [], people_to_contact = people_to_contact)
             print("LIGHETR Alert: GW Event Detected (No Optical Counterpart)\n"+'A gravitational wave event was detected. Event: '+str(superevent_id)+'\nProbability of BBH: '+str(sizes[0])+'\nProbability of BNS: '+str(sizes[1])+'\nProbability of NSBH:'+str(sizes[2])+'\nProbability of Terrestrial Event: '+str(sizes[3])+'\nDistance to object: '+str(dist)+' Mpc\nWe will ignore this event because it is unlikely to have a meaningful optical counterpart.\nThis had a FAR of '+str(far)+'\nSignificance of event: '+str(significance)+'\nGracedb Site: '+str(gracedb_site)+'\n\n Happy days!')
             return
         
