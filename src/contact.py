@@ -167,10 +167,11 @@ def send_low_prob_info(alert, contact_list, reason="low_prob"):
         data_out.write(body)
         
         
-def send_not_visible_info(alert, contact_list):
+def send_not_visible_info(observatory_HET, contact_list):
+    alert = observatory_HET.alert
     subject = f'({alert.event_id} {alert.alert_type}) LIGHETR Alert: NS Merger Detected (NOT VISIBLE TO HET).'                             
     body = 'A Neutron Star Merger has been detected by LIGO. This event is not visible to HET.'
-    body += f'Percentage of the 90% localization region of this event visible to HET: {alert.frac_visible_HET}.'
+    body += f'Percentage of the 90% localization region of this event visible to HET: {observatory_HET.frac_visible}.'
     body += 'This is too small to be worth following up. This is a courtesy email stating that an event was detected by LIGO.\n\n'
                        
     for k in alert.event_dict:
@@ -207,15 +208,16 @@ def send_not_visible_info(alert, contact_list):
         
         
 
-def send_mapped_alert_info(alert, contact_list):
-
+def send_mapped_alert_info(observatory_HET, contact_list):
+    alert = observatory_HET.alert
+    
     #sending emails out to everybody about the alert.
     subject = f'({alert.event_id} {alert.alert_type}) LIGHETR Alert: NS Merger Detected.'
     body = 'A Neutron Star Merger has been detected by LIGO.\n'
     body += '{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET)
     body += '\n\nI have attached a figure here, showing the 90% contour of the sky localization where LIGO found a merger.'
     body += 'The portion in bright green is not visible to HET because of declination limitations or because of sun constraints.'
-    body += f'The portion in the dimmer blue-green is visible to HET tonight. The percentage of pixels that are visible to HET is {round(frac_visible_HET*100, 3)}'
+    body += f'The portion in the dimmer blue-green is visible to HET tonight. The percentage of pixels that are visible to HET is {round(observatory_HET.frac_visible*100, 3)}'
     body += '\n\n=================\n'
     
     for k in alert.event_dict:
@@ -247,8 +249,8 @@ def send_mapped_alert_info(alert, contact_list):
     )
     email.send_email()
 
-    write_str = '{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET)
-    write_str += f'\nPercentage of visible pixels to HET: {round(frac_visible_HET*100, 3)}%'
+    #write_str = '{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET)
+    write_str += f'\nPercentage of visible pixels to HET: {round(observatory_HET.frac_visible*100, 3)}%'
     write_to_file(
         os.path.join(
             alert.directory, 'observability.txt',

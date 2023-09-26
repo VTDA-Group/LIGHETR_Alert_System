@@ -41,7 +41,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
             people_to_contact = people_to_contact
         )
         contact_list_HET = get_contact_lists(
-            file_loc = 'contact_all_LIGO.json',
+            file_loc = 'contact_only_HET_BNS.json',
             people_to_contact = people_to_contact
         )
         
@@ -90,7 +90,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         #get the skymap and header of the flattened, single-order fits file
         print("Processing FITS...")
         try:
-            alert.unload_skymap()
+            skymap = alert.unload_skymap()
             
         except:
             print("Unable to read map")
@@ -109,7 +109,6 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         
         if float(far) > 3.9E-7 and significance == 'False':
             #sending emails out to only people on the contact_list_file_loc_all_events file about the alert. Because there is likely no remnant.
-            
             send_low_prob_info(alert, contact_list_all, reason="significance")
             return
         
@@ -125,39 +124,66 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
             send_low_prob_info(alert, contact_list_all, reason="distance")     
             return
         
+        current_time = Time.now()
         print("Calculating probabilities")
+        
+        HET_observatory = Observatory(
+            name='HET',
+            dec_range=(-12.0, 74.0),
+            loc=(-104.01472,30.6814,2025),
+            pupil=np.loadtxt('hetpix.dat'),
+            alert=alert
+        )
+        
+        gen_observatory = Observatory(
+            name='GEN',
+            dec_range=(-90.0, 90.0),
+            loc=(-104.01472,30.6814,2025),
+            alert=alert,
+        )
+        
         #find pixels in the 90% confidence region that will be visible to HET in the next 24 hours
+        #NOTE: THIS MUTATES THE SKYMAPS
         skymap1 = np.copy(skymap)
-        m_gen, frac_visible_gen = prob_obs_gen.prob_observable(skymap, header, time, savedir = obs_time_dir, plot=True)
-        timetill90_HET, m_HET, frac_visible_HET = prob_obs_HET.prob_observable(skymap1, header, time, savedir = obs_time_dir, plot=True)
+        _, frac_visible_gen = prob_obs_gen.prob_observable(
+            skymap, gen_observatory, current_time, alert.directory
+        )
+        _, frac_visible_HET = prob_obs_HET.prob_observable(
+            skymap1, HET_observatory, current_time, alert.directory
+        )
+        
+        gen_observatory.skymap = skymap
+        HET_observatory.skymap = skymap1
+        
+        gen_observatory.frac_visible = frac_visible_gen
+        HET_observatory.frac_visible = frac_visible_HET
         
         print("Two-dimensionally, percentage of pixels visible to HET: "+str(frac_visible_HET*100)+"%")
-
-        alert_message['skymap_fits'] = singleorder_file_name
-        alert_message['skymap_array_HET'] = m_HET
-        alert_message['skymap_array'] = m_gen
         
-        cattop, logptop = get_galaxies.write_catalog(alert_message, savedir = obs_time_dir, HET_specific_constraints = False)
+        cattop_all, logptop_all = get_galaxies.write_catalogs(
+            savedir = alert.directory,
+            observatories = [gen_observatory, HET_observatory]
+        )
         
-        if timetill90_HET ==-99 or frac_visible_HET <= 0.1:
+        if frac_visible_HET <= 0.1:
             print("HET can't observe the source.")
-            send_not_visible_info(alert, contact_list_all)
+            send_not_visible_info(HET_observatory, contact_list_all)
             return
+        
         else:
-            cattop, logptop = get_galaxies.write_catalog(
-                alert_message, savedir = obs_time_dir, HET_specific_constraints = True
-            )
+            cattop, logptop = cattop_all[1], logptop_all[1]
+            
             if len(cattop) == 0:
                 return
                 
-            print('{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET)+"\nPercentage of visible pixels to HET: "+str(round(frac_visible_HET*100, 3))+"%")
+            print("Percentage of visible pixels to HET: "+str(round(frac_visible_HET*100, 3))+"%")
             
             get_LST.get_LST(
                 savedir = alert.directory,
                 targf = os.path.join(alert.directory,'HET_Visible_Galaxies_prob_list.dat')
             )
             
-            send_mapped_alert_info(alert, contact_list_HET)
+            send_mapped_alert_info(HET_observatory, contact_list_HET)
             
 
             

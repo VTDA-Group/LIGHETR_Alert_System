@@ -71,6 +71,6 @@ class Alert:
 
         alert.dist_mu = float(header['DISTMEAN'])
         alert.dist_std = float(header['DISTSTD'])
-        alert.skymap = skymap
+        return skymap
 
     
