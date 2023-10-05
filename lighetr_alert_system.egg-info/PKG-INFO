@@ -1,0 +1,68 @@
+Metadata-Version: 2.1
+Name: lighetr-alert-system
+Version: 0.1.0
+Summary: Pipeline to process LIGO alerts for the LIGHETR collaboration
+Home-page: https://github.com/sky5265/LIGHETR_Alert_System
+Author: VTDA Group
+Author-email: karthik_yadavalli@g.harvard.edu
+License: MIT license
+Keywords: lighetr_alert_system
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Requires-Python: >=3.6
+License-File: LICENSE
+License-File: AUTHORS.rst
+
+====================
+lighetr_alert_system
+====================
+
+
+.. image:: https://img.shields.io/pypi/v/lighetr_alert_system.svg
+        :target: https://pypi.python.org/pypi/lighetr_alert_system
+
+.. image:: https://img.shields.io/travis/sky5265/lighetr_alert_system.svg
+        :target: https://travis-ci.com/sky5265/lighetr_alert_system
+
+.. image:: https://readthedocs.org/projects/lighetr-alert-system/badge/?version=latest
+        :target: https://lighetr-alert-system.readthedocs.io/en/latest/?version=latest
+        :alt: Documentation Status
+
+
+
+
+Pipeline to process LIGO alerts for the LIGHETR collaboration
+
+
+* Free software: MIT license
+* Documentation: https://lighetr-alert-system.readthedocs.io.
+
+
+Features
+--------
+
+* TODO
+
+Credits
+-------
+
+This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+
+.. _Cookiecutter: https://github.com/audreyr/cookiecutter
+.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+
+
+=======
+History
+=======
+
+0.1.0 (2023-10-05)
+------------------
+
+* First release on PyPI.
