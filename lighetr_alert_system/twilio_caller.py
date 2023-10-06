@@ -9,10 +9,8 @@ account_sid = os.environ['TWILIO_ACCOUNT_SID']
 auth_token = os.environ['TWILIO_AUTH_TOKEN']
 client = Client(account_sid, auth_token)
 
-
-
-calling_dict = {'+17726438132'} # Ashley
-texter_dict = {'+17726438132'} # Ashley
+#calling_list = ['+17726438132'} # Ashley
+#texter_dict = {'+17726438132'} # Ashley
 
 message_to_say = 'There is a BNS!.'
 
@@ -32,7 +30,7 @@ def build_message_to_say(voice = voice, message_to_say = message_to_say):
     
     return xml
 
-def call_people(calling_list=calling_list, from_ = "+18333749011", message_to_say = message_to_say):
+def call_people(calling_list, from_ = "+18333749011", message_to_say = message_to_say):
     client = Client(account_sid, auth_token)
 
     for diggies in calling_list:

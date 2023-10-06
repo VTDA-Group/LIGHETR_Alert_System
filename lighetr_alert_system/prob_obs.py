@@ -9,8 +9,6 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import sys
 import os
-from astropy.time import TimeDeltas
-
 
 def helper_function(observatory, time, m):
     mplot = np.copy(m)
@@ -60,7 +58,10 @@ def helper_function(observatory, time, m):
     cumsum = np.cumsum(m[msortedpix])
     cls = np.empty_like(m)
     cls[msortedpix] = cumsum*100
-    p90i = np.where(cls <= 90)
+    if cls[msortedpix[0]] > 90:
+        p90i = [0,]
+    else:
+        p90i = np.where(cls <= 90)[0]
 
     #SUN CIRCLE OF 18 DEGREES
     radius_sun = 18
@@ -135,7 +136,7 @@ def make_visibility_figure(savedir, observatory, mplot, time, combined=False):
 
 def prob_observable(m, observatory, time, savedir, plot = True, plot_timestamps = False):
     t = astropy.time.Time(time,scale='utc',location=observatory.loc)
-    delta_time = np.linspace(0, 24, 1000)*u.hour
+    delta_time = np.linspace(0, 24, 100)*u.hour
     times24 = t + delta_time
     # not used currently
     """

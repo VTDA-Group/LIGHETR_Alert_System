@@ -38,14 +38,14 @@ def test_alert(dummy_alert):
     assert skymap is not None
     
         
-def test_observatory(dummy_alert):
+def test_observatory(dummy_alert, het_loc):
     """Test observatory functions."""
     loc = (-104.01472,30.6814,2025)
 
     observatory = Observatory(
         name='test',
         dec_range=(-60, 60), 
-        loc=loc,
+        loc=het_loc,
         alert=dummy_alert,
     )
     

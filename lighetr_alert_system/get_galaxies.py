@@ -1,6 +1,6 @@
 #Mainly a simplified copy of HET_obs.py
 #https://github.com/sjanowiecki/HET_observability
-
+import os
 import healpy as hp # for working with HEALPix files
 import numpy as np # needed for vector operations
 from scipy.stats import norm # probability functions
@@ -19,7 +19,8 @@ from ligo.skymap.distance import conditional_pdf
 import pdb
 import matplotlib.pyplot as plt
 import pdb
-from utils import *
+
+from lighetr_alert_system.utils import *
 
 def parseargs():
 
@@ -108,7 +109,14 @@ def aggregate_galaxies(chunksize, probb, distmu, distsigma, distnorm, pixarea, n
     """
     Helper function to attempt galaxy file imports with different chunksizes.
     """
-    reader = pd.read_csv("Glade_Visible_Galaxies.csv", chunksize=chunksize, sep=',',header=0)
+    
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    reader = pd.read_csv(
+        os.path.join(
+            dir_path,
+            "../data/Glade_Visible_Galaxies.csv"
+        ), chunksize=chunksize, sep=',',header=0
+    )
 
     clz = cdf(probb)
     cattop = None
@@ -140,10 +148,9 @@ def aggregate_galaxies(chunksize, probb, distmu, distsigma, distnorm, pixarea, n
     return cattop, l, c
  
 
-def write_catalog(savedir='', observatories):
+def write_catalogs(observatories, savedir=''):
     
     alert = observatories[0].alert
-    assert len(alert.skymaps) == len(observatories)
     
     fits = alert.singleorder_file # unmodified skymap
     # Reading in the skymap prob and header
@@ -163,22 +170,22 @@ def write_catalog(savedir='', observatories):
         #working with list of galaxies visble to HET
         chunksize = 50000 # initial chunksize
         while True:
-            try:
-                cattop, logptop, clz = aggregate_galaxies(
-                    chunksize,
-                    probb,
-                    distmu,
-                    distsigma,
-                    distnorm,
-                    pixarea,
-                    nside,
-                    probability,
-                )
-                break
-            except:
-                chunksize /= 5 # if crashed from chunksize
-                if chunksize < 1000:
-                    raise ValueError("Failure to generate galaxy catalog")
+            #try:
+            cattop, logptop, clz = aggregate_galaxies(
+                chunksize,
+                probb,
+                distmu,
+                distsigma,
+                distnorm,
+                pixarea,
+                nside,
+                probability,
+            )
+            break
+            #except:
+            #    chunksize /= 5 # if crashed from chunksize
+            #    if chunksize < 1000:
+            #        raise ValueError("Failure to generate galaxy catalog")
 
         index = Column(name='index',data=np.arange(len(cattop)))
         logprob = Column(name='LogProb',data=logptop)
@@ -200,7 +207,7 @@ def write_catalog(savedir='', observatories):
         cattop_all.append(cattop)
         logptop_all.append(logptop)
 
-    return cattop, logptop
+    return cattop_all, logptop_all
 
 
 def main():

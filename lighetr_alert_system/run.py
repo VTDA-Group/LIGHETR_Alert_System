@@ -8,19 +8,17 @@ from hop.io import StartPosition
 import healpy as hp
 from astropy.io import fits
 import requests
-import prob_obs_gen
-import prob_obs_HET
-import get_galaxies
-import get_LST
-
-import time as Time
 import numpy as np
 
-from contact import *
-from alert import *
+from lighetr_alert_system.contact import *
+from lighetr_alert_system.alert import *
+from lighetr_alert_system.observatory import *
+from lighetr_alert_system.prob_obs import prob_observable
+from lighetr_alert_system import get_galaxies, get_LST
 
 
-def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
+
+def process_fits(alert_message, people_to_contact = None, skip_test_alerts = True):
         '''
         The format of these alerts is given in this website:
         https://emfollow.docs.ligo.org/userguide/content.html
@@ -36,12 +34,19 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         If you look at alert_message['superevent_id'], it will be [{T,M}]SYYMMDDabc. The first character can be either T or M. T means test, M means mock. Then, the S just means it's a superevent. Then you have the name of the event.
         
         '''
-        contact_list_all = get_contact_lists(
-            file_loc = 'contact_all_LIGO.json',
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        contact_lists_all = get_contact_lists(
+            file_loc = os.path.join(
+                dir_path,
+               "../data/contact_all_LIGO.json"
+            ),
             people_to_contact = people_to_contact
         )
-        contact_list_HET = get_contact_lists(
-            file_loc = 'contact_only_HET_BNS.json',
+        contact_lists_HET = get_contact_lists(
+            file_loc = os.path.join(
+                dir_path,
+                "../data/contact_only_HET_BNS.json"
+            ),
             people_to_contact = people_to_contact
         )
         
@@ -52,7 +57,7 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         test_event = ( superevent_id[0] in ['M', 'T'] )
             
         if skip_test_alerts and test_event: #if we want to ignore test events, and this is a test event, ignore it.
-            return
+            return False
         
         print("\n\n=============================\nFound a real LIGO event: "+str(superevent_id)+" | "+str(alert_type)+" Alert\n")
         
@@ -62,18 +67,18 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
             time = Time(alert_message['time_created']),
             event_id = superevent_id,
             event_dict = alert_message['event']['classification'],
-            far = alert.far = alert_message['event']['far'],
-            significance = alert.significance = alert_message['event']['significant'],   
+            far = alert_message['event']['far'],
+            significance = alert_message['event']['significant'],   
         )
 
-        with open(self.overview_file, 'w+') as data_out: 
+        with open(alert.overview_file, 'w+') as data_out: 
             data_out.write(
                 f'Found an event: {alert.event_id} | {alert.alert_type} Alert\n' +
                 f'Found at time: {alert.time.mjd} MJD\n'
             )
         
         if not alert.read_in_skymap():
-            return
+            return False
         
         #flatten the multi-order fits file into single-order
         print("Flattening...")
@@ -83,29 +88,28 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         print("Processing FITS...")
         skymap = alert.unload_skymap()
         if skymap is None:  
-            save_burst_info(alert, contact_list_all)
-            return
-
+            save_burst_info(alert, contact_lists_all['email'])
+            return False
         alert.plot_skymap()
         alert.plot_piechart()
 
         
-        if float(far) > 3.9E-7 and significance == 'False':
+        if float(alert.far) > 3.9E-7 and alert.significance == 'False':
             #sending emails out to only people on the contact_list_file_loc_all_events file about the alert. Because there is likely no remnant.
-            send_low_prob_info(alert, contact_list_all, reason="significance")
-            return
+            send_low_prob_info(alert, contact_lists_all['email'], reason="significance")
+            return False
         
         #if it's not at least 30% a (BNS or NSBH) signal, ignore it.
-        if (alert.event_dict['NSBH']+alert.event_dict['BNS'])/np.sum(alert.event_dict.values()) < 0.3:
+        if (alert.event_dict['NSBH']+alert.event_dict['BNS'])/np.sum(list(alert.event_dict.values())) < 0.3:
             if sizes[3] < 0.9: #send the email if terrestrial signal < 0.9
-                send_low_prob_info(alert, contact_list_all)
+                send_low_prob_info(alert, contact_lists_all['email'])
             else:
                 print("Probably terrestrial")
-            return
+            return False
         
         if alert.dist_mu - alert.dist_std > alert.max_dist:
-            send_low_prob_info(alert, contact_list_all, reason="distance")     
-            return
+            send_low_prob_info(alert, contact_lists_all['email'], reason="distance")     
+            return False
         
         current_time = Time.now()
         print("Calculating probabilities")
@@ -114,7 +118,12 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
             name='HET',
             dec_range=(-12.0, 74.0),
             loc=(-104.01472,30.6814,2025),
-            pupil=np.loadtxt('hetpix.dat'),
+            pupil=np.loadtxt(
+                os.path.join(
+                    dir_path,
+                    '../data/hetpix.dat'
+                )
+            ),
             alert=alert
         )
         
@@ -128,10 +137,10 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         #find pixels in the 90% confidence region that will be visible to HET in the next 24 hours
         #NOTE: THIS MUTATES THE SKYMAPS
         skymap1 = np.copy(skymap)
-        _, frac_visible_gen = prob_obs_gen.prob_observable(
+        _, frac_visible_gen = prob_observable(
             skymap, gen_observatory, current_time, alert.directory
         )
-        _, frac_visible_HET = prob_obs_HET.prob_observable(
+        _, frac_visible_HET = prob_observable(
             skymap1, HET_observatory, current_time, alert.directory
         )
         
@@ -150,14 +159,14 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
         
         if HET_observatory.frac_visible <= 0.1:
             print("HET can't observe the source.")
-            send_not_visible_info(HET_observatory, contact_list_all)
-            return
+            send_not_visible_info(HET_observatory, contact_lists_all['email'])
+            return False
         
         else:
             cattop, logptop = cattop_all[1], logptop_all[1]
             
             if len(cattop) == 0:
-                return
+                return False
                 
             print("Percentage of visible pixels to HET: "+str(round(frac_visible_HET*100, 3))+"%")
             
@@ -166,7 +175,8 @@ def process_fits(fits_file, alert_message = None, skip_test_alerts = True):
                 targf = os.path.join(alert.directory,'HET_Visible_Galaxies_prob_list.dat')
             )
             
-            send_mapped_alert_info(HET_observatory, contact_list_HET)
+            send_mapped_alert_info(HET_observatory, contact_lists_all, contact_lists_HET)
+            return True
             
 
             
@@ -201,14 +211,8 @@ if __name__ == "__main__":
             #if num_messages > 2:
             #    sys.exit()
 
-            skymap = None
-            if 'skymap' in message_content.keys():
-                skymap = message_content['skymap']
-            if event is not None and 'skymap' in event.keys():
-                skymap = event['skymap']
-
             '''send that fits file into process_fits'''
             if skymap is not None and event is not None:
                 print('Calling process_fits')
-                process_fits(fits_file = skymap, alert_message = message_content,  skip_test_alerts = True)
+                process_fits(alert_message = message_content, skip_test_alerts = True)
 

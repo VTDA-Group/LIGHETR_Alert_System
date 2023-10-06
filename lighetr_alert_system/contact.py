@@ -11,9 +11,10 @@ import healpy as hp
 import os.path
 import datetime
 import numpy as np
-import make_phaseii
-from twilio_caller import *
-from twilio_texter import *
+from lighetr_alert_system import make_phaseii
+from lighetr_alert_system.twilio_caller import *
+
+gracedb_site = 
 
 def write_to_file(file_loc, data_out, separator = ' ', headers=None, append=False):
     '''inputs: file_loc-location to which to write to, data_to_write-this is a 2d array that will be written to a file
@@ -94,8 +95,10 @@ class Email:
                 with smtplib.SMTP_SSL("smtp.gmail.com", 465, context = context) as smtp:
                     smtp.login(self.sender_email, self.sender_password)
                     smtp.sendmail(self.sender_email, recipient, em.as_string())
+                return True
             except:
                 print(f"Wasn't able to send email to: {recipient}")
+                return False
 
     
     
@@ -105,7 +108,6 @@ def get_contact_lists(file_loc = 'contact_all_BNS.json', people_to_contact = Non
     jsonDict = {
         'email': jsonObject['email_list'],
         'call': jsonObject['caller_list'],
-        'text': jsonObject['texter_list']
     }
     
     for k in jsonDict:
@@ -208,13 +210,12 @@ def send_not_visible_info(observatory_HET, contact_list):
         
         
 
-def send_mapped_alert_info(observatory_HET, contact_list):
+def send_mapped_alert_info(observatory_HET, contact_dir, contact_dir_HET):
     alert = observatory_HET.alert
     
     #sending emails out to everybody about the alert.
     subject = f'({alert.event_id} {alert.alert_type}) LIGHETR Alert: NS Merger Detected.'
     body = 'A Neutron Star Merger has been detected by LIGO.\n'
-    body += '{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET)
     body += '\n\nI have attached a figure here, showing the 90% contour of the sky localization where LIGO found a merger.'
     body += 'The portion in bright green is not visible to HET because of declination limitations or because of sun constraints.'
     body += f'The portion in the dimmer blue-green is visible to HET tonight. The percentage of pixels that are visible to HET is {round(observatory_HET.frac_visible*100, 3)}'
@@ -240,7 +241,7 @@ def send_mapped_alert_info(observatory_HET, contact_list):
     email = Email(
         subject=subject,
         body=body,
-        recipients=contact_list,
+        recipients=contact_dir['email'],
         files=[
             os.path.join(
                 alert.directory, "HET_Full_Visibility.pdf"
@@ -264,7 +265,7 @@ def send_mapped_alert_info(observatory_HET, contact_list):
 
 
     #calling people
-    calling_list = contact_list['call']
+    calling_list = contact_dir['call']
     message_to_say = 'Lie Go Gravitational Wave Neutron Star Event Detected. Check email for information. '
     if test_event:
         message_to_say = 'This is a Test Alert. ' + message_to_say
@@ -280,7 +281,7 @@ def send_mapped_alert_info(observatory_HET, contact_list):
     email2 = Email(
         subject=subject,
         body=body_II,
-        recipients=contact_list['email']['HET'],
+        recipients=contact_dir_HET['email'],
         files=[
             os.path.join(
                 alert.directory, "submission_to_HET.tsl"
