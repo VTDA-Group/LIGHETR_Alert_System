@@ -39,8 +39,10 @@ class Alert:
             f'flattened_multiorder_fits_{self.event_id}.fits'
         )
         self.fits_url = f'https://gracedb.ligo.org/api/superevents/{self.event_id}/files/bayestar.multiorder.fits'
-        
+        self.gracedb_site =  f'https://gracedb.ligo.org/superevents/{self.event_id}/'
         self.max_dist = 300. # cutoff based on what could be reasonably followed up
+        
+        self.test_event = ( self.event_id[0] in ['M', 'T'] )
         
     
     def read_in_skymap(self):

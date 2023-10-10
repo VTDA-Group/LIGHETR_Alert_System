@@ -68,7 +68,7 @@ def process_fits(alert_message, people_to_contact = None, skip_test_alerts = Tru
             event_id = superevent_id,
             event_dict = alert_message['event']['classification'],
             far = alert_message['event']['far'],
-            significance = alert_message['event']['significant'],   
+            significance = alert_message['event']['significant'],  
         )
 
         with open(alert.overview_file, 'w+') as data_out: 

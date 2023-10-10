@@ -14,7 +14,6 @@ import numpy as np
 from lighetr_alert_system import make_phaseii
 from lighetr_alert_system.twilio_caller import *
 
-gracedb_site = 
 
 def write_to_file(file_loc, data_out, separator = ' ', headers=None, append=False):
     '''inputs: file_loc-location to which to write to, data_to_write-this is a 2d array that will be written to a file
@@ -122,51 +121,60 @@ def get_contact_lists(file_loc = 'contact_all_BNS.json', people_to_contact = Non
 
 
 def send_burst_info(alert, contact_list):
-    subject = f'LIGHETR Alert: GW Burst Event Detected (No Optical Counterpart) Event: {superevent_id}'
+    subject = f'LIGHETR Alert: GW Burst Event Detected (No Optical Counterpart) Event: {alert.event_id}'
     body = 'A gravitational wave burst event was detected. This means there is no sky localization from LIGO. We should ignore this event.\n Happy days!'
     
-    if alert.test:
+    if alert.test_event:
         subject = '[TEST, Can Safely Disregard!] '+ subject
         body = '[TEST EVENT!]\n' + body
 
-    #Let's NOT send emails for burst events.
-    email = Email(subject=subject, body=body, recipients=contact_list)
-    email.send_email()
+    try:
+        #Let's NOT send emails for burst events. --> let's send out burst info emails >:) 
+        email = Email(subject=subject, body=body, recipients=contact_list)
+        email.send_email()
 
-    with open(alert.overview_file, "a+") as data_out:
-        data_out.write(f'This is a burst event: {alert.superevent_id} | {alert.alert_type} Alert\n')
+        with open(alert.overview_file, "a+") as data_out:
+            data_out.write(f'This is a burst event: {alert.event_id} | {alert.alert_type} Alert\n')
+    except:
+        return False
+        
+    return True
                               
                               
 def send_low_prob_info(alert, contact_list, reason="low_prob"):
+    
     subject = f'({alert.event_id} {alert.alert_type}) LIGHETR Alert: GW Event Detected (No Optical Counterpart)'
-                              
+
     body = f'A gravitational wave event was detected.\n\n'
-                       
+
     for k in alert.event_dict:
         body += f'Probability of {k}: {alert.event_dict[k]}\n'
-    
+
     body += f'Distance to object: {alert.dist_mu} +/- {alert.dist_std} Mpc\n\n'
-    
+
     if reason == 'significance':
         body += 'We will ignore this event because of FAR and significance cuts.\n\n'
     elif reason == 'distance':
         body += f'We will ignore this event because of distance cuts. We\'re using a distance cut of mu-1sigma < {alert.max_dist} Mpc.\n\n'
     else:
         body += 'We will ignore this event because it is unlikely to have a meaningful optical counterpart.\n\n'
-        
+
     body += f'This had a FAR of {alert.far}\nSignificance of event: {alert.significance}\n'
-    body += f'Gracedb Site: {gracedb_site}\n\nHappy days!'
-                              
-    if test_event:
+    body += f'Gracedb Site: {alert.gracedb_site}\n\nHappy days!'
+
+    if alert.test_event:
         subject = '[TEST, Can Safely Disregard!] '+ subject
         body = '[TEST EVENT!]\n' + body
+        
+    try:
+        email = Email(subject=subject, body=body, recipients=contact_list)
+        email.send_email()
 
-
-    email = Email(subject=subject, body=body, recipients=contact_list)
-    email.send_email()
-
-    with open(alert.overview_file, "a+") as data_out:
-        data_out.write(body)
+        with open(alert.overview_file, "a+") as data_out:
+            data_out.write(body)
+        return True
+    except:
+        return False
         
         
 def send_not_visible_info(observatory_HET, contact_list):
@@ -181,32 +189,36 @@ def send_not_visible_info(observatory_HET, contact_list):
     
     body += f'Distance to object: {alert.dist_mu} +/- {alert.dist_std} Mpc\n\n'  
     body += f'This had a FAR of {alert.far}\nSignificance of event: {alert.significance}\n'
-    body += f'Gracedb Site: {gracedb_site}\n\nHappy days!'
+    body += f'Gracedb Site: {alert.gracedb_site}\n\nHappy days!'
                               
-    if test_event:
+    if alert.test_event:
         subject = '[TEST, Can Safely Disregard!] '+ subject
         body = '[TEST EVENT!]\n' + body
 
-    email = Email(
-        subject=subject,
-        body=body,
-        recipients=contact_list,
-        files=[
-            os.path.join(
-                alert.directory, "HET_Full_Visibility.pdf"
-            )
-        ]
-    )
-    email.send_email()
+    try:
+        email = Email(
+            subject=subject,
+            body=body,
+            recipients=contact_list,
+            files=[
+                os.path.join(
+                    alert.directory, "HET_Full_Visibility.pdf"
+                )
+            ]
+        )
+        email.send_email()
 
-    write_to_file(
-        os.path.join(
-            alert.directory, 'observability.txt',
-        ),
-        "HET can't observe this source."
-    )
-    with open(alert.overview_file, "a+") as data_out:
-        data_out.write(body)
+        write_to_file(
+            os.path.join(
+                alert.directory, 'observability.txt',
+            ),
+            "HET can't observe this source."
+        )
+        with open(alert.overview_file, "a+") as data_out:
+            data_out.write(body)
+        return True
+    except:
+        return False
         
         
 
@@ -226,14 +238,14 @@ def send_mapped_alert_info(observatory_HET, contact_dir, contact_dir_HET):
         
     body += f'Distance to object: {alert.dist_mu} +/- {alert.dist_std} Mpc\n\n'  
     body += f'This had a FAR of {alert.far}\nSignificance of event: {alert.significance}\n'
-    body += f'Gracedb Site: {gracedb_site}\n\nHappy days!\n'
+    body += f'Gracedb Site: {alert.gracedb_site}\n\nHappy days!\n'
     body += 'Please join this zoom call: https://us06web.zoom.us/j/87536495694\n'
     
     body_II = 'Attached is a phase ii submission file to HET with the list of galaxies we wish to observe, '
-    body_II += f'along with a file with LSTs of when they are visible\nGracedb Site: {gracedb_site}'
+    body_II += f'along with a file with LSTs of when they are visible\nGracedb Site: {alert.gracedb_site}'
     body_II += '\n Happy days!'+'.\nThanks for your help! \n\nZoom call: https://us06web.zoom.us/j/87536495694'
     
-    if test_event:
+    if alert.test_event:
         subject = '[TEST, Can Safely Disregard!] '+ subject
         body = '[TEST EVENT!]\n' + body
         body_II = '[TEST EVENT!]\n' + body_II
@@ -251,7 +263,7 @@ def send_mapped_alert_info(observatory_HET, contact_dir, contact_dir_HET):
     email.send_email()
 
     #write_str = '{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET)
-    write_str += f'\nPercentage of visible pixels to HET: {round(observatory_HET.frac_visible*100, 3)}%'
+    write_str = f'\nPercentage of visible pixels to HET: {round(observatory_HET.frac_visible*100, 3)}%'
     write_to_file(
         os.path.join(
             alert.directory, 'observability.txt',
@@ -267,7 +279,7 @@ def send_mapped_alert_info(observatory_HET, contact_dir, contact_dir_HET):
     #calling people
     calling_list = contact_dir['call']
     message_to_say = 'Lie Go Gravitational Wave Neutron Star Event Detected. Check email for information. '
-    if test_event:
+    if alert.test_event:
         message_to_say = 'This is a Test Alert. ' + message_to_say
     message_to_say = message_to_say * 10
     call_people(calling_list = calling_list, message_to_say = message_to_say)

@@ -17,6 +17,9 @@ requirements = [
     'numpy',
     'matplotlib',
     'healpy',
+    'astroquery',
+    'twilio',
+    'hop-client',
 ]
 
 test_requirements = ['pytest>=3', ]

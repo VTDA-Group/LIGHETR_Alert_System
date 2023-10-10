@@ -57,7 +57,7 @@ def test_contact_dir(test_data_dir):
 @pytest.fixture
 def dummy_alert_message(dummy_event_dict):
     alert_message = {}
-    alert_message['alert_type'] = 'S'
+    alert_message['alert_type'] = 'PRELIMINARY'
     alert_message['time_created'] = Time.now()
     alert_message['superevent_id'] = 'S230810af'
     alert_message['event'] = {
