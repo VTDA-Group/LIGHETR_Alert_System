@@ -177,11 +177,11 @@ def send_low_prob_info(alert, contact_list, reason="low_prob"):
         return False
         
         
-def send_not_visible_info(observatory_HET, contact_list):
-    alert = observatory_HET.alert
-    subject = f'({alert.event_id} {alert.alert_type}) LIGHETR Alert: NS Merger Detected (NOT VISIBLE TO HET).'                             
+def send_not_visible_info(observatory, contact_list):
+    alert = observatory.alert
+    subject = f'({alert.event_id} {alert.alert_type}) LIGHETR Alert: NS Merger Detected (NOT VISIBLE TO {observatory.name}).'                             
     body = 'A Neutron Star Merger has been detected by LIGO. This event is not visible to HET.'
-    body += f'Percentage of the 90% localization region of this event visible to HET: {observatory_HET.frac_visible}.'
+    body += f'Percentage of the 90% localization region of this event visible to {observatory.name}: {observatory.frac_visible}.'
     body += 'This is too small to be worth following up. This is a courtesy email stating that an event was detected by LIGO.\n\n'
                        
     for k in alert.event_dict:
@@ -202,7 +202,7 @@ def send_not_visible_info(observatory_HET, contact_list):
             recipients=contact_list,
             files=[
                 os.path.join(
-                    alert.directory, "HET_Full_Visibility.pdf"
+                    alert.directory, f"{observatory.name}_Full_Visibility.pdf"
                 )
             ]
         )
@@ -212,7 +212,7 @@ def send_not_visible_info(observatory_HET, contact_list):
             os.path.join(
                 alert.directory, 'observability.txt',
             ),
-            "HET can't observe this source."
+            f"{observatory.name} can't observe this source."
         )
         with open(alert.overview_file, "a+") as data_out:
             data_out.write(body)
@@ -222,15 +222,15 @@ def send_not_visible_info(observatory_HET, contact_list):
         
         
 
-def send_mapped_alert_info(observatory_HET, contact_dir, contact_dir_HET):
-    alert = observatory_HET.alert
+def send_mapped_alert_info(observatory, contact_dir, contact_dir_followup, phase_II = True):
+    alert = observatory.alert
     
     #sending emails out to everybody about the alert.
     subject = f'({alert.event_id} {alert.alert_type}) LIGHETR Alert: NS Merger Detected.'
     body = 'A Neutron Star Merger has been detected by LIGO.\n'
     body += '\n\nI have attached a figure here, showing the 90% contour of the sky localization where LIGO found a merger.'
-    body += 'The portion in bright green is not visible to HET because of declination limitations or because of sun constraints.'
-    body += f'The portion in the dimmer blue-green is visible to HET tonight. The percentage of pixels that are visible to HET is {round(observatory_HET.frac_visible*100, 3)}'
+    body += f'The portion in bright green is not visible to {observatory.name} because of declination limitations or because of sun constraints.'
+    body += f'The portion in the dimmer blue-green is visible to {observatory.name} tonight. The percentage of pixels that are visible to {observatory.name} is {round(observatory.frac_visible*100, 3)}'
     body += '\n\n=================\n'
     
     for k in alert.event_dict:
@@ -241,7 +241,7 @@ def send_mapped_alert_info(observatory_HET, contact_dir, contact_dir_HET):
     body += f'Gracedb Site: {alert.gracedb_site}\n\nHappy days!\n'
     body += 'Please join this zoom call: https://us06web.zoom.us/j/87536495694\n'
     
-    body_II = 'Attached is a phase ii submission file to HET with the list of galaxies we wish to observe, '
+    body_II = f'Attached is a phase ii submission file to {observatory.name} with the list of galaxies we wish to observe, '
     body_II += f'along with a file with LSTs of when they are visible\nGracedb Site: {alert.gracedb_site}'
     body_II += '\n Happy days!'+'.\nThanks for your help! \n\nZoom call: https://us06web.zoom.us/j/87536495694'
     
@@ -253,17 +253,17 @@ def send_mapped_alert_info(observatory_HET, contact_dir, contact_dir_HET):
     email = Email(
         subject=subject,
         body=body,
-        recipients=contact_dir['email'],
+        recipients=np.append(contact_dir['email'], contact_dir_followup['email']),
         files=[
             os.path.join(
-                alert.directory, "HET_Full_Visibility.pdf"
+                alert.directory, f"{observatory.name}_Full_Visibility.pdf"
             )
         ]
     )
     email.send_email()
 
     #write_str = '{:.1f} hours till you can observe the 90 % prob region.'.format(timetill90_HET)
-    write_str = f'\nPercentage of visible pixels to HET: {round(observatory_HET.frac_visible*100, 3)}%'
+    write_str = f'\nPercentage of visible pixels to {observatory.name}: {round(observatory.frac_visible*100, 3)}%'
     write_to_file(
         os.path.join(
             alert.directory, 'observability.txt',
@@ -284,23 +284,24 @@ def send_mapped_alert_info(observatory_HET, contact_dir, contact_dir_HET):
     message_to_say = message_to_say * 10
     call_people(calling_list = calling_list, message_to_say = message_to_say)
 
-    #sending phaseII file out to astronomer at HET
-    make_phaseii.make_phaseii(
-        lstfile = os.path.join(alert.directory,'LSTs_Visible.out'),
-        savedir = alert.directory
-    )
+    if phase_II:
+        #sending phaseII file out to astronomer at observatory
+        make_phaseii.make_phaseii(
+            lstfile = os.path.join(alert.directory,'LSTs_Visible.out'),
+            savedir = alert.directory
+        )
 
-    email2 = Email(
-        subject=subject,
-        body=body_II,
-        recipients=contact_dir_HET['email'],
-        files=[
-            os.path.join(
-                alert.directory, "submission_to_HET.tsl"
-            ),
-            os.path.join(
-                alert.directory, "LSTs_Visible.pdf"
-            ),
-        ]
-    )
-    email.send_email()
+        email2 = Email(
+            subject=subject,
+            body=body_II,
+            recipients=contact_dir_followup['email'],
+            files=[
+                os.path.join(
+                    alert.directory, "submission_to_HET.tsl"
+                ),
+                os.path.join(
+                    alert.directory, "LSTs_Visible.pdf"
+                ),
+            ]
+        )
+        email.send_email()
