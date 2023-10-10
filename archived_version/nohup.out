@@ -1,0 +1,2346 @@
+2023-05-29 06:28:17,302 INFO reading FITS file 60093.436261574076/multiorder_fits_S230529p.fits
+2023-05-29 06:28:17,337 INFO writing FITS file 60093.436261574076/flattened_multiorder_fits_S230529p.fits
+WARNING: AstropyDeprecationWarning: "verbose" was deprecated in version 1.15.0 and will be removed in a future version.  [__main__]
+2023-05-29 06:37:53,553 INFO reading FITS file 60093.442928240744/multiorder_fits_S230529p.fits
+2023-05-29 06:37:53,576 INFO writing FITS file 60093.442928240744/flattened_multiorder_fits_S230529p.fits
+2023-05-29 14:15:31,222 INFO reading FITS file 60093.760717592595/multiorder_fits_S230529ay.fits
+2023-05-29 14:15:31,256 INFO writing FITS file 60093.760717592595/flattened_multiorder_fits_S230529ay.fits
+2023-05-29 14:20:19,373 INFO reading FITS file 60093.7640625/multiorder_fits_S230529ay.fits
+2023-05-29 14:20:19,404 INFO writing FITS file 60093.7640625/flattened_multiorder_fits_S230529ay.fits
+WARNING: AstropyDeprecationWarning: "verbose" was deprecated in version 1.15.0 and will be removed in a future version.  [__main__]
+2023-05-29 14:27:34,952 INFO reading FITS file 60093.76909722222/multiorder_fits_S230529ay.fits
+2023-05-29 14:27:34,976 INFO writing FITS file 60093.76909722222/flattened_multiorder_fits_S230529ay.fits
+WARNING: AstropyDeprecationWarning: "verbose" was deprecated in version 1.15.0 and will be removed in a future version.  [__main__]
+Listening for Alerts from kafka
+2023-05-28T20:00:04.000
+Calling process_fits
+2023-05-28T20:04:43.000
+Calling process_fits
+2023-05-28T20:09:57.000
+Calling process_fits
+2023-05-28T21:00:01.000
+Calling process_fits
+2023-05-28T21:04:40.000
+Calling process_fits
+2023-05-28T21:09:58.000
+Calling process_fits
+2023-05-28T22:00:01.000
+Calling process_fits
+2023-05-28T22:04:39.000
+Calling process_fits
+2023-05-28T22:09:55.000
+2023-05-28T23:00:03.000
+Calling process_fits
+2023-05-28T23:04:44.000
+Calling process_fits
+2023-05-28T23:09:57.000
+Calling process_fits
+2023-05-29T00:00:02.000
+Calling process_fits
+2023-05-29T00:04:42.000
+Calling process_fits
+2023-05-29T00:09:56.000
+2023-05-29T01:00:02.000
+Calling process_fits
+2023-05-29T01:04:39.000
+Calling process_fits
+2023-05-29T01:09:57.000
+Calling process_fits
+2023-05-29T02:00:02.000
+Calling process_fits
+2023-05-29T02:04:41.000
+Calling process_fits
+2023-05-29T02:09:58.000
+Calling process_fits
+2023-05-29T03:00:03.000
+Calling process_fits
+2023-05-29T03:04:41.000
+Calling process_fits
+2023-05-29T03:09:58.000
+Calling process_fits
+2023-05-29T04:00:03.000
+Calling process_fits
+2023-05-29T04:04:43.000
+Calling process_fits
+2023-05-29T04:09:57.000
+Calling process_fits
+2023-05-29T05:00:02.000
+Calling process_fits
+2023-05-29T05:04:38.000
+Calling process_fits
+2023-05-29T05:09:56.000
+2023-05-29T06:00:07.000
+Calling process_fits
+2023-05-29T06:04:43.000
+Calling process_fits
+2023-05-29T06:09:58.000
+Calling process_fits
+2023-05-29T07:00:05.000
+Calling process_fits
+2023-05-29T07:04:41.000
+Calling process_fits
+2023-05-29T07:09:57.000
+Calling process_fits
+2023-05-29T08:00:02.000
+Calling process_fits
+2023-05-29T08:04:42.000
+Calling process_fits
+2023-05-29T08:09:56.000
+2023-05-29T09:00:03.000
+Calling process_fits
+2023-05-29T09:04:39.000
+Calling process_fits
+2023-05-29T09:09:58.000
+Calling process_fits
+2023-05-29T10:00:04.000
+Calling process_fits
+2023-05-29T10:04:41.000
+Calling process_fits
+2023-05-29T10:09:58.000
+2023-05-29T10:28:13.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230529p
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 663.7272333532153 +/- 206.790790640159
+{'Karthik': 'yadavallikarthik99@gmail.com', 'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'SKY': 'yadavallio@gmail.com', 'sKy': 'sky5265@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik', 'Karthik_PSU', 'SKY', 'sKy', 'Ashley', 'Oleg'])
+all email recipients: ['yadavallikarthik99@gmail.com', 's.karthik.yadavalli@psu.edu', 'yadavallio@gmail.com', 'sky5265@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: yadavallikarthik99@gmail.com
+recipients: s.karthik.yadavalli@psu.edu
+recipients: yadavallio@gmail.com
+recipients: sky5265@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230529p
+Probability of BBH: 0.0021805498962315694
+Probability of BNS: 0.0
+Probability of NSBH:0.024779051187418383
+Probability of Terrestrial Event: 0.9730403989163501
+Distance to object: 663.7272333532153 +/- 206.790790640159 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-05-29T10:37:49.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230529p
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 663.7272333532153 +/- 206.790790640159
+{'Karthik': 'yadavallikarthik99@gmail.com', 'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'SKY': 'yadavallio@gmail.com', 'sKy': 'sky5265@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik', 'Karthik_PSU', 'SKY', 'sKy', 'Ashley', 'Oleg'])
+all email recipients: ['yadavallikarthik99@gmail.com', 's.karthik.yadavalli@psu.edu', 'yadavallio@gmail.com', 'sky5265@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: yadavallikarthik99@gmail.com
+recipients: s.karthik.yadavalli@psu.edu
+recipients: yadavallio@gmail.com
+recipients: sky5265@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230529p
+Probability of BBH: 0.0021805498962315694
+Probability of BNS: 0.0
+Probability of NSBH:0.024779051187418383
+Probability of Terrestrial Event: 0.9730403989163501
+Distance to object: 663.7272333532153 +/- 206.790790640159 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-05-29T11:00:07.000
+Calling process_fits
+2023-05-29T11:04:42.000
+Calling process_fits
+2023-05-29T11:09:56.000
+2023-05-29T12:00:04.000
+Calling process_fits
+2023-05-29T12:04:42.000
+Calling process_fits
+2023-05-29T12:09:58.000
+Calling process_fits
+2023-05-29T13:00:01.000
+Calling process_fits
+2023-05-29T13:04:39.000
+Calling process_fits
+2023-05-29T13:09:57.000
+Calling process_fits
+2023-05-29T14:00:02.000
+Calling process_fits
+2023-05-29T14:04:44.000
+Calling process_fits
+2023-05-29T14:09:56.000
+2023-05-29T15:00:02.000
+Calling process_fits
+2023-05-29T15:04:37.000
+Calling process_fits
+2023-05-29T15:09:56.000
+2023-05-29T16:00:01.000
+Calling process_fits
+2023-05-29T16:04:41.000
+Calling process_fits
+2023-05-29T16:09:59.000
+2023-05-29T17:00:02.000
+Calling process_fits
+2023-05-29T17:04:38.000
+Calling process_fits
+2023-05-29T17:09:58.000
+Calling process_fits
+2023-05-29T18:00:03.000
+Calling process_fits
+2023-05-29T18:04:42.000
+Calling process_fits
+2023-05-29T18:09:58.000
+Calling process_fits
+2023-05-29T18:15:26.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230529ay
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 217.3980356032381 +/- 71.40610517565747
+Calculating probabilities
+275708 0.0031894411211112732 3.138403212468682
+Two-dimensionally, percentage of pixels visible to HET: 18.68989655710152%
+184.68274831047248 57.570095700045876
+[115747 118417 132019 ... 237615 237286 142083]
+277458 794580
+HET can't observe the source.
+{'Karthik': 'yadavallikarthik99@gmail.com', 'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'SKY': 'yadavallio@gmail.com', 'sKy': 'sky5265@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik', 'Karthik_PSU', 'SKY', 'sKy', 'Ashley', 'Oleg'])
+all email recipients: ['yadavallikarthik99@gmail.com', 's.karthik.yadavalli@psu.edu', 'yadavallio@gmail.com', 'sky5265@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: yadavallikarthik99@gmail.com
+recipients: s.karthik.yadavalli@psu.edu
+recipients: yadavallio@gmail.com
+recipients: sky5265@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+2023-05-29T18:20:15.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230529ay
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 217.3980356032381 +/- 71.40610517565747
+Calculating probabilities
+275708 0.0031894411211112732 3.138403212468682
+Two-dimensionally, percentage of pixels visible to HET: 18.594164226430788%
+184.68274831047248 57.570095700045876
+[115747 118417 132019 ... 237615 237286 142083]
+277458 794580
+HET can't observe the source.
+{'Karthik': 'yadavallikarthik99@gmail.com', 'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'SKY': 'yadavallio@gmail.com', 'sKy': 'sky5265@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik', 'Karthik_PSU', 'SKY', 'sKy', 'Ashley', 'Oleg'])
+all email recipients: ['yadavallikarthik99@gmail.com', 's.karthik.yadavalli@psu.edu', 'yadavallio@gmail.com', 'sky5265@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: yadavallikarthik99@gmail.com
+recipients: s.karthik.yadavalli@psu.edu
+recipients: yadavallio@gmail.com
+recipients: sky5265@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+2023-05-29T18:27:30.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230529ay
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 217.3980356032381 +/- 71.40610517565747
+Calculating probabilities
+275708 2023-05-29 15:51:40,655 INFO reading FITS file 60093.8275/multiorder_fits_S230529ay.fits
+2023-05-29 15:51:40,690 INFO writing FITS file 60093.8275/flattened_multiorder_fits_S230529ay.fits
+WARNING: AstropyDeprecationWarning: "verbose" was deprecated in version 1.15.0 and will be removed in a future version.  [__main__]
+2023-05-30 20:34:14,102 INFO reading FITS file 60095.02373842592/multiorder_fits_S230531f.fits
+Traceback (most recent call last):
+  File "/root/miniconda3/envs/ligoenv/bin/ligo-skymap-flatten", line 11, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/ligo/skymap/tool/ligo_skymap_flatten.py", line 52, in main
+    hdus = fits.open(args.input)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/astropy/io/fits/hdu/hdulist.py", line 214, in fitsopen
+    return HDUList.fromfile(
+           ^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/astropy/io/fits/hdu/hdulist.py", line 482, in fromfile
+    return cls._readfrom(
+           ^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/astropy/io/fits/hdu/hdulist.py", line 1222, in _readfrom
+    raise OSError(
+OSError: No SIMPLE card found, this file does not appear to be a valid FITS file. If this is really a FITS file, try with ignore_missing_simple=True
+WARNING: AstropyDeprecationWarning: "verbose" was deprecated in version 1.15.0 and will be removed in a future version.  [__main__]
+0.0031894411211112732 3.138403212468682
+Two-dimensionally, percentage of pixels visible to HET: 18.446883717706584%
+184.68274831047248 57.570095700045876
+[115747 118417 132019 ... 237615 237286 142083]
+277458 794580
+HET can't observe the source.
+{'Karthik': 'yadavallikarthik99@gmail.com', 'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'SKY': 'yadavallio@gmail.com', 'sKy': 'sky5265@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik', 'Karthik_PSU', 'SKY', 'sKy', 'Ashley', 'Oleg'])
+all email recipients: ['yadavallikarthik99@gmail.com', 's.karthik.yadavalli@psu.edu', 'yadavallio@gmail.com', 'sky5265@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: yadavallikarthik99@gmail.com
+recipients: s.karthik.yadavalli@psu.edu
+recipients: yadavallio@gmail.com
+recipients: sky5265@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+2023-05-29T19:00:02.000
+Calling process_fits
+2023-05-29T19:04:46.000
+Calling process_fits
+2023-05-29T19:14:59.000
+Calling process_fits
+2023-05-29T19:51:36.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230529ay
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 217.3980356032381 +/- 71.40610517565747
+Calculating probabilities
+275708 0.0031894411211112732 3.138403212468682
+Two-dimensionally, percentage of pixels visible to HET: 17.034506956838147%
+184.68274831047248 57.570095700045876
+[115747 118417 132019 ... 237615 237286 142083]
+277458 794580
+HET can't observe the source.
+{'Karthik': 'yadavallikarthik99@gmail.com', 'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'SKY': 'yadavallio@gmail.com', 'sKy': 'sky5265@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik', 'Karthik_PSU', 'SKY', 'sKy', 'Ashley', 'Oleg'])
+all email recipients: ['yadavallikarthik99@gmail.com', 's.karthik.yadavalli@psu.edu', 'yadavallio@gmail.com', 'sky5265@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: yadavallikarthik99@gmail.com
+recipients: s.karthik.yadavalli@psu.edu
+recipients: yadavallio@gmail.com
+recipients: sky5265@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+2023-05-29T20:00:03.000
+Calling process_fits
+2023-05-29T20:04:41.000
+Calling process_fits
+2023-05-29T20:09:56.000
+2023-05-29T21:00:02.000
+Calling process_fits
+2023-05-29T21:04:39.000
+Calling process_fits
+2023-05-29T21:09:56.000
+2023-05-29T22:00:03.000
+Calling process_fits
+2023-05-29T22:04:41.000
+Calling process_fits
+2023-05-29T22:09:59.000
+Calling process_fits
+2023-05-29T23:00:05.000
+Calling process_fits
+2023-05-29T23:04:41.000
+Calling process_fits
+2023-05-29T23:09:58.000
+Calling process_fits
+2023-05-30T00:00:02.000
+Calling process_fits
+2023-05-30T00:04:38.000
+Calling process_fits
+2023-05-30T00:09:58.000
+Calling process_fits
+2023-05-30T01:00:02.000
+Calling process_fits
+2023-05-30T01:04:38.000
+Calling process_fits
+2023-05-30T01:09:59.000
+Calling process_fits
+2023-05-30T02:00:07.000
+Calling process_fits
+2023-05-30T02:04:44.000
+Calling process_fits
+2023-05-30T02:09:57.000
+2023-05-30T03:00:05.000
+Calling process_fits
+2023-05-30T03:04:40.000
+Calling process_fits
+2023-05-30T03:09:57.000
+2023-05-30T04:00:08.000
+Calling process_fits
+2023-05-30T04:04:44.000
+Calling process_fits
+2023-05-30T04:09:57.000
+2023-05-30T05:00:03.000
+Calling process_fits
+2023-05-30T05:04:38.000
+Calling process_fits
+2023-05-30T05:09:58.000
+Calling process_fits
+2023-05-30T06:00:08.000
+Calling process_fits
+2023-05-30T06:09:44.000
+Calling process_fits
+2023-05-30T06:09:56.000
+2023-05-30T07:00:06.000
+Calling process_fits
+2023-05-30T07:04:41.000
+Calling process_fits
+2023-05-30T07:09:57.000
+2023-05-30T08:05:10.000
+Calling process_fits
+2023-05-30T08:09:45.000
+Calling process_fits
+2023-05-30T08:09:57.000
+2023-05-30T09:00:03.000
+Calling process_fits
+2023-05-30T09:04:39.000
+Calling process_fits
+2023-05-30T09:09:58.000
+Calling process_fits
+2023-05-30T10:00:06.000
+Calling process_fits
+2023-05-30T10:04:44.000
+Calling process_fits
+2023-05-30T10:10:01.000
+Calling process_fits
+2023-05-30T11:00:09.000
+Calling process_fits
+2023-05-30T11:04:44.000
+Calling process_fits
+2023-05-30T11:09:57.000
+2023-05-30T12:00:09.000
+Calling process_fits
+2023-05-30T13:00:03.000
+Calling process_fits
+2023-05-30T13:04:40.000
+Calling process_fits
+2023-05-30T13:09:57.000
+2023-05-30T14:00:06.000
+Calling process_fits
+2023-05-30T14:04:41.000
+Calling process_fits
+2023-05-30T14:09:58.000
+2023-05-30T15:00:07.000
+Calling process_fits
+2023-05-30T15:04:42.000
+Calling process_fits
+2023-05-30T15:09:57.000
+2023-05-30T16:00:06.000
+Calling process_fits
+2023-05-30T16:04:42.000
+Calling process_fits
+2023-05-30T16:10:00.000
+Calling process_fits
+2023-05-30T17:00:07.000
+Calling process_fits
+2023-05-30T17:04:42.000
+Calling process_fits
+2023-05-30T17:09:58.000
+2023-05-30T18:00:06.000
+Calling process_fits
+2023-05-30T18:04:43.000
+Calling process_fits
+2023-05-30T18:09:57.000
+2023-05-30T19:00:03.000
+Calling process_fits
+2023-05-30T19:04:39.000
+Calling process_fits
+2023-05-30T19:09:57.000
+2023-05-30T20:00:06.000
+Calling process_fits
+2023-05-30T20:04:41.000
+Calling process_fits
+2023-05-30T20:09:58.000
+2023-05-30T21:00:04.000
+Calling process_fits
+2023-05-30T21:04:40.000
+Calling process_fits
+2023-05-30T21:10:00.000
+Calling process_fits
+2023-05-30T22:00:09.000
+Calling process_fits
+2023-05-30T22:04:46.000
+Calling process_fits
+2023-05-30T22:10:00.000
+2023-05-30T23:00:07.000
+Calling process_fits
+2023-05-30T23:04:41.000
+Calling process_fits
+2023-05-30T23:09:58.000
+2023-05-31T00:00:03.000
+Calling process_fits
+2023-05-31T00:04:39.000
+Calling process_fits
+2023-05-31T00:10:00.000
+Calling process_fits
+2023-05-31T00:34:11.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230531f
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+Traceback (most recent call last):
+  File "/home/ligo_files/LIGHETR_alert_stable/LIGHETR_Alert_System/Final Directory/Alert Main.py", line 300, in <module>
+    process_fits(fits_file = skymap, alert_message = message_content,  skip_test_alerts = True)
+  File "/home/ligo_files/LIGHETR_alert_stable/LIGHETR_Alert_System/Final Directory/Alert Main.py", line 124, in process_fits
+    skymap,header = hp.read_map(singleorder_file_name, h=True, verbose=False)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/astropy/utils/decorators.py", line 607, in wrapper
+    return function(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/healpy/fitsfunc.py", line 370, in read_map
+    filename = pf.open(filename, memmap=memmap)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/astropy/io/fits/hdu/hdulist.py", line 214, in fitsopen
+    return HDUList.fromfile(
+           ^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/astropy/io/fits/hdu/hdulist.py", line 482, in fromfile
+    return cls._readfrom(
+           ^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/astropy/io/fits/hdu/hdulist.py", line 1248, in _readfrom
+    raise OSError("Empty or corrupt FITS file")
+OSError: Empty or corrupt FITS file
+2023-06-01 18:42:08,818 INFO reading FITS file 60096.94587962963/multiorder_fits_S230601bf.fits
+2023-06-01 18:42:08,855 INFO writing FITS file 60096.94587962963/flattened_multiorder_fits_S230601bf.fits
+WARNING: AstropyDeprecationWarning: "verbose" was deprecated in version 1.15.0 and will be removed in a future version.  [__main__]
+2023-06-01 18:46:52,611 INFO reading FITS file 60096.949166666665/multiorder_fits_S230601bf.fits
+2023-06-01 18:46:52,634 INFO writing FITS file 60096.949166666665/flattened_multiorder_fits_S230601bf.fits
+2023-06-01 19:08:53,377 INFO reading FITS file 60096.96445601852/multiorder_fits_S230601bf.fits
+2023-06-01 19:08:53,401 INFO writing FITS file 60096.96445601852/flattened_multiorder_fits_S230601bf.fits
+Listening for Alerts from kafka
+2023-05-31T16:00:08.000
+Calling process_fits
+2023-05-31T16:04:43.000
+Calling process_fits
+2023-05-31T16:10:00.000
+Calling process_fits
+2023-05-31T17:00:07.000
+Calling process_fits
+2023-05-31T17:04:42.000
+Calling process_fits
+2023-05-31T17:09:58.000
+2023-05-31T18:00:06.000
+Calling process_fits
+2023-05-31T18:04:41.000
+Calling process_fits
+2023-05-31T18:09:59.000
+2023-05-31T19:00:05.000
+Calling process_fits
+2023-05-31T19:04:40.000
+Calling process_fits
+2023-05-31T19:10:00.000
+Calling process_fits
+2023-05-31T20:00:05.000
+Calling process_fits
+2023-05-31T20:04:41.000
+Calling process_fits
+2023-05-31T20:09:58.000
+2023-05-31T21:00:09.000
+Calling process_fits
+2023-05-31T21:04:45.000
+Calling process_fits
+2023-05-31T21:10:01.000
+Calling process_fits
+2023-05-31T22:00:08.000
+Calling process_fits
+2023-05-31T22:04:45.000
+Calling process_fits
+2023-05-31T22:09:59.000
+2023-05-31T23:00:09.000
+Calling process_fits
+2023-05-31T23:04:44.000
+Calling process_fits
+2023-05-31T23:09:58.000
+2023-06-01T00:00:08.000
+Calling process_fits
+2023-06-01T00:04:45.000
+Calling process_fits
+2023-06-01T00:10:00.000
+Calling process_fits
+2023-06-01T01:00:08.000
+Calling process_fits
+2023-06-01T01:04:43.000
+Calling process_fits
+2023-06-01T01:09:59.000
+2023-06-01T02:00:09.000
+Calling process_fits
+2023-06-01T02:04:45.000
+Calling process_fits
+2023-06-01T02:10:00.000
+Calling process_fits
+2023-06-01T03:00:06.000
+Calling process_fits
+2023-06-01T03:04:41.000
+Calling process_fits
+2023-06-01T03:09:59.000
+2023-06-01T04:00:08.000
+Calling process_fits
+2023-06-01T04:04:44.000
+Calling process_fits
+2023-06-01T04:10:01.000
+Calling process_fits
+2023-06-01T05:00:05.000
+Calling process_fits
+2023-06-01T05:04:42.000
+Calling process_fits
+2023-06-01T05:10:01.000
+Calling process_fits
+2023-06-01T06:00:07.000
+Calling process_fits
+2023-06-01T06:04:42.000
+Calling process_fits
+2023-06-01T06:10:02.000
+Calling process_fits
+2023-06-01T07:00:07.000
+Calling process_fits
+2023-06-01T07:04:42.000
+Calling process_fits
+2023-06-01T07:10:00.000
+Calling process_fits
+2023-06-01T08:00:08.000
+Calling process_fits
+2023-06-01T08:04:44.000
+Calling process_fits
+2023-06-01T08:09:58.000
+2023-06-01T09:00:09.000
+Calling process_fits
+2023-06-01T09:04:44.000
+Calling process_fits
+2023-06-01T09:10:00.000
+2023-06-01T10:00:10.000
+Calling process_fits
+2023-06-01T10:04:47.000
+Calling process_fits
+2023-06-01T10:10:01.000
+Calling process_fits
+2023-06-01T11:00:07.000
+Calling process_fits
+2023-06-01T11:04:42.000
+Calling process_fits
+2023-06-01T11:09:59.000
+2023-06-01T12:00:08.000
+Calling process_fits
+2023-06-01T12:04:44.000
+Calling process_fits
+2023-06-01T12:10:01.000
+Calling process_fits
+2023-06-01T13:00:08.000
+Calling process_fits
+2023-06-01T13:04:44.000
+Calling process_fits
+2023-06-01T13:09:59.000
+2023-06-01T14:00:09.000
+Calling process_fits
+2023-06-01T14:04:45.000
+Calling process_fits
+2023-06-01T14:10:02.000
+Calling process_fits
+2023-06-01T15:00:10.000
+Calling process_fits
+2023-06-01T15:04:46.000
+Calling process_fits
+2023-06-01T15:10:08.000
+Calling process_fits
+2023-06-01T16:00:08.000
+Calling process_fits
+2023-06-01T16:04:43.000
+Calling process_fits
+2023-06-01T16:10:00.000
+2023-06-01T17:00:10.000
+Calling process_fits
+2023-06-01T17:04:46.000
+Calling process_fits
+2023-06-01T17:10:00.000
+2023-06-01T18:00:09.000
+Calling process_fits
+2023-06-01T18:04:45.000
+Calling process_fits
+2023-06-01T18:09:59.000
+2023-06-01T19:00:09.000
+Calling process_fits
+2023-06-01T19:04:44.000
+Calling process_fits
+2023-06-01T19:10:01.000
+2023-06-01T20:00:08.000
+Calling process_fits
+2023-06-01T20:09:44.000
+Calling process_fits
+2023-06-01T20:10:01.000
+Calling process_fits
+2023-06-01T21:00:07.000
+Calling process_fits
+2023-06-01T21:04:42.000
+Calling process_fits
+2023-06-01T21:10:01.000
+Calling process_fits
+2023-06-01T22:00:10.000
+Calling process_fits
+2023-06-01T22:04:47.000
+Calling process_fits
+2023-06-01T22:10:02.000
+Calling process_fits
+2023-06-01T22:42:04.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230601bf
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 810.7501502032096 +/- 225.8732291568995
+{'Karthik': 'yadavallikarthik99@gmail.com', 'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'SKY': 'yadavallio@gmail.com', 'sKy': 'sky5265@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik', 'Karthik_PSU', 'SKY', 'sKy', 'Ashley', 'Oleg'])
+all email recipients: ['yadavallikarthik99@gmail.com', 's.karthik.yadavalli@psu.edu', 'yadavallio@gmail.com', 'sky5265@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: yadavallikarthik99@gmail.com
+recipients: s.karthik.yadavalli@psu.edu
+recipients: yadavallio@gmail.com
+recipients: sky5265@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230601bf
+Probability of BBH: 0.994389357818161
+Probability of BNS: 1.4784633358368251e-33
+Probability of NSBH:1.159482883595884e-31
+Probability of Terrestrial Event: 0.005610642181839043
+Distance to object: 810.7501502032096 +/- 225.8732291568995 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-01T22:46:48.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230601bf
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 3578.453685813072 +/- 998.1276979281147
+{'Karthik': 'yadavallikarthik99@gmail.com', 'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'SKY': 'yadavallio@gmail.com', 'sKy': 'sky5265@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik', 'Karthik_PSU', 'SKY', 'sKy', 'Ashley', 'Oleg'])
+all email recipients: ['yadavallikarthik99@gmail.com', 's.karthik.yadavalli@psu.edu', 'yadavallio@gmail.com', 'sky5265@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: yadavallikarthik99@gmail.com
+recipients: s.karthik.yadavalli@psu.edu
+recipients: yadavallio@gmail.com
+recipients: sky5265@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230601bf
+Probability of BBH: 0.9999999935572232
+Probability of BNS: 0.0
+Probability of NSBH:0.0
+Probability of Terrestrial Event: 6.442776756543367e-09
+Distance to object: 3578.453685813072 +/- 998.1276979281147 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-01T23:00:09.000
+Calling process_fits
+2023-06-01T23:04:45.000
+Calling process_fits
+2023-06-01T23:08:49.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230601bf
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 3578.453685813072 +/- 998.1276979281147
+{'Karthik': 'yadavallikarthik99@gmail.com', 'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'SKY': 'yadavallio@gmail.com', 'sKy': 'sky5265@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik', 'Karthik_PSU', 'SKY', 'sKy', 'Ashley', 'Oleg'])
+all email recipients: ['yadavallikarthik99@gmail.com', 's.karthik.yadavalli@psu.edu', 'yadavallio@gmail.com', 'sky5265@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: yadavallikarthik99@gmail.com
+recipients: s.karthik.yadavalli@psu.edu
+recipients: yadavallio@gmail.com
+recipients: sky5265@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230601bf
+Probability of BBH: 0.9999999935572232
+Probability of BNS: 0.0
+Probability of NSBH:0.0
+Probability of Terrestrial Event: 6.442776756543367e-09
+Distance to object: 3578.453685813072 +/- 998.1276979281147 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-01T23:10:00.000
+2023-06-02T00:00:10.000
+Calling process_fits
+2023-06-02T00:09:46.000
+Calling process_fits
+2023-06-02T00:10:00.000
+2023-06-02T01:00:09.000
+Calling process_fits
+2023-06-02T01:04:44.000
+2023-06-02 14:46:57,587 INFO reading FITS file 60097.78256944445/multiorder_fits_S230602ap.fits
+Traceback (most recent call last):
+  File "/root/miniconda3/envs/ligoenv/bin/ligo-skymap-flatten", line 11, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/ligo/skymap/tool/ligo_skymap_flatten.py", line 52, in main
+    hdus = fits.open(args.input)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/astropy/io/fits/hdu/hdulist.py", line 214, in fitsopen
+    return HDUList.fromfile(
+           ^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/astropy/io/fits/hdu/hdulist.py", line 482, in fromfile
+    return cls._readfrom(
+           ^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/astropy/io/fits/hdu/hdulist.py", line 1222, in _readfrom
+    raise OSError(
+OSError: No SIMPLE card found, this file does not appear to be a valid FITS file. If this is really a FITS file, try with ignore_missing_simple=True
+Calling process_fits
+2023-06-02T01:10:01.000
+Calling process_fits
+2023-06-02T02:00:08.000
+Calling process_fits
+2023-06-02T02:04:45.000
+Calling process_fits
+2023-06-02T02:10:02.000
+Calling process_fits
+2023-06-02T03:00:10.000
+Calling process_fits
+2023-06-02T03:04:46.000
+Calling process_fits
+2023-06-02T03:09:59.000
+2023-06-02T04:00:09.000
+Calling process_fits
+2023-06-02T04:04:48.000
+Calling process_fits
+2023-06-02T04:10:02.000
+Calling process_fits
+2023-06-02T05:00:12.000
+Calling process_fits
+2023-06-02T05:04:46.000
+Calling process_fits
+2023-06-02T05:10:00.000
+2023-06-02T06:00:08.000
+Calling process_fits
+2023-06-02T06:04:44.000
+Calling process_fits
+2023-06-02T06:10:00.000
+2023-06-02T07:00:10.000
+Calling process_fits
+2023-06-02T07:04:46.000
+Calling process_fits
+2023-06-02T07:10:02.000
+Calling process_fits
+2023-06-02T08:00:09.000
+Calling process_fits
+2023-06-02T08:04:45.000
+Calling process_fits
+2023-06-02T08:10:02.000
+Calling process_fits
+2023-06-02T09:00:10.000
+Calling process_fits
+2023-06-02T09:04:49.000
+Calling process_fits
+2023-06-02T09:10:00.000
+2023-06-02T10:00:08.000
+Calling process_fits
+2023-06-02T10:04:44.000
+Calling process_fits
+2023-06-02T10:10:00.000
+2023-06-02T11:00:08.000
+Calling process_fits
+2023-06-02T11:04:43.000
+Calling process_fits
+2023-06-02T11:10:02.000
+Calling process_fits
+2023-06-02T12:00:10.000
+Calling process_fits
+2023-06-02T12:04:48.000
+Calling process_fits
+2023-06-02T12:10:00.000
+2023-06-02T13:00:08.000
+Calling process_fits
+2023-06-02T13:04:44.000
+Calling process_fits
+2023-06-02T13:10:00.000
+2023-06-02T14:00:09.000
+Calling process_fits
+2023-06-02T14:04:47.000
+Calling process_fits
+2023-06-02T14:10:00.000
+2023-06-02T15:00:09.000
+Calling process_fits
+2023-06-02T15:04:45.000
+Calling process_fits
+2023-06-02T15:10:02.000
+Calling process_fits
+2023-06-02T16:00:08.000
+Calling process_fits
+2023-06-02T16:04:45.000
+Calling process_fits
+2023-06-02T16:10:01.000
+2023-06-02T17:00:09.000
+Calling process_fits
+2023-06-02T17:04:45.000
+Calling process_fits
+2023-06-02T17:10:02.000
+Calling process_fits
+2023-06-02T18:00:10.000
+Calling process_fits
+2023-06-02T18:04:47.000
+Calling process_fits
+2023-06-02T18:10:03.000
+Calling process_fits
+2023-06-02T18:46:54.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230602ap
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+Traceback (most recent call last):
+  File "/home/ligo_files/LIGHETR_alert_stable/LIGHETR_Alert_System/Final Directory/Alert Main.py", line 300, in <module>
+    process_fits(fits_file = skymap, alert_message = message_content,  skip_test_alerts = True)
+  File "/home/ligo_files/LIGHETR_alert_stable/LIGHETR_Alert_System/Final Directory/Alert Main.py", line 124, in process_fits
+    skymap,header = hp.read_map(singleorder_file_name, h=True, verbose=False)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/astropy/utils/decorators.py", line 607, in wrapper
+    return function(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/healpy/fitsfunc.py", line 370, in read_map
+    filename = pf.open(filename, memmap=memmap)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/astropy/io/fits/hdu/hdulist.py", line 214, in fitsopen
+    return HDUList.fromfile(
+           ^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/astropy/io/fits/hdu/hdulist.py", line 482, in fromfile
+    return cls._readfrom(
+           ^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/astropy/io/fits/hdu/hdulist.py", line 1248, in _readfrom
+    raise OSError("Empty or corrupt FITS file")
+OSError: Empty or corrupt FITS file
+2023-06-04 05:21:14,248 INFO reading FITS file 60099.389699074076/multiorder_fits_S230604z.fits
+2023-06-04 05:21:14,812 INFO writing FITS file 60099.389699074076/flattened_multiorder_fits_S230604z.fits
+WARNING: AstropyDeprecationWarning: "verbose" was deprecated in version 1.15.0 and will be removed in a future version.  [__main__]
+2023-06-04 05:25:48,646 INFO reading FITS file 60099.39288194444/multiorder_fits_S230604z.fits
+2023-06-04 05:25:49,169 INFO writing FITS file 60099.39288194444/flattened_multiorder_fits_S230604z.fits
+2023-06-05 02:54:10,524 INFO reading FITS file 60100.287569444445/multiorder_fits_S230605o.fits
+2023-06-05 02:54:10,557 INFO writing FITS file 60100.287569444445/flattened_multiorder_fits_S230605o.fits
+Listening for Alerts from kafka
+2023-06-03T14:00:11.000
+Calling process_fits
+2023-06-03T14:04:47.000
+Calling process_fits
+2023-06-03T14:10:07.000
+Calling process_fits
+2023-06-03T15:00:38.000
+Calling process_fits
+2023-06-03T15:05:13.000
+Calling process_fits
+2023-06-03T15:10:02.000
+Calling process_fits
+2023-06-03T16:00:10.000
+Calling process_fits
+2023-06-03T16:04:47.000
+Calling process_fits
+2023-06-03T16:10:10.000
+Calling process_fits
+2023-06-03T17:00:10.000
+Calling process_fits
+2023-06-03T17:04:45.000
+Calling process_fits
+2023-06-03T17:10:01.000
+2023-06-03T18:00:10.000
+Calling process_fits
+2023-06-03T18:04:45.000
+Calling process_fits
+2023-06-03T18:10:04.000
+Calling process_fits
+2023-06-03T19:00:09.000
+Calling process_fits
+2023-06-03T19:04:43.000
+Calling process_fits
+2023-06-03T19:10:02.000
+2023-06-03T20:00:08.000
+Calling process_fits
+2023-06-03T20:04:45.000
+Calling process_fits
+2023-06-03T20:10:02.000
+2023-06-03T21:00:08.000
+Calling process_fits
+2023-06-03T21:04:43.000
+Calling process_fits
+2023-06-03T21:10:01.000
+2023-06-03T22:00:10.000
+Calling process_fits
+2023-06-03T22:04:47.000
+Calling process_fits
+2023-06-03T22:10:04.000
+Calling process_fits
+2023-06-03T23:00:10.000
+Calling process_fits
+2023-06-03T23:04:45.000
+Calling process_fits
+2023-06-03T23:10:01.000
+2023-06-04T00:00:10.000
+Calling process_fits
+2023-06-04T00:04:47.000
+Calling process_fits
+2023-06-04T00:10:04.000
+Calling process_fits
+2023-06-04T01:00:10.000
+Calling process_fits
+2023-06-04T01:04:45.000
+Calling process_fits
+2023-06-04T01:10:02.000
+2023-06-04T02:00:10.000
+Calling process_fits
+2023-06-04T02:04:47.000
+Calling process_fits
+2023-06-04T02:10:04.000
+Calling process_fits
+2023-06-04T03:00:09.000
+Calling process_fits
+2023-06-04T03:04:43.000
+Calling process_fits
+2023-06-04T03:10:04.000
+Calling process_fits
+2023-06-04T04:00:11.000
+Calling process_fits
+2023-06-04T04:04:46.000
+Calling process_fits
+2023-06-04T04:10:05.000
+Calling process_fits
+2023-06-04T05:00:12.000
+Calling process_fits
+2023-06-04T05:04:47.000
+Calling process_fits
+2023-06-04T05:10:06.000
+Calling process_fits
+2023-06-04T06:00:09.000
+Calling process_fits
+2023-06-04T06:04:44.000
+Calling process_fits
+2023-06-04T06:10:03.000
+Calling process_fits
+2023-06-04T07:00:10.000
+Calling process_fits
+2023-06-04T07:04:44.000
+Calling process_fits
+2023-06-04T07:10:03.000
+Calling process_fits
+2023-06-04T08:00:11.000
+Calling process_fits
+2023-06-04T08:04:45.000
+Calling process_fits
+2023-06-04T08:10:05.000
+Calling process_fits
+2023-06-04T09:00:11.000
+Calling process_fits
+2023-06-04T09:04:46.000
+Calling process_fits
+2023-06-04T09:10:04.000
+Calling process_fits
+2023-06-04T09:21:10.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230604z
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 392.4490482431841 +/- 200.9025933478169
+{'Karthik': 'yadavallikarthik99@gmail.com', 'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'SKY': 'yadavallio@gmail.com', 'sKy': 'sky5265@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik', 'Karthik_PSU', 'SKY', 'sKy', 'Ashley', 'Oleg'])
+all email recipients: ['yadavallikarthik99@gmail.com', 's.karthik.yadavalli@psu.edu', 'yadavallio@gmail.com', 'sky5265@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: yadavallikarthik99@gmail.com
+recipients: s.karthik.yadavalli@psu.edu
+recipients: yadavallio@gmail.com
+recipients: sky5265@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230604z
+Probability of BBH: 0.7061956992397619
+Probability of BNS: 3.6054262797413515e-19
+Probability of NSBH:0.0423002585795029
+Probability of Terrestrial Event: 0.2515040421807352
+Distance to object: 392.4490482431841 +/- 200.9025933478169 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-04T09:25:45.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230604z
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 392.4490482431841 +/- 200.9025933478169
+{'Karthik': 'yadavallikarthik99@gmail.com', 'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'SKY': 'yadavallio@gmail.com', 'sKy': 'sky5265@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik', 'Karthik_PSU', 'SKY', 'sKy', 'Ashley', 'Oleg'])
+all email recipients: ['yadavallikarthik99@gmail.com', 's.karthik.yadavalli@psu.edu', 'yadavallio@gmail.com', 'sky5265@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: yadavallikarthik99@gmail.com
+recipients: s.karthik.yadavalli@psu.edu
+recipients: yadavallio@gmail.com
+recipients: sky5265@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230604z
+Probability of BBH: 0.7061956992397619
+Probability of BNS: 3.6054262797413515e-19
+Probability of NSBH:0.0423002585795029
+Probability of Terrestrial Event: 0.2515040421807352
+Distance to object: 392.4490482431841 +/- 200.9025933478169 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-04T10:00:10.000
+Calling process_fits
+2023-06-04T10:04:44.000
+Calling process_fits
+2023-06-04T10:10:02.000
+2023-06-04T11:00:11.000
+Calling process_fits
+2023-06-04T11:04:46.000
+Calling process_fits
+2023-06-04T11:10:02.000
+2023-06-04T12:00:10.000
+Calling process_fits
+2023-06-04T12:04:45.000
+Calling process_fits
+2023-06-04T12:10:02.000
+2023-06-04T13:10:03.000
+2023-06-04T14:05:13.000
+Calling process_fits
+2023-06-04T14:14:50.000
+Calling process_fits
+2023-06-04T15:00:14.000
+Calling process_fits
+2023-06-04T15:04:49.000
+Calling process_fits
+2023-06-04T15:10:04.000
+Calling process_fits
+2023-06-04T16:00:13.000
+Calling process_fits
+2023-06-04T16:04:48.000
+Calling process_fits
+2023-06-04T17:00:11.000
+Calling process_fits
+2023-06-04T17:04:46.000
+Calling process_fits
+2023-06-04T17:10:08.000
+Calling process_fits
+2023-06-04T18:00:12.000
+Calling process_fits
+2023-06-04T18:04:48.000
+Calling process_fits
+2023-06-04T18:10:02.000
+2023-06-04T19:00:10.000
+Calling process_fits
+2023-06-04T19:04:45.000
+Calling process_fits
+2023-06-04T19:10:02.000
+2023-06-04T20:00:12.000
+Calling process_fits
+2023-06-04T20:04:47.000
+Calling process_fits
+2023-06-04T20:10:05.000
+Calling process_fits
+2023-06-04T21:00:11.000
+Calling process_fits
+2023-06-04T21:04:46.000
+Calling process_fits
+2023-06-04T21:10:03.000
+2023-06-04T22:00:12.000
+Calling process_fits
+2023-06-04T22:04:47.000
+Calling process_fits
+2023-06-04T22:10:03.000
+2023-06-04T23:00:11.000
+Calling process_fits
+2023-06-04T23:04:45.000
+Calling process_fits
+2023-06-04T23:10:03.000
+2023-06-05T00:00:10.000
+Calling process_fits
+2023-06-05T00:04:45.000
+Calling process_fits
+2023-06-05T00:10:05.000
+Calling process_fits
+2023-06-05T01:00:11.000
+Calling process_fits
+2023-06-05T01:04:45.000
+Calling process_fits
+2023-06-05T01:10:02.000
+2023-06-05T02:00:12.000
+Calling process_fits
+2023-06-05T02:04:47.000
+Calling process_fits
+2023-06-05T02:10:04.000
+Calling process_fits
+2023-06-05T03:00:12.000
+Calling process_fits
+2023-06-05T03:04:47.000
+Calling process_fits
+2023-06-05T03:10:05.000
+Calling process_fits
+2023-06-05T04:00:14.000
+Calling process_fits
+2023-06-05T04:04:49.000
+Calling process_fits
+2023-06-05T04:10:06.000
+Calling process_fits
+2023-06-05T05:00:13.000
+Calling process_fits
+2023-06-05T05:04:48.000
+Calling process_fits
+2023-06-05T05:10:05.000
+Calling process_fits
+2023-06-05T06:00:09.000
+Calling process_fits
+2023-06-05T06:04:44.000
+Calling process_fits
+2023-06-05T06:10:05.000
+Calling process_fits
+2023-06-05T06:54:06.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230605o
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 1288.077735805905 +/- 390.7744059594049
+{'Karthik': 'yadavallikarthik99@gmail.com', 'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'SKY': 'yadavallio@gmail.com', 'sKy': 'sky5265@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+2023-06-05 02:58:45,829 INFO reading FITS file 60100.29076388889/multiorder_fits_S230605o.fits
+2023-06-05 02:58:45,860 INFO writing FITS file 60100.29076388889/flattened_multiorder_fits_S230605o.fits
+2023-06-05 03:09:58,780 INFO reading FITS file 60100.29854166666/multiorder_fits_S230605o.fits
+2023-06-05 03:09:58,813 INFO writing FITS file 60100.29854166666/flattened_multiorder_fits_S230605o.fits
+  File "/home/ligo_files/LIGHETR_alert_stable/LIGHETR_Alert_System/Final Directory/Alert Main.py", line 124
+    try:
+TabError: inconsistent use of tabs and spaces in indentation
+2023-06-05 12:41:43,652 INFO reading FITS file 60100.695601851854/multiorder_fits_S230601bf.fits
+2023-06-05 12:41:43,684 INFO writing FITS file 60100.695601851854/flattened_multiorder_fits_S230601bf.fits
+WARNING: AstropyDeprecationWarning: "verbose" was deprecated in version 1.15.0 and will be removed in a future version.  [__main__]
+2023-06-05 15:42:47,044 INFO reading FITS file 60100.82134259259/multiorder_fits_S230605o.fits
+2023-06-05 15:42:47,076 INFO writing FITS file 60100.82134259259/flattened_multiorder_fits_S230605o.fits
+2023-06-05 20:43:33,703 INFO reading FITS file 60101.03020833333/multiorder_fits_S230606d.fits
+2023-06-05 20:43:33,738 INFO writing FITS file 60101.03020833333/flattened_multiorder_fits_S230606d.fits
+2023-06-05 20:48:11,738 INFO reading FITS file 60101.03341435185/multiorder_fits_S230606d.fits
+2023-06-05 20:48:11,763 INFO writing FITS file 60101.03341435185/flattened_multiorder_fits_S230606d.fits
+2023-06-05 21:01:28,650 INFO reading FITS file 60101.042650462965/multiorder_fits_S230606d.fits
+2023-06-05 21:01:28,676 INFO writing FITS file 60101.042650462965/flattened_multiorder_fits_S230606d.fits
+2023-06-05 21:43:40,689 INFO reading FITS file 60101.07195601852/multiorder_fits_S230606d.fits
+2023-06-05 21:43:40,723 INFO writing FITS file 60101.07195601852/flattened_multiorder_fits_S230606d.fits
+Listening for Alerts from kafka
+2023-06-05T14:00:12.000
+Calling process_fits
+2023-06-05T14:04:47.000
+Calling process_fits
+2023-06-05T14:10:03.000
+2023-06-05T15:00:18.000
+Calling process_fits
+2023-06-05T15:04:52.000
+Calling process_fits
+2023-06-05T15:10:06.000
+Calling process_fits
+2023-06-05T16:00:11.000
+Calling process_fits
+2023-06-05T16:04:46.000
+Calling process_fits
+2023-06-05T16:10:03.000
+2023-06-05T16:41:40.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230601bf
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 3578.453685813072 +/- 998.1276979281147
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230601bf
+Probability of BBH: 0.9999999935572232
+Probability of BNS: 0.0
+Probability of NSBH:0.0
+Probability of Terrestrial Event: 6.442776756543367e-09
+Distance to object: 3578.453685813072 +/- 998.1276979281147 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-05T17:00:11.000
+Calling process_fits
+2023-06-05T17:04:46.000
+Calling process_fits
+2023-06-05T17:10:05.000
+Calling process_fits
+2023-06-05T18:00:13.000
+Calling process_fits
+2023-06-05T18:04:49.000
+Calling process_fits
+2023-06-05T18:10:06.000
+Calling process_fits
+2023-06-05T19:00:11.000
+Calling process_fits
+2023-06-05T19:04:46.000
+Calling process_fits
+2023-06-05T19:10:03.000
+2023-06-05T19:42:44.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230605o
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 1096.449879141824 +/- 332.8048520297362
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230605o
+Probability of BBH: 0.98770478
+Probability of BNS: 0.0
+Probability of NSBH:0.0
+Probability of Terrestrial Event: 0.01229522
+Distance to object: 1096.449879141824 +/- 332.8048520297362 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-05T20:00:12.000
+Calling process_fits
+2023-06-05T20:04:48.000
+Calling process_fits
+2023-06-05T20:10:04.000
+2023-06-05T21:00:16.000
+Calling process_fits
+2023-06-05T21:04:51.000
+Calling process_fits
+2023-06-05T21:10:07.000
+2023-06-05T22:00:14.000
+Calling process_fits
+2023-06-05T22:04:55.000
+Calling process_fits
+2023-06-05T22:10:07.000
+Calling process_fits
+2023-06-05T23:00:13.000
+Calling process_fits
+2023-06-05T23:04:47.000
+Calling process_fits
+2023-06-05T23:10:05.000
+Calling process_fits
+2023-06-06T00:00:13.000
+Calling process_fits
+2023-06-06T00:04:50.000
+Calling process_fits
+2023-06-06T00:10:06.000
+Calling process_fits
+2023-06-06T00:43:30.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230606d
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 2290.811748117235 +/- 698.0098420002366
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230606d
+Probability of BBH: 0.9667068842824107
+Probability of BNS: 1.5904633502619938e-27
+Probability of NSBH:1.262620256758239e-25
+Probability of Terrestrial Event: 0.033293115717589306
+Distance to object: 2290.811748117235 +/- 698.0098420002366 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-06T00:48:07.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230606d
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 1817.793140130575 +/- 557.4948959222124
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230606d
+Probability of BBH: 0.999277956450759
+Probability of BNS: 0.0
+Probability of NSBH:0.0
+Probability of Terrestrial Event: 0.0007220435492409916
+Distance to object: 1817.793140130575 +/- 557.4948959222124 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-06T01:00:13.000
+Calling process_fits
+2023-06-06T01:01:25.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230606d
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 1817.793140130575 +/- 557.4948959222124
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230606d
+Probability of BBH: 0.999277956450759
+Probability of BNS: 0.0
+Probability of NSBH:0.0
+Probability of Terrestrial Event: 0.0007220435492409916
+Distance to object: 1817.793140130575 +/- 557.4948959222124 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-06T01:04:49.000
+Calling process_fits
+2023-06-06T01:10:14.000
+Calling process_fits
+2023-06-06T01:43:37.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230606d
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 1817.793140130575 +/- 557.4948959222124
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230606d
+Probability of BBH: 0.999277956450759
+Probability of BNS: 0.0
+Probability of NSBH:0.0
+Probability of Terrestrial Event: 0.0007220435492409916
+Distance to object: 1817.793140130575 +/- 557.4948959222124 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-06T02:00:16.000
+Calling process_fits
+2023-06-06T02:04:52.000
+Calling process_fits
+2023-06-06T02:10:05.000
+Calling process_fits
+2023-06-06T03:00:13.000
+Calling process_fits
+2023-06-06T03:04:48.000
+Calling process_fits
+2023-06-06T03:10:04.000
+2023-06-06T04:00:13.000
+Calling process_fits
+2023-06-06T04:04:48.000
+Calling process_fits
+2023-06-06T04:10:06.000
+Calling process_fits
+2023-06-06T05:00:13.000
+Calling process_fits
+2023-06-06T05:04:48.000
+Calling process_fits
+2023-06-06T05:10:04.000
+2023-06-06T06:00:12.000
+Calling process_fits
+2023-06-06T06:04:47.000
+2023-06-06 02:53:52,231 INFO reading FITS file 60101.28737268518/multiorder_fits_S230606z.fits
+2023-06-06 02:53:52,266 INFO writing FITS file 60101.28737268518/flattened_multiorder_fits_S230606z.fits
+2023-06-06 02:58:26,921 INFO reading FITS file 60101.29054398148/multiorder_fits_S230606z.fits
+2023-06-06 02:58:26,945 INFO writing FITS file 60101.29054398148/flattened_multiorder_fits_S230606z.fits
+Calling process_fits
+2023-06-06T06:10:04.000
+2023-06-06T06:53:49.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230606z
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 4496.887061114983 +/- 2023.244821059532
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230606z
+Probability of BBH: 0.8346274263882714
+Probability of BNS: 1.010269123355217e-35
+Probability of NSBH:9.061869075001201e-34
+Probability of Terrestrial Event: 0.16537257361172863
+Distance to object: 4496.887061114983 +/- 2023.244821059532 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-06T06:58:23.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230606z
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 4496.887061114983 +/- 2023.244821059532
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230606z
+Probability of BBH: 0.8346274263882714
+Probability of BNS: 1.010269123355217e-35
+Probability of NSBH:9.061869075001201e-34
+Probability of Terrestrial Event: 0.16537257361172863
+Distance to object: 4496.887061114983 +/- 2023.244821059532 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-06T07:00:17.000
+Calling process_fits
+2023-06-06T07:04:53.000
+Calling process_fits
+2023-06-06T07:10:06.000
+Calling process_fits
+2023-06-06T08:00:12.000
+Calling process_fits
+2023-06-06T08:04:51.000
+Calling process_fits
+2023-06-06T08:10:11.000
+Calling process_fits
+2023-06-06T09:00:12.000
+Calling process_fits
+2023-06-06T09:04:47.000
+Calling process_fits
+2023-06-06T09:10:04.000
+2023-06-06T10:00:11.000
+Calling process_fits
+2023-06-06T10:04:46.000
+Calling process_fits
+2023-06-06T10:10:12.000
+Calling process_fits
+2023-06-06T11:00:13.000
+Calling process_fits
+2023-06-06T11:04:48.000
+Calling process_fits
+2023-06-06T11:10:05.000
+2023-06-06T12:00:11.000
+Calling process_fits
+2023-06-06T12:04:53.000
+Calling process_fits
+2023-06-06T12:10:06.000
+Calling process_fits
+2023-06-06T13:00:13.000
+Calling process_fits
+2023-06-06T13:04:48.000
+Calling process_fits
+2023-06-06T13:10:07.000
+Calling process_fits
+2023-06-06T14:00:12.000
+Calling process_fits
+2023-06-06T14:04:53.000
+Calling process_fits
+2023-06-06T14:10:05.000
+2023-06-06T15:00:16.000
+Calling process_fits
+2023-06-06T15:04:51.000
+Calling process_fits
+2023-06-06T15:10:05.000
+2023-06-06T16:00:15.000
+Calling process_fits
+2023-06-06T16:04:51.000
+Calling process_fits
+2023-06-06T16:10:08.000
+Calling process_fits
+2023-06-06T17:00:13.000
+Calling process_fits
+2023-06-06T17:04:48.000
+Calling process_fits
+2023-06-06T17:10:07.000
+Calling process_fits
+2023-06-06T18:00:12.000
+Calling process_fits
+2023-06-06T19:00:13.000
+Calling process_fits
+2023-06-06T19:00:30.000
+2023-06-06T19:04:48.000
+Calling process_fits
+2023-06-06T19:10:07.000
+Calling process_fits
+2023-06-06T20:00:14.000
+Calling process_fits
+2023-06-06T20:04:49.000
+Calling process_fits
+2023-06-06T20:10:07.000
+Calling process_fits
+2023-06-06T21:00:12.000
+Calling process_fits
+2023-06-06T21:04:47.000
+Calling process_fits
+2023-06-06T21:10:06.000
+Calling process_fits
+2023-06-06T22:00:14.000
+Calling process_fits
+2023-06-06T22:04:51.000
+Calling process_fits
+2023-06-06T22:10:07.000
+Calling process_fits
+2023-06-06T23:00:15.000
+Calling process_fits
+2023-06-06T23:04:50.000
+Calling process_fits
+2023-06-06T23:10:07.000
+Calling process_fits
+2023-06-07T00:03:26.000
+Calling process_fits
+2023-06-07T00:08:02.000
+Calling process_fits
+2023-06-07T00:10:05.000
+2023-06-07T01:00:13.000
+Calling process_fits
+2023-06-07T01:04:47.000
+Calling process_fits
+2023-06-07T01:10:04.000
+2023-06-07T02:00:17.000
+Calling process_fits
+2023-06-07T02:04:53.000
+Calling process_fits
+2023-06-07T02:10:07.000
+Calling process_fits
+2023-06-07T03:00:12.000
+Calling process_fits
+2023-06-07T03:04:47.000
+Calling process_fits
+2023-06-07T03:10:07.000
+Calling process_fits
+2023-06-07T04:00:13.000
+Calling process_fits
+2023-06-07T04:04:48.000
+Calling process_fits
+2023-06-07T04:10:06.000
+Calling process_fits
+2023-06-07T05:00:14.000
+Calling process_fits
+2023-06-07T05:04:48.000
+Calling process_fits
+2023-06-07T05:10:07.000
+Calling process_fits
+2023-06-07T06:00:13.000
+Calling process_fits
+2023-06-07T06:04:47.000
+Calling process_fits
+2023-06-07T06:10:07.000
+Calling process_fits
+2023-06-07T07:00:12.000
+Calling process_fits
+2023-06-07T07:10:07.000
+Calling process_fits
+2023-06-07T08:00:13.000
+Calling process_fits
+2023-06-07T08:04:50.000
+Calling process_fits
+2023-06-07T08:10:05.000
+2023-06-07T09:00:11.000
+Calling process_fits
+2023-06-07T09:04:46.000
+Calling process_fits
+2023-06-07T09:10:05.000
+2023-06-07T10:00:13.000
+Calling process_fits
+2023-06-07T10:04:50.000
+Calling process_fits
+2023-06-07T10:10:08.000
+2023-06-07T11:00:16.000
+Calling process_fits
+2023-06-07T11:04:50.000
+Calling process_fits
+2023-06-07T11:10:06.000
+2023-06-07T12:00:12.000
+Calling process_fits
+2023-06-07T12:04:49.000
+Calling process_fits
+2023-06-07T12:10:05.000
+2023-06-07T13:00:13.000
+Calling process_fits
+2023-06-07T13:04:49.000
+Calling process_fits
+2023-06-07T13:10:05.000
+2023-06-07T14:00:13.000
+Calling process_fits
+2023-06-07T14:04:49.000
+Calling process_fits
+2023-06-07T14:10:06.000
+2023-06-07T15:00:12.000
+Calling process_fits
+2023-06-07T15:04:47.000
+Calling process_fits
+2023-06-07T15:10:07.000
+Calling process_fits
+2023-06-07T16:00:14.000
+Calling process_fits
+2023-06-07T16:06:58.000
+Calling process_fits
+2023-06-07T16:10:07.000
+Calling process_fits
+2023-06-07T17:00:15.000
+Calling process_fits
+2023-06-07T17:04:51.000
+Calling process_fits
+2023-06-07T17:15:06.000
+2023-06-07T18:00:12.000
+Calling process_fits
+2023-06-07T18:10:07.000
+Calling process_fits
+2023-06-07T19:00:15.000
+Calling process_fits
+2023-06-07T19:04:50.000
+Calling process_fits
+2023-06-07T20:00:14.000
+Calling process_fits
+2023-06-07T20:04:49.000
+Calling process_fits
+2023-06-07T20:10:06.000
+2023-06-07T21:00:12.000
+Calling process_fits
+2023-06-07T21:09:49.000
+Calling process_fits
+2023-06-07T21:10:07.000
+Calling process_fits
+2023-06-07T22:00:12.000
+Calling process_fits
+2023-06-07T22:04:48.000
+Calling process_fits
+2023-06-07T22:10:08.000
+Calling process_fits
+2023-06-07T23:00:14.000
+Calling process_fits
+2023-06-07T23:04:49.000
+Calling process_fits
+2023-06-07T23:10:06.000
+2023-06-08T00:00:13.000
+Calling process_fits
+2023-06-08T00:04:48.000
+Calling process_fits
+2023-06-08T00:10:06.000
+2023-06-08T01:00:12.000
+Calling process_fits
+2023-06-08T01:04:48.000
+Calling process_fits
+2023-06-08T01:10:07.000
+Calling process_fits
+2023-06-08T02:00:14.000
+Calling process_fits
+2023-06-08T02:04:50.000
+Calling process_fits
+2023-06-08T02:10:06.000
+2023-06-08T03:00:13.000
+Calling process_fits
+2023-06-08T03:04:48.000
+Calling process_fits
+2023-06-08T03:10:06.000
+2023-06-08T04:00:16.000
+Calling process_fits
+2023-06-08T04:04:52.000
+Calling process_fits
+2023-06-08T04:10:06.000
+2023-06-08T05:00:14.000
+Calling process_fits
+2023-06-08T05:04:50.000
+Calling process_fits
+2023-06-08T05:10:07.000
+2023-06-08T06:00:12.000
+Calling process_fits
+2023-06-08T06:04:48.000
+Calling process_fits
+2023-06-08T06:10:09.000
+Calling process_fits
+2023-06-08T07:00:13.000
+Calling process_fits
+2023-06-08T07:04:48.000
+Calling process_fits
+2023-06-08T07:10:07.000
+2023-06-08T08:00:14.000
+Calling process_fits
+2023-06-08T08:04:51.000
+Calling process_fits
+2023-06-08 05:22:42,796 INFO reading FITS file 60103.39071759259/multiorder_fits_S230608q.fits
+2023-06-08 05:22:42,821 INFO writing FITS file 60103.39071759259/flattened_multiorder_fits_S230608q.fits
+2023-06-08 05:27:16,534 INFO reading FITS file 60103.393900462965/multiorder_fits_S230608q.fits
+2023-06-08 05:27:16,557 INFO writing FITS file 60103.393900462965/flattened_multiorder_fits_S230608q.fits
+2023-06-08 14:05:10,968 INFO reading FITS file 60103.75355324074/multiorder_fits_S230608aa.fits
+2023-06-08 14:05:11,004 INFO writing FITS file 60103.75355324074/flattened_multiorder_fits_S230608aa.fits
+2023-06-08 14:09:48,549 INFO reading FITS file 60103.75675925926/multiorder_fits_S230608aa.fits
+2023-06-08 14:09:48,584 INFO writing FITS file 60103.75675925926/flattened_multiorder_fits_S230608aa.fits
+2023-06-08 15:06:58,160 INFO reading FITS file 60103.79645833333/multiorder_fits_S230608ah.fits
+2023-06-08 15:06:58,196 INFO writing FITS file 60103.79645833333/flattened_multiorder_fits_S230608ah.fits
+2023-06-08 15:11:31,742 INFO reading FITS file 60103.799629629626/multiorder_fits_S230608ah.fits
+2023-06-08 15:11:31,765 INFO writing FITS file 60103.799629629626/flattened_multiorder_fits_S230608ah.fits
+2023-06-08 16:51:15,891 INFO reading FITS file 60103.86888888889/multiorder_fits_S230608as.fits
+2023-06-08 16:51:15,926 INFO writing FITS file 60103.86888888889/flattened_multiorder_fits_S230608as.fits
+2023-06-08T08:10:08.000
+Calling process_fits
+2023-06-08T09:00:13.000
+Calling process_fits
+2023-06-08T09:04:48.000
+Calling process_fits
+2023-06-08T09:10:08.000
+Calling process_fits
+2023-06-08T09:22:38.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230608q
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 351.2326608256262 +/- 113.6783582347747
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230608q
+Probability of BBH: 0.0
+Probability of BNS: 0.0033412509970743506
+Probability of NSBH:0.00646311218991797
+Probability of Terrestrial Event: 0.9901956368130077
+Distance to object: 351.2326608256262 +/- 113.6783582347747 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-08T09:27:13.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230608q
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 351.2326608256262 +/- 113.6783582347747
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230608q
+Probability of BBH: 0.0
+Probability of BNS: 0.0033412509970743506
+Probability of NSBH:0.00646311218991797
+Probability of Terrestrial Event: 0.9901956368130077
+Distance to object: 351.2326608256262 +/- 113.6783582347747 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-08T10:00:13.000
+Calling process_fits
+2023-06-08T10:04:49.000
+Calling process_fits
+2023-06-08T10:10:08.000
+Calling process_fits
+2023-06-08T11:00:14.000
+Calling process_fits
+2023-06-08T11:04:49.000
+Calling process_fits
+2023-06-08T11:10:09.000
+Calling process_fits
+2023-06-08T12:00:18.000
+Calling process_fits
+2023-06-08T12:04:54.000
+Calling process_fits
+2023-06-08T12:10:09.000
+Calling process_fits
+2023-06-08T13:00:13.000
+Calling process_fits
+2023-06-08T13:04:48.000
+Calling process_fits
+2023-06-08T13:10:07.000
+2023-06-08T14:00:14.000
+Calling process_fits
+2023-06-08T14:04:50.000
+Calling process_fits
+2023-06-08T14:10:07.000
+2023-06-08T15:00:14.000
+Calling process_fits
+2023-06-08T15:09:50.000
+Calling process_fits
+2023-06-08T15:10:08.000
+Calling process_fits
+2023-06-08T16:00:14.000
+Calling process_fits
+2023-06-08T16:04:55.000
+Calling process_fits
+2023-06-08T16:10:07.000
+2023-06-08T17:00:16.000
+Calling process_fits
+2023-06-08T17:04:50.000
+Calling process_fits
+2023-06-08T17:10:07.000
+2023-06-08T18:00:14.000
+Calling process_fits
+2023-06-08T18:04:50.000
+Calling process_fits
+2023-06-08T18:05:07.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230608aa
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 608.0955035787483 +/- 192.6913041928236
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230608aa
+Probability of BBH: 0.005397508025070268
+Probability of BNS: 0.0
+Probability of NSBH:0.03450616337963374
+Probability of Terrestrial Event: 0.960096328595296
+Distance to object: 608.0955035787483 +/- 192.6913041928236 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-08T18:09:44.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230608aa
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 608.0955035787483 +/- 192.6913041928236
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230608aa
+Probability of BBH: 0.005397508025070268
+Probability of BNS: 0.0
+Probability of NSBH:0.03450616337963374
+Probability of Terrestrial Event: 0.960096328595296
+Distance to object: 608.0955035787483 +/- 192.6913041928236 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-08T18:10:09.000
+Calling process_fits
+2023-06-08T19:00:14.000
+Calling process_fits
+2023-06-08T19:04:48.000
+Calling process_fits
+2023-06-08T19:06:54.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230608ah
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 232.3627870562732 +/- 99.54904920323109
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230608ah
+Probability of BBH: 0.0
+Probability of BNS: 0.019000514
+Probability of NSBH:0.0
+Probability of Terrestrial Event: 0.980999486
+Distance to object: 232.3627870562732 +/- 99.54904920323109 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-08T19:10:07.000
+2023-06-08T19:11:28.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230608ah
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 232.3627870562732 +/- 99.54904920323109
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230608ah
+Probability of BBH: 0.0
+Probability of BNS: 0.019000514
+Probability of NSBH:0.0
+Probability of Terrestrial Event: 0.980999486
+Distance to object: 232.3627870562732 +/- 99.54904920323109 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-08T20:00:15.000
+Calling process_fits
+2023-06-08T20:04:51.000
+Calling process_fits
+2023-06-08T20:10:07.000
+2023-06-08T20:51:12.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230608as
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 3193.105228002574 +/- 955.7109823595155
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+2023-06-08 17:32:31,970 INFO reading FITS file 60103.8975462963/multiorder_fits_S230608as.fits
+2023-06-08 17:32:31,995 INFO writing FITS file 60103.8975462963/flattened_multiorder_fits_S230608as.fits
+2023-06-08 19:48:34,023 INFO reading FITS file 60103.99202546296/multiorder_fits_S230608aw.fits
+Traceback (most recent call last):
+  File "/root/miniconda3/envs/ligoenv/bin/ligo-skymap-flatten", line 11, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/ligo/skymap/tool/ligo_skymap_flatten.py", line 52, in main
+    hdus = fits.open(args.input)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/astropy/io/fits/hdu/hdulist.py", line 214, in fitsopen
+    return HDUList.fromfile(
+           ^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/astropy/io/fits/hdu/hdulist.py", line 482, in fromfile
+    return cls._readfrom(
+           ^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/astropy/io/fits/hdu/hdulist.py", line 1222, in _readfrom
+    raise OSError(
+OSError: No SIMPLE card found, this file does not appear to be a valid FITS file. If this is really a FITS file, try with ignore_missing_simple=True
+2023-06-08 19:53:09,837 INFO reading FITS file 60103.99521990741/multiorder_fits_S230608aw.fits
+Traceback (most recent call last):
+  File "/root/miniconda3/envs/ligoenv/bin/ligo-skymap-flatten", line 11, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/ligo/skymap/tool/ligo_skymap_flatten.py", line 52, in main
+    hdus = fits.open(args.input)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/astropy/io/fits/hdu/hdulist.py", line 214, in fitsopen
+    return HDUList.fromfile(
+           ^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/astropy/io/fits/hdu/hdulist.py", line 482, in fromfile
+    return cls._readfrom(
+           ^^^^^^^^^^^^^^
+  File "/root/miniconda3/envs/ligoenv/lib/python3.11/site-packages/astropy/io/fits/hdu/hdulist.py", line 1222, in _readfrom
+    raise OSError(
+OSError: No SIMPLE card found, this file does not appear to be a valid FITS file. If this is really a FITS file, try with ignore_missing_simple=True
+2023-06-08 21:08:50,756 INFO reading FITS file 60104.04775462963/multiorder_fits_S230609a.fits
+2023-06-08 21:08:50,791 INFO writing FITS file 60104.04775462963/flattened_multiorder_fits_S230609a.fits
+2023-06-08 21:13:28,293 INFO reading FITS file 60104.05097222222/multiorder_fits_S230609a.fits
+2023-06-08 21:13:28,317 INFO writing FITS file 60104.05097222222/flattened_multiorder_fits_S230609a.fits
+2023-06-09 02:50:29,452 INFO reading FITS file 60104.28501157407/multiorder_fits_S230609u.fits
+2023-06-09 02:50:29,489 INFO writing FITS file 60104.28501157407/flattened_multiorder_fits_S230609u.fits
+2023-06-09 02:55:09,516 INFO reading FITS file 60104.28826388889/multiorder_fits_S230609u.fits
+2023-06-09 02:55:09,542 INFO writing FITS file 60104.28826388889/flattened_multiorder_fits_S230609u.fits
+2023-06-09 03:32:58,733 INFO reading FITS file 60104.31452546296/multiorder_fits_S230609u.fits
+2023-06-09 03:32:58,769 INFO writing FITS file 60104.31452546296/flattened_multiorder_fits_S230609u.fits
+/home/ligo_files/LIGHETR_alert_stable/LIGHETR_Alert_System/Final Directory/Alert Main.py:158: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+  fig1, ax1 = plt.subplots()
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230608as
+Probability of BBH: 0.9998056109287473
+Probability of BNS: 2.6521932956095014e-24
+Probability of NSBH:5.421817374918003e-19
+Probability of Terrestrial Event: 0.00019438907125268745
+Distance to object: 3193.105228002574 +/- 955.7109823595155 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-08T21:32:28.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230608as
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 3193.105228002574 +/- 955.7109823595155
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230608as
+Probability of BBH: 0.9998056109287473
+Probability of BNS: 2.6521932956095014e-24
+Probability of NSBH:5.421817374918003e-19
+Probability of Terrestrial Event: 0.00019438907125268745
+Distance to object: 3193.105228002574 +/- 955.7109823595155 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-08T22:00:15.000
+Calling process_fits
+2023-06-08T22:04:52.000
+Calling process_fits
+2023-06-08T22:10:10.000
+Calling process_fits
+2023-06-08T23:00:13.000
+Calling process_fits
+2023-06-08T23:04:48.000
+Calling process_fits
+2023-06-08T23:10:07.000
+2023-06-08T23:48:31.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230608aw
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+Unable to read map
+2023-06-08T23:53:07.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230608aw
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+Unable to read map
+2023-06-09T00:00:14.000
+Calling process_fits
+2023-06-09T00:04:51.000
+Calling process_fits
+2023-06-09T00:10:10.000
+Calling process_fits
+2023-06-09T01:00:13.000
+Calling process_fits
+2023-06-09T01:04:51.000
+Calling process_fits
+2023-06-09T01:08:46.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230609a
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 4451.575587167492 +/- 1401.819981072773
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230609a
+Probability of BBH: 0.9287134220712912
+Probability of BNS: 3.3995738270146023e-15
+Probability of NSBH:2.449586729888665e-13
+Probability of Terrestrial Event: 0.07128657792846049
+Distance to object: 4451.575587167492 +/- 1401.819981072773 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-09T01:10:08.000
+Calling process_fits
+2023-06-09T01:13:24.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230609a
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 4537.499807173187 +/- 1432.880307415378
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230609a
+Probability of BBH: 0.9555122708185579
+Probability of BNS: 2.5712075474648447e-15
+Probability of NSBH:1.863059407079187e-13
+Probability of Terrestrial Event: 0.04448772918125321
+Distance to object: 4537.499807173187 +/- 1432.880307415378 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-09T02:02:11.000
+Calling process_fits
+2023-06-09T02:06:45.000
+Calling process_fits
+2023-06-09T02:10:07.000
+2023-06-09T03:14:58.000
+Calling process_fits
+2023-06-09T03:19:33.000
+Calling process_fits
+2023-06-09T04:00:14.000
+Calling process_fits
+2023-06-09T04:10:07.000
+2023-06-09T04:14:50.000
+Calling process_fits
+2023-06-09T05:15:18.000
+Calling process_fits
+2023-06-09T05:19:52.000
+Calling process_fits
+2023-06-09T05:20:09.000
+2023-06-09T06:05:56.000
+Calling process_fits
+2023-06-09T06:10:09.000
+Calling process_fits
+2023-06-09T06:50:25.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230609u
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 3446.568353860104 +/- 1084.213594142404
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230609u
+Probability of BBH: 0.9854179898562037
+Probability of BNS: 5.7180833786362945e-21
+Probability of NSBH:4.29703807774404e-19
+Probability of Terrestrial Event: 0.014582010143796342
+Distance to object: 3446.568353860104 +/- 1084.213594142404 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-09T06:55:06.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230609u
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 2798.778095695261 +/- 842.0974799542527
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+LIGHETR Alert: GW Event Detected (No Optical Counterpart)
+A gravitational wave event was detected. Event: S230609u
+Probability of BBH: 0.961466981
+Probability of BNS: 0.0
+Probability of NSBH:0.0
+Probability of Terrestrial Event: 0.038533019
+Distance to object: 2798.778095695261 +/- 842.0974799542527 Mpc
+We will ignore this event because it is unlikely to have a meaningful optical counterpart. Happy days!
+2023-06-09T07:05:14.000
+Calling process_fits
+2023-06-09T07:09:49.000
+Calling process_fits
+2023-06-09T07:10:10.000
+Calling process_fits
+2023-06-09T07:32:55.000
+Calling process_fits
+
+
+=============================
+Found a real LIGO event: S230609u
+
+Saving multiorder file
+Flattening...
+Processing FITS...
+dist: 2798.778095695261 +/- 842.0974799542527
+{'Karthik_PSU': 's.karthik.yadavalli@psu.edu', 'Ashley': 'vav5084@psu.edu', 'Oleg': 'o.korobkin@gmail.com'}
+people to contact: dict_keys(['Karthik_PSU', 'Ashley', 'Oleg'])
+all email recipients: ['s.karthik.yadavalli@psu.edu', 'vav5084@psu.edu', 'o.korobkin@gmail.com']
+recipients: s.karthik.yadavalli@psu.edu
+recipients: vav5084@psu.edu
+recipients: o.korobkin@gmail.com
+Traceback (most recent call last):
+  File "Alert Main.py", line 1, in <module>
+    import matplotlib.pyplot as plt
+ImportError: No module named matplotlib.pyplot
