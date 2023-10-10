@@ -17,7 +17,7 @@ from lighetr_alert_system.prob_obs import prob_observable
 from lighetr_alert_system import get_galaxies
 
 
-def process_fits(alert_message, people_to_contact = None, skip_test_alerts = True):
+def process_fits(alert_message, save_path='.', people_to_contact = None, skip_test_alerts = True):
         '''
         The format of these alerts is given in this website:
         https://emfollow.docs.ligo.org/userguide/content.html
@@ -56,6 +56,7 @@ def process_fits(alert_message, people_to_contact = None, skip_test_alerts = Tru
         test_event = ( superevent_id[0] in ['M', 'T'] )
             
         if skip_test_alerts and test_event: #if we want to ignore test events, and this is a test event, ignore it.
+            print("TEST EVENT - SKIPPING")
             return False
         
         print("\n\n=============================\nFound a real LIGO event: "+str(superevent_id)+" | "+str(alert_type)+" Alert\n")
@@ -67,7 +68,8 @@ def process_fits(alert_message, people_to_contact = None, skip_test_alerts = Tru
             event_id = superevent_id,
             event_dict = alert_message['event']['classification'],
             far = alert_message['event']['far'],
-            significance = alert_message['event']['significant'],  
+            significance = alert_message['event']['significant'],
+            save_path = save_path
         )
         
         with open(alert.overview_file, 'w+') as data_out: 
@@ -165,12 +167,14 @@ def process_fits(alert_message, people_to_contact = None, skip_test_alerts = Tru
         """
         if len(cattop_all[0]) > 0:
             send_mapped_alert_info(
-                MMT_observatory, contact_lists_all, contact_lists_followup, phase_II=False
+                MMT_observatory, contact_lists_all,
+                contact_lists_followup, phase_II=False
             )
             
         if len(cattop_all[1]) > 0:
             send_mapped_alert_info(
-                magellan_observatory, contact_lists_all, contact_lists_followup, phase_II=False
+                magellan_observatory, contact_lists_all,
+                contact_lists_followup, phase_II=False
             )
 
         """
@@ -186,12 +190,11 @@ def process_fits(alert_message, people_to_contact = None, skip_test_alerts = Tru
 if __name__ == "__main__":
     ###########Things start here####################
    
-    #stream_start_pos = 1600
+    SAVE_PATH = '../../'
     stream_start_pos = StartPosition.EARLIEST
     #print("Starting stream at "+str(stream_start_pos))
-    #stream = Stream(start_at=stream_start_pos)
-
-    stream = Stream()
+    stream = Stream(start_at=stream_start_pos)
+    #stream = Stream()
 
     num_messages = 0
 
@@ -217,5 +220,5 @@ if __name__ == "__main__":
             '''send that fits file into process_fits'''
             if event is not None:
                 print('Calling process_fits')
-                process_fits(alert_message = message_content, skip_test_alerts = True)
+                process_fits(alert_message = message_content, save_path = SAVE_PATH, skip_test_alerts = True)
 

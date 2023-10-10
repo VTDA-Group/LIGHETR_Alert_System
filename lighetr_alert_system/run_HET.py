@@ -18,7 +18,7 @@ from lighetr_alert_system import get_galaxies, get_LST
 
 
 
-def process_fits(alert_message, people_to_contact = None, skip_test_alerts = True):
+def process_fits(alert_message, save_path = '.', people_to_contact = None, skip_test_alerts = True):
         '''
         The format of these alerts is given in this website:
         https://emfollow.docs.ligo.org/userguide/content.html
@@ -68,7 +68,8 @@ def process_fits(alert_message, people_to_contact = None, skip_test_alerts = Tru
             event_id = superevent_id,
             event_dict = alert_message['event']['classification'],
             far = alert_message['event']['far'],
-            significance = alert_message['event']['significant'],  
+            significance = alert_message['event']['significant'], 
+            save_path = save_path,
         )
 
         with open(alert.overview_file, 'w+') as data_out: 
@@ -183,12 +184,10 @@ def process_fits(alert_message, people_to_contact = None, skip_test_alerts = Tru
 if __name__ == "__main__":
     ###########Things start here####################
    
-    #stream_start_pos = 1600
+    SAVE_PATH = "../../" # change to where you want results stored
     stream_start_pos = StartPosition.EARLIEST
     #print("Starting stream at "+str(stream_start_pos))
-    #stream = Stream(start_at=stream_start_pos)
-
-    stream = Stream()
+    stream = Stream(start_at=stream_start_pos)
 
     num_messages = 0
 
@@ -214,5 +213,5 @@ if __name__ == "__main__":
             '''send that fits file into process_fits'''
             if event is not None:
                 print('Calling process_fits')
-                process_fits(alert_message = message_content, skip_test_alerts = True)
+                process_fits(alert_message = message_content, save_path = SAVE_PATH, skip_test_alerts = True)
 
