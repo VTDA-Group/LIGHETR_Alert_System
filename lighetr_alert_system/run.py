@@ -182,11 +182,7 @@ def process_fits(alert_message, people_to_contact = None, skip_test_alerts = Tru
             
 if __name__ == "__main__":
     ###########Things start here####################
-    contact_list_file_loc = 'contact_only_HET_BNS.json'
-    contact_list_file_loc_all_events = 'contact_all_LIGO.json'
-    #people_to_contact = ["Karthik"]
-    people_to_contact = []
-
+   
     #stream_start_pos = 1600
     stream_start_pos = StartPosition.EARLIEST
     #print("Starting stream at "+str(stream_start_pos))
@@ -202,17 +198,21 @@ if __name__ == "__main__":
         for message in s:
             event = message.content[0]['event']
             message_content = message.content[0]
-            alert_type = message_content['alert_type']
             alert_time = message_content['time_created']
-
             alert_time = Time(alert_time)
+            
+            # check alert within last 24 hours
+            if alert_time.mjd < Time.now().mjd - 1.:
+                continue
+                
             print(alert_time)
+            
             num_messages+=1
             #if num_messages > 2:
             #    sys.exit()
 
             '''send that fits file into process_fits'''
-            if skymap is not None and event is not None:
+            if event is not None:
                 print('Calling process_fits')
                 process_fits(alert_message = message_content, skip_test_alerts = True)
 
