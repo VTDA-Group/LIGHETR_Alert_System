@@ -1,0 +1,8 @@
+https://askubuntu.com/questions/8653/how-to-keep-processes-running-after-ending-ssh-sessio
+
+https://askubuntu.com/questions/8653/how-to-keep-processes-running-after-ending-ssh-session
+
+https://linuxize.com/post/how-to-run-linux-commands-in-background/
+
+This seems to be working rn:
+https://unix.stackexchange.com/questions/479/keep-processes-running-after-ssh-session-disconnects
