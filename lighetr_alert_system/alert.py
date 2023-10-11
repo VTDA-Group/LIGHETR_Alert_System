@@ -99,7 +99,7 @@ class Alert:
     def unload_skymap(self):
         try:
             skymap, header = hp.read_map(
-                self.singleorder_file, h=True, verbose=False
+                self.singleorder_file, h=True
             )
             header = dict(header)
             obs_time = Time(header['DATE-OBS'],format='isot',scale='utc')

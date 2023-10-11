@@ -25,9 +25,7 @@ def build_message_to_say(voice = voice, message_to_say = message_to_say):
     xml += message_to_say
     xml += '</Say>'
     xml += '</Response>'
-    
-    print("going to say: "+str(xml))
-    
+        
     return xml
 
 def call_people(calling_list, from_ = "+18333749011", message_to_say = message_to_say):
@@ -43,7 +41,6 @@ def call_people(calling_list, from_ = "+18333749011", message_to_say = message_t
           from_=from_,
         )
 
-        print(call.sid)
         time.sleep(1)
 
 # This is just a test

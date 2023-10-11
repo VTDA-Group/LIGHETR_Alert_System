@@ -46,7 +46,7 @@ def helper_function(observatory, time, m):
     #Get RA,DEC of the sun in this time
     sun = astropy.coordinates.get_sun(time)
     #Get RA,DEC of the moon in this time
-    moon = astropy.coordinates.get_moon(time)
+    moon = astropy.coordinates.get_body("moon", time)
     
     
     # Where is the sun in the Texas sky, in this time?

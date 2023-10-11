@@ -94,10 +94,10 @@ class Email:
                 with smtplib.SMTP_SSL("smtp.gmail.com", 465, context = context) as smtp:
                     smtp.login(self.sender_email, self.sender_password)
                     smtp.sendmail(self.sender_email, recipient, em.as_string())
-                return True
             except:
                 print(f"Wasn't able to send email to: {recipient}")
                 return False
+        return True
 
     
     
@@ -253,7 +253,9 @@ def send_mapped_alert_info(observatory, contact_dir, contact_dir_followup, phase
     email = Email(
         subject=subject,
         body=body,
-        recipients=np.append(contact_dir['email'], contact_dir_followup['email']),
+        recipients=np.unique(
+            np.append(contact_dir['email'], contact_dir_followup['email']),
+        ),
         files=[
             os.path.join(
                 alert.directory, f"{observatory.name}_Full_Visibility.pdf"
@@ -277,7 +279,9 @@ def send_mapped_alert_info(observatory, contact_dir, contact_dir_followup, phase
 
 
     #calling people
-    calling_list = contact_dir['call']
+    calling_list = np.unique(
+        np.append(contact_dir['call'], contact_dir_followup['call']),
+    )
     message_to_say = 'Lie Go Gravitational Wave Neutron Star Event Detected. Check email for information. '
     if alert.test_event:
         message_to_say = 'This is a Test Alert. ' + message_to_say

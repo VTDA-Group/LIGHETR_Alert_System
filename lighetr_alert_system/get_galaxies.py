@@ -166,6 +166,11 @@ def write_catalogs(observatories, savedir=''):
     logptop_all = []
     
     for i, obs in enumerate(observatories):
+        if obs.frac_visible == 0.0:
+            cattop_all.append([])
+            logptop_all.append([])
+            continue
+            
         probability = obs.skymap
         #working with list of galaxies visble to HET
         chunksize = 50000 # initial chunksize
