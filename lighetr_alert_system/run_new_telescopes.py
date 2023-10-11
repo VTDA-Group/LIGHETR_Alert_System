@@ -102,7 +102,7 @@ def process_fits(alert_message, save_path='.', people_to_contact = None, skip_te
         print("Processing FITS...")
         skymap = alert.unload_skymap()
         if skymap is None:  
-            save_burst_info(alert, contact_lists_all['email'])
+            send_burst_info(alert, contact_lists_all['email'])
             return False
         
         alert.plot_skymap()
