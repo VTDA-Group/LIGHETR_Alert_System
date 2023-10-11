@@ -94,7 +94,9 @@ def process_fits(alert_message, save_path = '.', people_to_contact = None, skip_
         
         #flatten the multi-order fits file into single-order
         print("Flattening...")
-        alert.flatten_skymap()
+        if not alert.flatten_skymap():
+            print("Failed to flatten skymap")
+            return False
         
         #get the skymap and header of the flattened, single-order fits file
         print("Processing FITS...")
@@ -102,6 +104,7 @@ def process_fits(alert_message, save_path = '.', people_to_contact = None, skip_
         if skymap is None:  
             send_burst_info(alert, contact_lists_all['email'])
             return False
+        
         alert.plot_skymap()
         alert.plot_piechart()
 
