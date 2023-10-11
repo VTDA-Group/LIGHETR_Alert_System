@@ -4,11 +4,13 @@ import json
 import os
 import pdb
 from hop import Stream
-from hop.io import StartPosition
+from hop.io import StartPosition, Deserializer
 import healpy as hp
 from astropy.io import fits
 import requests
 import numpy as np
+import datetime
+import confluent_kafka
 
 from lighetr_alert_system.contact import *
 from lighetr_alert_system.alert import *
@@ -16,7 +18,16 @@ from lighetr_alert_system.observatory import *
 from lighetr_alert_system.prob_obs import prob_observable
 from lighetr_alert_system import get_galaxies, get_LST
 
+def _offsets_for_position(consumer, partitions, position):
+    offset = int(position.timestamp() * 1000)
 
+    _partitions = [
+        confluent_kafka.TopicPartition(topic=tp.topic, partition=tp.partition, offset=offset)
+        for tp in partitions
+    ]
+
+    return consumer._consumer.offsets_for_times(_partitions)
+    
 
 def process_fits(alert_message, save_path = '.', people_to_contact = None, skip_test_alerts = True):
         '''
@@ -102,7 +113,10 @@ def process_fits(alert_message, save_path = '.', people_to_contact = None, skip_
         
         #if it's not at least 30% a (BNS or NSBH) signal, ignore it.
         if (alert.event_dict['NSBH']+alert.event_dict['BNS'])/np.sum(list(alert.event_dict.values())) < 0.3:
-            if sizes[3] < 0.9: #send the email if terrestrial signal < 0.9
+            noise_key = 'Terrestrial'
+            if noise_key not in alert.event_dict:
+                noise_key = 'noise'
+            if alert.event_dict[noise_key] < 0.9:
                 send_low_prob_info(alert, contact_lists_all['email'])
             else:
                 print("Probably terrestrial")
@@ -153,31 +167,29 @@ def process_fits(alert_message, save_path = '.', people_to_contact = None, skip_
         
         print("Two-dimensionally, percentage of pixels visible to HET: "+str(frac_visible_HET*100)+"%")
         
-        cattop_all, logptop_all = get_galaxies.write_catalogs(
-            savedir = alert.directory,
-            observatories = [gen_observatory, HET_observatory]
-        )
-        
         if HET_observatory.frac_visible <= 0.1:
             print("HET can't observe the source.")
             send_not_visible_info(HET_observatory, contact_lists_all['email'])
             return False
-        
-        else:
-            cattop, logptop = cattop_all[1], logptop_all[1]
-            
-            if len(cattop) == 0:
-                return False
-                
-            print("Percentage of visible pixels to HET: "+str(round(frac_visible_HET*100, 3))+"%")
-            
-            get_LST.get_LST(
-                savedir = alert.directory,
-                targf = os.path.join(alert.directory,'HET_Visible_Galaxies_prob_list.dat')
-            )
-            
-            send_mapped_alert_info(HET_observatory, contact_lists_all, contact_lists_HET)
-            return True
+
+        cattop_all, logptop_all = get_galaxies.write_catalogs(
+            savedir = alert.directory,
+            observatories = [gen_observatory, HET_observatory]
+        )
+        cattop, logptop = cattop_all[1], logptop_all[1]
+
+        if len(cattop) == 0:
+            return False
+
+        print("Percentage of visible pixels to HET: "+str(round(frac_visible_HET*100, 3))+"%")
+
+        get_LST.get_LST(
+            savedir = alert.directory,
+            targf = os.path.join(alert.directory,'HET_Visible_Galaxies_prob_list.dat')
+        )
+
+        send_mapped_alert_info(HET_observatory, contact_lists_all, contact_lists_HET)
+        return True
             
 
             
@@ -185,8 +197,9 @@ if __name__ == "__main__":
     ###########Things start here####################
    
     SAVE_PATH = "../../" # change to where you want results stored
-    stream_start_pos = StartPosition.EARLIEST
-    #print("Starting stream at "+str(stream_start_pos))
+    
+    stream_start_pos = datetime.datetime.fromordinal(datetime.date.today().toordinal()) # beginning of day
+    print("Starting stream at "+str(stream_start_pos))
     stream = Stream(start_at=stream_start_pos)
 
     num_messages = 0
@@ -194,24 +207,24 @@ if __name__ == "__main__":
     print("Listening for Alerts from kafka")
 
     with stream.open("kafka://kafka.scimma.org/igwn.gwalert", "r") as s:
-        for message in s:
+        
+        assignment = s._consumer._consumer.assignment()
+        s._consumer._consumer.assign(
+            _offsets_for_position(s._consumer, assignment, stream_start_pos)
+        )
+
+        for m in s._consumer.stream(autocommit=True):
+            message = Deserializer.deserialize(m)
             event = message.content[0]['event']
             message_content = message.content[0]
             alert_time = message_content['time_created']
             alert_time = Time(alert_time)
-            
-            # check alert within last 24 hours
-            if alert_time.mjd < Time.now().mjd - 1.:
-                continue
                 
             print(alert_time)
             
             num_messages+=1
-            #if num_messages > 2:
-            #    sys.exit()
-
             '''send that fits file into process_fits'''
             if event is not None:
                 print('Calling process_fits')
-                process_fits(alert_message = message_content, save_path = SAVE_PATH, skip_test_alerts = True)
+                process_fits(alert_message = message_content, save_path = SAVE_PATH)
 
