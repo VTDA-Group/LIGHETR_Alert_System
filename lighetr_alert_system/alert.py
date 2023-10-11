@@ -61,18 +61,26 @@ class Alert:
         
         
     def flatten_skymap(self):
-        os.system(
-            f'ligo-skymap-flatten {self.multiorder_file} {self.singleorder_file} --nside 256'
-        )
+        try:
+            os.system(
+                f'ligo-skymap-flatten {self.multiorder_file} {self.singleorder_file} --nside 256'
+            )
+            return True
+        except:
+            return False
         
     
     def plot_skymap(self):
         """Plot the sky-localization from the flattened, single-order fits file.
         """
-        plot_fn = os.path.join(self.directory, "skymap_plot.pdf")
-        os.system(
-            f"ligo-skymap-plot {self.singleorder_file} -o {plot_fn}"
-        )
+        try:
+            plot_fn = os.path.join(self.directory, "skymap_plot.pdf")
+            os.system(
+                f"ligo-skymap-plot {self.singleorder_file} -o {plot_fn}"
+            )
+            return True
+        except:
+            return False
         
         
     def plot_piechart(self):

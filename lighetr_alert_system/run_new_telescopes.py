@@ -96,7 +96,9 @@ def process_fits(alert_message, save_path='.', people_to_contact = None, skip_te
         
         #flatten the multi-order fits file into single-order
         print("Flattening...")
-        alert.flatten_skymap()
+        if not alert.flatten_skymap():
+            print("Failed to flatten sky map")
+            return False
         
         #get the skymap and header of the flattened, single-order fits file
         print("Processing FITS...")
